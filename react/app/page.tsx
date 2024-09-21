@@ -69,9 +69,11 @@ export default function Home() {
     // model loader
     const fbxloader: FBXLoader = new FBXLoader();
     let mixer: THREE.AnimationMixer;
-    fbxloader.load("models/Tpose.fbx", (object) => {
-      object.position.set(0, 0, 0);
-      object.scale.set(0.05, 0.05, 0.05);
+    let loadedModel: THREE.Object3D; // Add this line
+    fbxloader.load("models/testbox.fbx", (object) => {
+      object.position.set(0, 0.8, 0);
+      object.scale.set(0.08, 0.05, 0.05);
+      loadedModel = object; // Add this line
       const anim = new FBXLoader();
       anim.load("models/CenterBlock.fbx", (anim) => {
         mixer = new THREE.AnimationMixer(object);
