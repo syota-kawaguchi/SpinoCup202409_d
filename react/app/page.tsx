@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -8,6 +8,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 export default function Home() {
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
+  const [reverseRotation, setReverseRotation] = useState(false);
+  let test = 0.01;
 
   useEffect(() => {
     if (!ref.current) return;
@@ -67,9 +69,11 @@ export default function Home() {
     // model loader
     const fbxloader: FBXLoader = new FBXLoader();
     let mixer: THREE.AnimationMixer;
-    fbxloader.load("models/Tpose.fbx", (object) => {
-      object.position.set(0, 0, 0);
-      object.scale.set(0.05, 0.05, 0.05);
+    let loadedModel: THREE.Object3D; // Add this line
+    fbxloader.load("models/testbox.fbx", (object) => {
+      object.position.set(0, 0.8, 0);
+      object.scale.set(0.08, 0.05, 0.05);
+      loadedModel = object; // Add this line
       const anim = new FBXLoader();
       anim.load("models/CenterBlock.fbx", (anim) => {
         mixer = new THREE.AnimationMixer(object);
@@ -102,6 +106,20 @@ export default function Home() {
 
     animate();
 
+    // 初回実行
+    tick();
+
+    function tick() {
+      requestAnimationFrame(tick);
+
+      // アニメーション処理をここに書く
+      if (loadedModel) {
+        loadedModel.rotation.y += test; // Rotate the loaded model
+        loadedModel.position.y += test; // Rotate the loaded model
+      }
+      renderer.render(scene, camera); // レンダリング
+    }
+
     // リサイズ対応
     const handleResize = () => {
       const width = window.innerWidth;
@@ -113,11 +131,19 @@ export default function Home() {
 
     window.addEventListener("resize", handleResize);
 
+    // クリックイベントリスナーを追加
+    // クリックで箱が下向きに移動する
+    window.addEventListener("click", () => {
+      test = -0.01;
+    });
+
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("click", () => {
+      });
     };
-  }, []);
+  }, [reverseRotation]);
 
   return (
     <main className="w-full h-screen">
