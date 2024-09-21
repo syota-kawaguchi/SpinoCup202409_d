@@ -1,0 +1,9 @@
+{
+  "name": "quad-hack",
+  "private": true,
+  "workspaces": [
+    "react",
+    "vue",
+    "svelte"
+  ]
+}
