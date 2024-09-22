@@ -1,7 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-    basePath: '/react',
-    
-};
+const nextConfig = {};
 
 export default nextConfig;
