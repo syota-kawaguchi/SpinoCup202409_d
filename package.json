@@ -7,10 +7,15 @@
     "svelte"
   ],
   "scripts": {
+    "start-server": "node server.js",
     "build": "concurrently \"npm run build --prefix react\" \"npm run build --prefix vue\" \"npm run build --prefix svelte\"",
     "dev": "concurrently \"npm run dev --prefix react\" \"npm run dev --prefix vue\" \"npm run dev --prefix svelte\""
   },
   "devDependencies": {
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "http-proxy-middleware": "^3.0.2"
   }
 }
