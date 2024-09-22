@@ -1,5 +1,5 @@
 {
-  "name": "vue",
+  "name": "vue-app",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "serve": "vite"
   },
   "dependencies": {
     "single-spa-vue": "^3.0.0",
