@@ -70,7 +70,7 @@ export default function Home() {
     const fbxloader: FBXLoader = new FBXLoader();
     let mixer: THREE.AnimationMixer;
     let loadedModel: THREE.Object3D; // Add this line
-    fbxloader.load("models/car03.fbx", (object) => {
+    fbxloader.load("models/tamanegi_yake.fbx", (object) => {
       object.position.set(0, 0.8, 0);
       object.scale.set(0.05, 0.05, 0.05);
       loadedModel = object; // Add this line
