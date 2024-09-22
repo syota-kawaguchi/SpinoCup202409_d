@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "single-spa-vue": "^3.0.0",
+    "systemjs-webpack-interop": "^2.3.7",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },
