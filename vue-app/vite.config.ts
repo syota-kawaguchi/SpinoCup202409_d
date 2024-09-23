@@ -12,8 +12,15 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3002
+    port: 3002,
+    host: true,
+    strictPort: true,
+    hmr: {
+      protocol: 'ws',
+      clientPort: 3002
+    }
   },
+  base: '/vue',
   build: {
     outDir: 'build',
     rollupOptions: {
