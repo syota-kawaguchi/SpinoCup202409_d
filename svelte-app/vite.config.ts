@@ -1,7 +1,7 @@
-import { sveltekit } from '@sveltejs/kit/vite';
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 export default {
-	plugins: [sveltekit()],
+	plugins: [svelte()],
 	server: {
 		port: 3003,
 		host: true,

@@ -1,30 +1,23 @@
-import { fileURLToPath, URL } from 'node:url'
-
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import { fileURLToPath } from "node:url";
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
   server: {
     port: 3002,
     host: true,
     strictPort: true,
     hmr: {
-      protocol: 'ws',
-      clientPort: 3002
-    }
+      protocol: "ws",
+      clientPort: 3002,
+    },
   },
-  base: '/vue',
-  build: {
-    outDir: 'build',
-    rollupOptions: {
-      external: ['systemjs-webpack-interop']
-    }
-  }
-})
+  base: "/vue",
+});
