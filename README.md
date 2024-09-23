@@ -5,8 +5,10 @@
 - nodeとnpmをインストールしている前提
 
 
-- reactディレクトリに移動する
-- `cd react`
-- `npm ci`
-- `npm run dev`
+1. 必要であれば `npm run install:all`
+2. `npm run build`
+3. `npm run dev`
   - 開発サーバーが立ち上がる
+4. 初回のみ？ `docker compose up -d`
+5. `docker compose restart reverse-proxy`
+  - loacalhostを80番に統一
