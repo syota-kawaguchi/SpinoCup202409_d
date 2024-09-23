@@ -3,6 +3,8 @@ import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
+
 function App() {
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
@@ -18,6 +20,16 @@ function App() {
       height: window.innerHeight,
     };
 
+    // mouse
+        // レイキャスターの初期化(追記部分)
+        raycaster = new THREE.Raycaster();
+
+        //マウスベクトルの初期化(追記部分)
+        mouse = new THREE.Vector2();
+    
+        // イベントリスナーの追加(追記部分)
+        document.addEventListener('click', onMouseEvent, false);
+
     // scene
     const scene: THREE.Scene = new THREE.Scene();
 
@@ -32,7 +44,7 @@ function App() {
       1000
     );
     camera.position.set(0, 2, 10); // カメラ位置を調整
-
+    
     // renderer
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
       canvas: ref.current,
@@ -124,6 +136,34 @@ function App() {
     controls.target.copy(center);
     */
     //カメラ関連、上の記述を参考に
+
+    // イベントリスナーに対応する処理(追記部分)
+function onMouseEvent(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+  event.preventDefault();
+
+  // 座標を正規化する呪文
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // レイキャスティングでマウスと重なるオブジェクトを取得
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(scene.children);
+
+  // 取得したオブジェクトの色を青色に変える
+  for (let i = 0; i < intersects.length; i++) {
+      //intersects[i].object.rotation.x += 10;
+  }
+  intersects[0].object.rotation.x += 1;
+  
+  //"a"という名前ならば追加で移動
+  if(intersects[0].object.name == "a"){
+    intersects[0].object.position.x += 100;
+  }
+  //"a"という名前を、クリックしたオブジェクト（もっとも近い）に付与
+  //今後の展望、食べ物タグや背景タグを活用し、食べ物だけクリックして回収可能にするなどの運用をする。生成時に名づける。また、時間経過で焦げるときにも使う。
+  //例えば、raw,cooked,burned,car,background,effect など
+  intersects[0].object.name = "a";
+}
 
     // 初回実行
     tick();
