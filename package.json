@@ -15,8 +15,7 @@
     "concurrently": "^9.0.1"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "http-proxy-middleware": "^3.0.2",
-    "single-spa": "^6.0.2"
+    "single-spa": "^6.0.2",
+    "vite-plugin-single-spa": "^0.7.0"
   }
 }
