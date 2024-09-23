@@ -12,7 +12,6 @@
     "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18",
-    "single-spa-react": "^6.0.2",
     "three": "^0.168.0"
   },
   "devDependencies": {
