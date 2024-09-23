@@ -1,21 +1,18 @@
-// src/main.ts
-import '../set-public-path' // パブリックパスの設定
+import './set-public-path'
 import { h, createApp } from 'vue'
 import singleSpaVue from 'single-spa-vue'
+import router from './router'
 import App from './App.vue'
 
-const appOptions = {
-  render() {
-    return h(App)
-  }
-}
-
-// Vue 用のライフサイクルメソッドを定義
 const vueLifecycles = singleSpaVue({
   createApp,
-  appOptions,
-  handleInstance(app) {
-    // Vue インスタンスに対するカスタム操作を行う場合
+  appOptions: {
+    render() {
+      return h(App)
+    }
+  },
+  handleInstance: (app) => {
+    app.use(router)
   }
 })
 

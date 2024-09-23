@@ -1,14 +1,12 @@
 import singleSpaSvelte from "single-spa-svelte";
-import App from './App.svelte';  // Svelte コンポーネントをインポート
+import myRootSvelteComponent from "my-root-svelte-component.js";
 
-// Svelte コンポーネントのライフサイクル関数を設定
 const svelteLifecycles = singleSpaSvelte({
-  component: App,
-  domElementGetter: () => document.getElementById("svelte-app"),  // DOM要素を取得
-  props: { someData: "Hello from Svelte!" }  // Svelteコンポーネントに渡すプロパティ
+  component: myRootSvelteComponent,
+  domElementGetter: () => document.getElementById("svelte-app"),
+  props: { someData: "data" },
 });
 
-// `single-spa` のライフサイクル関数をエクスポート
 export const bootstrap = svelteLifecycles.bootstrap;
 export const mount = svelteLifecycles.mount;
 export const unmount = svelteLifecycles.unmount;

@@ -2,6 +2,7 @@
 const path = require('path');
 
 module.exports = {
+  externals: ["vue", "vue-router"],
   entry: './src/main.ts', // エントリーポイント
   output: {
     filename: 'vue-app.js', // 出力ファイル名

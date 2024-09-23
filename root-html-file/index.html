@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single-SPA</title>
+</head>
+
+<body>
+    <div id="react-app"></div>
+    <div id="vue-app"></div>
+    <div id="svelte-app"></div>
+    <script type="systemjs-importmap">
+        {
+            "imports": {
+                "single-spa": "https://unpkg.com/single-spa/lib/system/single-spa.min.js",
+                "react": "https://unpkg.com/react/umd/react.production.min.js",
+                "react-dom": "https://unpkg.com/react-dom/umd/react-dom.production.min.js",
+                "vue": "https://unpkg.com/vue@2.6.12/dist/vue.min.js",
+                "svelte": "https://unpkg.com/svelte@3.38.2/index.mjs"
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/systemjs/dist/system.min.js"></script>
+    <script>
+        System.import('./dist/main.js');
+    </script>
+</body>
+
+</html>

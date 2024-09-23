@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "system",
-    "moduleResolution": "node",
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "target": "ES5", // もしくは ES6
+    "module": "System", // または "ESNext"
+    "outDir": "./dist", // 出力先ディレクトリ
+    "moduleResolution": "node", // Node モジュール解決
+    "baseUrl": ".", // ベースURL
+    "paths": {
+      "*": ["node_modules/*"] // Node モジュールを含める
+    },
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "typeRoots": ["./node_modules/@types", "./types"]
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"]
+  "include": ["main.ts"], // main.tsを含める
+  "exclude": ["node_modules"]
 }
