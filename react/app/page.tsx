@@ -4,39 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { registerApplication, start } from "single-spa";
 
 export default function Home() {
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
   const [reverseRotation, setReverseRotation] = useState(false);
   let test = 0.01;
-
-  useEffect(() => {
-    // Reactアプリケーションの登録
-    registerApplication({
-      name: "react-app",
-      app: () => System.import("react-app"),
-      activeWhen: ["/react"],
-    });
-
-    // Vueアプリケーションの登録
-    registerApplication({
-      name: "vue-app",
-      app: () => System.import("vue-app"),
-      activeWhen: ["/vue"],
-    });
-
-    // Svelteアプリケーションの登録
-    registerApplication({
-      name: "svelte-app",
-      app: () => System.import("svelte-app"),
-      activeWhen: ["/svelte"],
-    });
-
-    // single-spaの開始
-    start({ urlRerouteOnly: true });
-  }, []);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -167,7 +140,8 @@ export default function Home() {
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("click", () => {});
+      window.removeEventListener("click", () => {
+      });
     };
   }, [reverseRotation]);
 
