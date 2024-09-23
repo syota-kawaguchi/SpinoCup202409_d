@@ -12,3 +12,7 @@
 4. 初回のみ？ `docker compose up -d`
 5. `docker compose restart reverse-proxy`
   - loacalhostを80番に統一
+
+
+## 共有事項
+- svgファイルを使うとバグが起きるので、使う必要が出たら要検討したい
