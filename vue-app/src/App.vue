@@ -4,6 +4,7 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <div>
+    <meta property="og:image" content="https://spinocup2024-dynamic-ogp.onrender.com/ogp/{{ score }}" />
   </div>
   <HelloWorld msg="Vite + Vue" />
 </template>
