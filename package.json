@@ -12,7 +12,8 @@
     "dev": "concurrently \"npm run dev --prefix react\" \"npm run dev --prefix vue\" \"npm run dev --prefix svelte\""
   },
   "devDependencies": {
-    "concurrently": "^9.0.1"
+    "concurrently": "^9.0.1",
+    "http-server": "^14.1.1"
   },
   "dependencies": {
     "single-spa": "^6.0.2",
