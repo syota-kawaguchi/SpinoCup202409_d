@@ -8,7 +8,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 export default function Home() {
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
-  const [reverseRotation, setReverseRotation] = useState(false);
+
   let test = 0.01;
 
   useEffect(() => {
@@ -70,12 +70,23 @@ export default function Home() {
     const fbxloader: FBXLoader = new FBXLoader();
     let mixer: THREE.AnimationMixer;
     let loadedModels: THREE.Object3D[] = []; // Explicitly define the type
+    let stageModels: THREE.Object3D[] = [];
 
     function loadFBXModel(_filename: string, _posX: number, _posY: number, _posZ: number, _scale: number) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
         object.scale.set(_scale, _scale, _scale);
         loadedModels.push(object); // Store the model in the array
+
+        scene.add(object);
+      });
+    }
+
+    function loadFBXModelAsStage(_filename: string,_posX: number, _posY: number, _posZ: number, _scale: number) {
+      fbxloader.load(_filename, (object) => {
+        object.position.set(_posX, _posY, _posZ);
+        object.scale.set(_scale, _scale, _scale);
+        stageModels.push(object); // Store the model in the array
 
         scene.add(object);
       });
@@ -98,6 +109,8 @@ export default function Home() {
     loadFBXModel("models/niku.fbx",0,0,0,0.05); //使用例
     loadFBXModel("models/tamanegi.fbx",2,0,2,0.05);
 
+    loadFBXModelAsStage("models/stage01.fbx",0,0,0,0.02);
+
 
       // オブジェクトが読み込まれた後にカメラの位置を自動調整
       /*
@@ -114,24 +127,11 @@ export default function Home() {
       */
      //カメラ関連、上の記述を参考に
 
-    // Animation
-    const animate = () => {
-      requestAnimationFrame(animate);
-      const delta = clock.getDelta();
-      if (mixer) mixer.update(delta);
-      controls.update();
-      renderer.render(scene, camera);
-    };
-
-    animate();
-
     // 初回実行
     tick();
 
     function tick() {
       requestAnimationFrame(tick);
-    
-      // アニメーション処理をここに書く
       loadedModels.forEach((model) => {
         model.rotation.y += test; // Rotate the loaded model
         model.position.y += test; // Translate the loaded model
@@ -163,7 +163,7 @@ export default function Home() {
       window.removeEventListener("click", () => {
       });
     };
-  }, [reverseRotation]);
+  },);
 
   return (
     <main className="w-full h-screen">
