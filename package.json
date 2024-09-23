@@ -12,5 +12,8 @@
     "dev:react": "cd react-app && npm run dev",
     "dev:vue": "cd vue-app && npm run dev",
     "dev:svelte": "cd svelte-app && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
   }
 }
