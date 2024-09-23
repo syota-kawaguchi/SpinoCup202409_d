@@ -8,7 +8,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 export default function Home() {
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
-  const [reverseRotation, setReverseRotation] = useState(false);
+
   let test = 0.01;
 
   useEffect(() => {
@@ -52,12 +52,12 @@ export default function Home() {
     // light
     const ambientLight: THREE.AmbientLight = new THREE.AmbientLight(
       0xffffff,
-      0.5
+      1.8
     );
     scene.add(ambientLight);
     const directionalLight: THREE.DirectionalLight = new THREE.DirectionalLight(
       0xffffff,
-      0.8
+      1.2
     );
     directionalLight.position.set(5, 10, 7.5);
     scene.add(directionalLight);
@@ -69,20 +69,51 @@ export default function Home() {
     // model loader
     const fbxloader: FBXLoader = new FBXLoader();
     let mixer: THREE.AnimationMixer;
-    let loadedModel: THREE.Object3D; // Add this line
-    fbxloader.load("models/tamanegi_yake.fbx", (object) => {
-      object.position.set(0, 0.8, 0);
-      object.scale.set(0.05, 0.05, 0.05);
-      loadedModel = object; // Add this line
-      const anim = new FBXLoader();
-      anim.load("models/CenterBlock.fbx", (anim) => {
-        mixer = new THREE.AnimationMixer(object);
-        mixer.clipAction(anim.animations[0]).play();
-      });
+    let loadedModels: THREE.Object3D[] = []; // Explicitly define the type
+    let stageModels: THREE.Object3D[] = [];
 
-      scene.add(object);
+    function loadFBXModel(_filename: string, _posX: number, _posY: number, _posZ: number, _scale: number) {
+      fbxloader.load(_filename, (object) => {
+        object.position.set(_posX, _posY, _posZ);
+        object.scale.set(_scale, _scale, _scale);
+        loadedModels.push(object); // Store the model in the array
+
+        scene.add(object);
+      });
+    }
+
+    function loadFBXModelAsStage(_filename: string,_posX: number, _posY: number, _posZ: number, _scale: number) {
+      fbxloader.load(_filename, (object) => {
+        object.position.set(_posX, _posY, _posZ);
+        object.scale.set(_scale, _scale, _scale);
+        stageModels.push(object); // Store the model in the array
+
+        scene.add(object);
+      });
+    }
+
+    function loadMultipleFBXModels(_filename: string, _count: number, _scale: number) {
+      for (let i = 0; i < _count; i++) {
+        const posX = Math.random() * 10 - 5; // Random X position between -50 and 50
+        const posY = Math.random() * 10 - 5; // Random Y position between -50 and 50
+        const posZ = Math.random() * 10 - 5; // Random Z position between -50 and 50
+    
+        loadFBXModel(_filename, posX, posY, posZ, _scale);
+      }
+    }
+
+    loadMultipleFBXModels("models/car03.fbx", 3, 0.01);
+    loadMultipleFBXModels("models/car02.fbx", 3, 0.01);
+    loadMultipleFBXModels("models/car01.fbx", 3, 0.01);
+
+    loadFBXModel("models/niku.fbx",0,0,0,0.05); //使用例
+    loadFBXModel("models/tamanegi.fbx",2,0,2,0.05);
+
+    loadFBXModelAsStage("models/stage01.fbx",0,0,0,0.02);
+
 
       // オブジェクトが読み込まれた後にカメラの位置を自動調整
+      /*
       const box = new THREE.Box3().setFromObject(object);
       const center = box.getCenter(new THREE.Vector3());
       const size = box.getSize(new THREE.Vector3());
@@ -93,30 +124,19 @@ export default function Home() {
       camera.position.set(center.x, center.y, center.z + cameraZ);
       camera.lookAt(center);
       controls.target.copy(center);
-    });
-
-    // Animation
-    const animate = () => {
-      requestAnimationFrame(animate);
-      const delta = clock.getDelta();
-      if (mixer) mixer.update(delta);
-      controls.update();
-      renderer.render(scene, camera);
-    };
-
-    animate();
+      */
+     //カメラ関連、上の記述を参考に
 
     // 初回実行
     tick();
 
     function tick() {
       requestAnimationFrame(tick);
-
-      // アニメーション処理をここに書く
-      if (loadedModel) {
-        loadedModel.rotation.y += test; // Rotate the loaded model
-        loadedModel.position.y += test; // Rotate the loaded model
-      }
+      loadedModels.forEach((model) => {
+        model.rotation.y += test; // Rotate the loaded model
+        model.position.y += test; // Translate the loaded model
+      });
+    
       renderer.render(scene, camera); // レンダリング
     }
 
@@ -143,7 +163,7 @@ export default function Home() {
       window.removeEventListener("click", () => {
       });
     };
-  }, [reverseRotation]);
+  },);
 
   return (
     <main className="w-full h-screen">
