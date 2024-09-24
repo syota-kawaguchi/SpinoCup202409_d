@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+//import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+//未使用
 
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
 let pointer: THREE.Vector2;
@@ -113,6 +114,7 @@ function App() {
         object.rotation.y = _rotate;
         object.scale.set(_scale, _scale, _scale);
         object.name = _tag;
+        object.castShadow = true;
         loadedModels.push(object); // Store the model in the array
         scene.add(object);
       });
@@ -124,6 +126,7 @@ function App() {
         object.rotation.y = _rotate;
         object.scale.set(_scale, _scale, _scale);
         object.name = _tag; // 作成したオブジェクトに"stage"タグを適用
+        object.receiveShadow = true;
         stageModels.push(object); // Store the model in the array
         scene.add(object);
       });
@@ -203,7 +206,7 @@ function App() {
         for (let i = 0; i < intersects.length; i++) {
           if(intersects[i].object.parent !== dragObject.dragTarget){
             dragObject.x = intersects[i].point.x;
-            dragObject.y = intersects[i].point.y;
+            dragObject.y = intersects[i].point.y+1;
             dragObject.z = intersects[i].point.z;
             if(dragObject.dragTarget !== null){
               dragObject.dragTarget.position.x = dragObject.x;
@@ -218,7 +221,10 @@ function App() {
 
     function onMouseUp(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
       event.preventDefault();
-      dragObject.dragTarget = null;
+      if(dragObject.dragTarget !== null){
+        dragObject.dragTarget.position.y += -1;
+        dragObject.dragTarget = null;
+      }
     }
 
     // 初回実行
