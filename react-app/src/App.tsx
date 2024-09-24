@@ -5,14 +5,10 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 //未使用
 
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
-let pointer: THREE.Vector2;
-let INTERSECTED: THREE.Object3D<THREE.Object3DEventMap> | null;
 
 function App() {
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
-
-  let test = 0.01;
 
   const dragObject: {
     mode: number;
@@ -247,7 +243,10 @@ function App() {
         model.position.y += test; // Translate the loaded model
       });
       */
-      document.getElementById("output").innerText = 100-clock.getElapsedTime();
+      const outputElement = document.getElementById("output");
+      if (outputElement) {
+          outputElement.innerText = (100 - clock.getElapsedTime()).toString();
+      }
       renderer.render(scene, camera); // レンダリング
     }
 
