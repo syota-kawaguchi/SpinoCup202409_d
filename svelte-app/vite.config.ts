@@ -11,5 +11,5 @@ export default {
 			clientPort: 3003
 		}
 	},
-	base: '/svelte'
+	base: '/svelte/selecting-cars'
 };

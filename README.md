@@ -22,9 +22,11 @@
   - `aws s3 cp ./vue-app/dist s3://***bucket-name***/vue --recursive`
 
 ## アプリケーション構成とルーティング
-- localhost/svelte/title タイトル画面
+- localhost/vanilla タイトル画面
+- localhost/solidjs/title 車選択画面
 - localhost/svelte/selecting-cars 車選択画面
 - localhost/react/play ゲーム画面
+- localhost/vue/score スコア画面
 
 ## 共有事項
 - svgファイルを使うとバグが起きるので、使う必要が出たら要検討したい

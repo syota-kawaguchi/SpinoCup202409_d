@@ -1,19 +1,28 @@
 {
   "scripts": {
-    "install:all": "npm install && npm run install:react && npm run install:vue && npm run install:svelte",
+    "install:all": "npm install && npm run install:react && npm run install:vue && npm run install:svelte && npm run install:solidjs && npm run install:vanilla && echo 'All apps installed successfully!'",
     "install:react": "cd react-app && npm install",
     "install:vue": "cd vue-app && npm install",
     "install:svelte": "cd svelte-app && npm install",
-    "build": "npm run build:react && npm run build:vue && npm run build:svelte && echo 'Build completed successfully!'",
+    "install:solidjs": "cd solidjs-app && npm install",
+    "install:vanilla": "cd vanilla-app && npm install",
+    "build": "npm run build:react && npm run build:vue && npm run build:svelte && npm run build:solidjs && npm run build:vanilla && echo 'All apps built successfully!'",
     "build:react": "cd react-app && npm run build",
     "build:vue": "cd vue-app && npm run build",
     "build:svelte": "cd svelte-app && npm run build",
-    "dev": "concurrently \"npm run dev:react\" \"npm run dev:vue\" \"npm run dev:svelte\"",
+    "build:solidjs": "cd solidjs-app && npm run build",
+    "build:vanilla": "cd vanilla-app && npm run build",
+    "dev": "concurrently \"npm run dev:react\" \"npm run dev:vue\" \"npm run dev:svelte\" \"npm run dev:solidjs\" \"npm run dev:vanilla\"",
     "dev:react": "cd react-app && npm run dev",
     "dev:vue": "cd vue-app && npm run dev",
-    "dev:svelte": "cd svelte-app && npm run dev"
+    "dev:svelte": "cd svelte-app && npm run dev",
+    "dev:solidjs": "cd solidjs-app && npm run dev",
+    "dev:vanilla": "cd vanilla-app && npm run dev"
   },
   "devDependencies": {
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "degit": "^2.8.4"
   }
 }
