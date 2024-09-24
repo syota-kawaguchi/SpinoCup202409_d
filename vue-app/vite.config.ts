@@ -15,7 +15,7 @@ export default defineConfig({
     host: true,
     strictPort: true,
     hmr: {
-      protocol: "ws",
+      protocol: "wss",
       clientPort: 3002,
     },
   },

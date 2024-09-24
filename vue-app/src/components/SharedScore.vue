@@ -21,31 +21,6 @@ const loading = ref(true);
 const showModal = ref(false);
 const imageUrl = ref("");
 
-const generateImage = async () => {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1200;
-  canvas.height = 630;
-  const ctx = canvas.getContext("2d");
-
-  if (ctx) {
-    // 背景
-    ctx.fillStyle = "#f0f0f0";
-    ctx.fillRect(0, 0, 1200, 630);
-
-    // タイトル
-    ctx.font = "bold 48px Arial";
-    ctx.fillStyle = "#333333";
-    ctx.fillText(`ゲームスコア: ${score.value}点`, 50, 100);
-
-    // スコア
-    ctx.font = "bold 72px Arial";
-    ctx.fillStyle = "#FF4500";
-    ctx.fillText(`${score.value}点`, 50, 300);
-  }
-
-  return canvas.toDataURL("image/png");
-};
-
 onMounted(async () => {
   const scoreId = route.params.id as string;
 
@@ -54,8 +29,9 @@ onMounted(async () => {
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
-      score.value = querySnapshot.docs[0].data().score;
-      imageUrl.value = await generateImage();
+      const scoreData = querySnapshot.docs[0].data();
+      score.value = scoreData.score;
+      imageUrl.value = scoreData.imageUrl;
     } else {
       console.error("Score not found");
     }
@@ -95,6 +71,12 @@ const closeModal = () => {
     <div v-if="loading">読み込み中...</div>
     <div v-else>
       <h1>共有されたスコア: {{ score }}点</h1>
+      <pre>{{ imageUrl }}</pre>
+      <img
+        :src="imageUrl"
+        alt="スコア画像"
+        style="max-width: 300px; margin-top: 20px"
+      />
       <button @click="openModal">画像プレビュー</button>
       <ImagePreviewModal
         :show="showModal"
