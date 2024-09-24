@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { T, useTask, useLoader } from '@threlte/core'
+  import { T, useTask } from '@threlte/core'
   import { interactivity, GLTF, Environment } from '@threlte/extras'
   import { carPaths } from "../const";
 
@@ -54,16 +54,13 @@
   />
 </T.Mesh>
 
-<button class="next-car-button" on:click={showNextCar}>
-  "Next car"
-</button>
-
 <style>
-  .next-car-button {
-    position: relative;
-    width: 200px;
-    height: 80px;
-    bottom: 10%;
-    left: 50px;
+  #next-car-button{
+    position: absolute;
+    top: 50px;
+    left: 30px;
+    width: 100%;
+    z-index: 100;
+    display: block;
   }
 </style>
