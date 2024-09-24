@@ -1,6 +1,5 @@
 <!-- App.svelte -->
 <script lang="ts">
-  import { Router, Route } from "svelte-routing";
   import SelectingCars from "./pages/SelectingCars.svelte";
   import Title from  "./pages/Title.svelte";
 
@@ -17,8 +16,3 @@
     localStorage.setItem("selectedCarID", id.toString());
   };
 </script>
-
-<Router>
-  <Route path="/svelte/selecting-cars" component={SelectingCars} />
-  <Route path="/svelte/title" component={Title} />
-</Router>
