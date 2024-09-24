@@ -10,6 +10,7 @@
   min-height: 100vh;
   min-width: 100vw;
   background: linear-gradient(45deg, #2e2f30, #5ab3bf);
+  overflow: hidden;
 }
 
 .title {
@@ -18,13 +19,16 @@
   position: fixed;
   top: 0;
   left: 0;
+  overflow: hidden;
 }
 
 .canvas {
   min-height: 100vh;
   min-width: 100vw;
+  position: fixed;
   /* 右にずらして拡大 */
   transform: translateX(30%) translateY(-10%) scale(1.5);
+  overflow: hidden;
 }
 
 .p{
