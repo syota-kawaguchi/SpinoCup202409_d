@@ -13,7 +13,7 @@
       carIndex = 0;
     }
   };
-  let carPath: string = "assets/models/car01.gltf";
+  let carPath: string = "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car01.gltf";
   console.log(carPath);
 </script>
 

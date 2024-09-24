@@ -1,37 +1,37 @@
 export const modelPaths: string[] = [
-    'assets/models/car01.gltf',
-    'assets/models/car02.gltf',
-    'assets/models/car03.gltf',
-    'assets/medamayaki_koge.gltf',
-    'assets/medamayaki_yake.gltf',
-    'assets/medamayaki.gltf',
-    'assets/niku_koge.gltf',
-    'assets/niku_yake.gltf',
-    'assets/niku.gltf',
-    'assets/tamanegi_koge.gltf',
-    'assets/tamanegi_yake.gltf',
-    'assets/tamanegi.gltf',
-    'assets/stage01.gltf'
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car01.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car02.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car03.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/medamayaki_koge.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/medamayaki_yake.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/medamayaki.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/niku_koge.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/niku_yake.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/niku.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/tamanegi_koge.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/tamanegi_yake.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/tamanegi.gltf',
+  'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/stage01.gltf',
   ]
 
 export const carPaths: string[] = [
-    'assets/models/car01.gltf',
-    'assets/models/car02.gltf',
-    'assets/models/car03.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car01.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car02.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car03.gltf',
   ]
 
 export const foodPaths: string[] = [
-    'assets/medamayaki_koge.gltf',
-    'assets/medamayaki_yake.gltf',
-    'assets/medamayaki.gltf',
-    'assets/niku_koge.gltf',
-    'assets/niku_yake.gltf',
-    'assets/niku.gltf',
-    'assets/tamanegi_koge.gltf',
-    'assets/tamanegi_yake.gltf',
-    'assets/tamanegi.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/medamayaki_koge.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/medamayaki_yake.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/medamayaki.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/niku_koge.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/niku_yake.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/niku.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/tamanegi_koge.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/tamanegi_yake.gltf',
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/tamanegi.gltf',
   ]
 
 export const stagePaths: string[] = [
-    'assets/stage01.gltf'
+    'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/stage01.gltf'
   ]
