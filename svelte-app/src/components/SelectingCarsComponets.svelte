@@ -3,21 +3,7 @@
   import { interactivity, GLTF, Environment } from '@threlte/extras'
   import { carPaths } from "../const";
 
-  let carIndex = 0;
-  const showNextCar = () => {
-    console.log(`current car Index : ${carIndex}`);
-    if (carIndex < carPaths.length) {
-      carIndex++;
-    } else {
-      carIndex = 0;
-    }
-  };
-
-  let carPath: string = carPaths[0]
-  useTask((delta:number) => {
-    carPath = carPaths[carIndex];
-  })
-  console.log(`carPath : ${carPath}`)
+  export let carPath: string
 
   interactivity()
 </script>
@@ -53,14 +39,3 @@
   	url={carPath}
   />
 </T.Mesh>
-
-<style>
-  #next-car-button{
-    position: absolute;
-    top: 50px;
-    left: 30px;
-    width: 100%;
-    z-index: 100;
-    display: block;
-  }
-</style>
