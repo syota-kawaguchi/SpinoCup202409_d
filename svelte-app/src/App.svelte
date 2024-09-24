@@ -1,39 +1,45 @@
+<!-- pages/Top.svelte -->
 <script lang="ts">
-  import Counter from "./lib/Counter.svelte";
+  import { Canvas } from '@threlte/core';
+  import SelectingCarsComponets from "./components/SelectingCarsComponets.svelte";
+  import { carPaths } from "./const";
+
+  let carIndex = 0;
+  const showNextCar = () => {
+    console.log(`current car Index : ${carIndex}`);
+    if (carIndex < carPaths.length) {
+      carIndex++;
+    } else {
+      carIndex = 0;
+    }
+  };
+  let carPath: string = "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car01.gltf";
+  console.log(carPath);
 </script>
 
-<main>
-  <h1>Vite + Svelte</h1>
-
-  <div class="card">
-    <Counter />
+<div class="container">
+  <div class="canvas-wrapper">
+    <Canvas>
+      <SelectingCarsComponets {carPath} />
+    </Canvas>
   </div>
-
-  <p>
-    Check out <a
-      href="https://github.com/sveltejs/kit#readme"
-      target="_blank"
-      rel="noreferrer">SvelteKit</a
-    >, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">Click on the Vite and Svelte logos to learn more</p>
-</main>
+  <button on:click={showNextCar}>Next Car</button>
+</div>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  .container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
+
+  .canvas-wrapper {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    max-height: calc(
+      100vh - 50px
+    );
   }
 </style>
