@@ -15,5 +15,8 @@
   },
   "devDependencies": {
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "degit": "^2.8.4"
   }
 }
