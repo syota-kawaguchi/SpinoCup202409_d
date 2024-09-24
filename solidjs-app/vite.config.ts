@@ -13,8 +13,15 @@ export default defineConfig({
   ],
   server: {
     port: 3004,
+    host: true,
+    strictPort: true,
+    hmr: {
+      protocol: "ws",
+      clientPort: 3004,
+    },
   },
   build: {
     target: 'esnext',
   },
+  base: '/solidjs',
 });
