@@ -43,6 +43,8 @@ const App: Component = () => {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.enableRotate = false;
+    controls.enablePan = false;
+    controls.enableZoom = false;
 
     // light
     const ambientLight: THREE.AmbientLight = new THREE.AmbientLight(
@@ -105,6 +107,11 @@ const App: Component = () => {
   return (
     <div class={styles.App}>
       <main class={styles.main}>
+        <img
+          class={styles.title}
+          src="title/title.svg"
+          alt="BONNET GRILLS BBQのタイトルロゴ"
+        />
         <canvas class={styles.canvas} ref={canvasRef} />
       </main>
     </div>

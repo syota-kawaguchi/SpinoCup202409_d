@@ -12,6 +12,14 @@
   background: linear-gradient(45deg, #2e2f30, #5ab3bf);
 }
 
+.title {
+  z-index: 1;
+  min-height: 80vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
 .canvas {
   min-height: 100vh;
   min-width: 100vw;
