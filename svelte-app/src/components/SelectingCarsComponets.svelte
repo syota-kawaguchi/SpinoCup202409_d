@@ -1,8 +1,8 @@
 <script lang="ts">
   import { T, useTask, useLoader } from '@threlte/core'
   import { interactivity, useGltf, ContactShadows, GLTF, Grid, OrbitControls, Environment } from '@threlte/extras'
-  import { spring } from 'svelte/motion'
-  import { Group } from 'three'
+  // import { spring } from 'svelte/motion'
+  // import { Group } from 'three'
 
   export let carPath: string
 
