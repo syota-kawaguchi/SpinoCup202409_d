@@ -4,6 +4,8 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
+let pointer: THREE.Vector2;
+let INTERSECTED: THREE.Object3D<THREE.Object3DEventMap> | null;
 
 function App() {
   const ref: React.RefObject<HTMLCanvasElement> =
@@ -43,7 +45,7 @@ function App() {
       0.1,
       1000
     );
-    camera.position.set(0, 2, 10); // カメラ位置を調整
+    camera.position.set(0, 20, 100); // カメラ位置を調整
     
     // renderer
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
@@ -82,36 +84,45 @@ function App() {
     const loadedModels: THREE.Object3D[] = []; // Explicitly define the type
     const stageModels: THREE.Object3D[] = [];
 
-    function loadFBXModel(_filename: string, _posX: number, _posY: number, _posZ: number, _scale: number) {
+    function loadFBXModel(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
+        object.rotation.y = _rotate;
         object.scale.set(_scale, _scale, _scale);
+        object.name = _tag;
         loadedModels.push(object); // Store the model in the array
-
         scene.add(object);
       });
     }
 
-    function loadFBXModelAsStage(_filename: string, _posX: number, _posY: number, _posZ: number, _scale: number) {
+    function loadFBXModelAsStage(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
+        object.rotation.y = _rotate;
         object.scale.set(_scale, _scale, _scale);
+        object.name = _tag; // 作成したオブジェクトに"stage"タグを適用
         stageModels.push(object); // Store the model in the array
-
         scene.add(object);
       });
     }
 
-    function loadMultipleFBXModels(_filename: string, _count: number, _scale: number) {
+    function loadMultipleFBXModels(_filename: string, _tag: string, _count: number, _scale: number) {
       for (let i = 0; i < _count; i++) {
-        const posX = Math.random() * 10 - 5; // Random X position between -50 and 50
-        const posY = Math.random() * 10 - 5; // Random Y position between -50 and 50
-        const posZ = Math.random() * 10 - 5; // Random Z position between -50 and 50
+        const posX = Math.random() * 100 - 50; // Random X position between -50 and 50
+        const posY = Math.random() * 100 - 50; // Random Y position between -50 and 50
+        const posZ = Math.random() * 100 - 50; // Random Z position between -50 and 50
 
-        loadFBXModel(_filename, posX, posY, posZ, _scale);
+        loadFBXModel(_filename, _tag, posX, posY, posZ, 0, _scale);
       }
     }
 
+    function initializeStage(){ // stageを既定の位置に配置
+      loadFBXModelAsStage("/react/models/stage01.fbx","stage",0,0,0,0,0.1);
+      loadFBXModelAsStage("/react/models/car02.fbx","car",0,5,0,-0.5,0.05);
+      loadMultipleFBXModels("/react/models/niku.fbx","food",10,0.1);
+    }
+
+    /* テスト用、オブジェクト配置テスト
     loadMultipleFBXModels("/react/models/car03.fbx", 3, 0.01);
     loadMultipleFBXModels("/react/models/car02.fbx", 3, 0.01);
     loadMultipleFBXModels("/react/models/car01.fbx", 3, 0.01);
@@ -120,7 +131,7 @@ function App() {
     loadFBXModel("/react/models/tamanegi.fbx", 2, 0, 2, 0.05);
 
     loadFBXModelAsStage("/react/models/stage01.fbx", 0, 0, 0, 0.02);
-
+    */
 
     // オブジェクトが読み込まれた後にカメラの位置を自動調整
     /*
@@ -138,42 +149,69 @@ function App() {
     //カメラ関連、上の記述を参考に
 
     // イベントリスナーに対応する処理(追記部分)
-function onMouseEvent(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
-  event.preventDefault();
+    function onMouseEvent(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+      event.preventDefault();
 
-  // 座標を正規化する呪文
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      // 座標を正規化する呪文
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-  // レイキャスティングでマウスと重なるオブジェクトを取得
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(scene.children);
+      // レイキャスティングでマウスと重なるオブジェクトを取得
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+      //const intersect = intersects[0];
+      //const object = intersect.object;
+      // raycaster.setFromCamera( pointer, camera );
 
-  // 取得したオブジェクトの色を青色に変える
-  for (let i = 0; i < intersects.length; i++) {
-      //intersects[i].object.rotation.x += 10;
-  }
-  intersects[0].object.rotation.x += 1;
-  
-  //"a"という名前ならば追加で移動
-  if(intersects[0].object.name == "a"){
-    intersects[0].object.position.x += 100;
-  }
-  //"a"という名前を、クリックしたオブジェクト（もっとも近い）に付与
-  //今後の展望、食べ物タグや背景タグを活用し、食べ物だけクリックして回収可能にするなどの運用をする。生成時に名づける。また、時間経過で焦げるときにも使う。
-  //例えば、raw,cooked,burned,car,background,effect など
-  intersects[0].object.name = "a";
-}
+      // const intersects = raycaster.intersectObjects( scene.children, false );
+
+      for (let i = 0; i < intersects.length; i++) {
+          console.log(intersects[i].object.name)
+      }
+      //タグがfoodなら回収
+      if(intersects[0].object.parent?.name == "food"){
+        intersects[0].object.parent.position.x += 10;
+      }
+
+      /* クリック時、一直線上すべてのオブジェクトにアクション
+      for (let i = 0; i < intersects.length; i++) {
+          //intersects[i].object.rotation.x += 10;
+      }
+      */
+      /* タグ付け、判定用テスト
+      //"a"という名前ならば追加で移動
+      if(intersects[0].object.name == "a"){
+        intersects[0].object.position.x += 100;
+      }
+      //"a"という名前を、クリックしたオブジェクト（もっとも近い）に付与
+      //今後の展望、食べ物タグや背景タグを活用し、食べ物だけクリックして回収可能にするなどの運用をする。生成時に名づける。また、時間経過で焦げるときにも使う。
+      //例えば、raw,cooked,burned,car,background,effect など
+      intersects[0].object.name = "a";
+      */
+    }
 
     // 初回実行
     tick();
+    initializeStage();
 
     function tick() {
       requestAnimationFrame(tick);
+
+      stageModels.forEach((model) => {
+        /*if(model.name == "food"){
+          model.position.x += 0.1;
+        }*/
+          if(model.name == "car"){
+            model.position.y += 0.1;
+          }
+      });      
+
+      /* テスト用、全オブジェクト回転移動
       loadedModels.forEach((model) => {
         model.rotation.y += test; // Rotate the loaded model
         model.position.y += test; // Translate the loaded model
       });
+      */
 
       renderer.render(scene, camera); // レンダリング
     }
@@ -190,9 +228,8 @@ function onMouseEvent(event: { preventDefault: () => void; clientX: number; clie
     window.addEventListener("resize", handleResize);
 
     // クリックイベントリスナーを追加
-    // クリックで箱が下向きに移動する
     window.addEventListener("click", () => {
-      test = -0.01;
+      //ここにクリック時のアクションを追加
     });
 
     // クリーンアップ
