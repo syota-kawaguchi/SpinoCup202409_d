@@ -6,6 +6,30 @@ import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
 
+class Food {
+  constructor(
+    public isOnBonnet: boolean,
+    public grilledness: number, 
+    public obj3D: THREE.Object3D
+  ) 
+  {
+  }
+  grill(){
+    //if(this.isOnBonnet == true){
+      this.grilledness++;
+    //}
+  }
+  grillednessCheck() {
+    if (this.grilledness == 200) {
+      return "koge";
+    }else if(this.grilledness == 100){
+      return "yake";
+    }
+  }
+}
+
+
+
 function App() {
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
@@ -96,8 +120,9 @@ function App() {
     const fbxloader: FBXLoader = new FBXLoader();
     // let mixer: THREE.AnimationMixer;
     const loadedModels: THREE.Object3D[] = []; // Explicitly define the type
+    const foodModels: Food[] = []; // Explicitly define the type
     const stageModels: THREE.Object3D[] = [];
-    const hera: THREE.Object3D[] = [];
+    const other: THREE.Object3D[] = []; //otherにはヘラ[0]、まな板[1]
 
     //camera move
     function initializeCamera(){
@@ -117,18 +142,42 @@ function App() {
       });
     }
 
-    function initializeHera(){
+    function loadFBXModelAsFood(_filename: string, _tag: string, _grillednessMax: number, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+      fbxloader.load(_filename, (object) => {
+        object.position.set(_posX, _posY, _posZ);
+        object.rotation.y = _rotate;
+        object.scale.set(_scale, _scale, _scale);
+        object.name = _tag;
+        object.castShadow = true;
+        foodModels.push(new Food(false, _grillednessMax, object)); // Store the model in the array
+        scene.add(object);
+      });
+    }
+
+    function initializeHera(){ //初期化の順番守って。Hera->Manaita->
       fbxloader.load("/react/models/hera.fbx", (object) => {
         object.position.set(2, 8, 0);
         object.rotation.y = -0.8;
         object.scale.set(0.01, 0.01, 0.01);
         object.name = "hera";
         object.castShadow = true;
-        hera.push(object); // Store the model in the array
+        //other.push(object); // Store the model in the array
+        other[0] = object;
         scene.add(object);
       });
     }
 
+    function initializeManaita(){
+      fbxloader.load("/react/models/manaita.fbx", (object) => {
+        object.position.set(10, 5, -2);
+        object.scale.set(0.02, 0.02, 0.02);
+        object.name = "manaita";
+        object.castShadow = true;
+        //other.push(object); // Store the model in the array
+        other[1] = object;
+        scene.add(object);
+      });
+    }
 
     function loadFBXModelAsStage(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
       fbxloader.load(_filename, (object) => {
@@ -148,7 +197,7 @@ function App() {
         const posY = 6;// Math.random() * 100 - 50; // Random Y position between -50 and 50
         const posZ = Math.random() * 6 - 3; // Random Z position between -50 and 50
 
-        loadFBXModel(_filename, _tag, posX, posY, posZ, 0, _scale);
+        loadFBXModelAsFood(_filename, _tag, 0, posX, posY, posZ, 0, _scale);
       }
     }
 
@@ -183,6 +232,23 @@ function App() {
     controls.target.copy(center);
     */
     //カメラ関連、上の記述を参考に
+
+    function changeModel(_formerObject: Food, _grilledness: number, _Filename: string){
+      const _posX = _formerObject.obj3D.position.x;
+      const _posY = _formerObject.obj3D.position.y;
+      const _posZ = _formerObject.obj3D.position.z;
+      //const _rotateX = _formerObject.obj3D.rotation.x;
+      const _rotateY = _formerObject.obj3D.rotation.y;
+      //const _rotateZ = _formerObject.obj3D.rotation.z;
+      const _scale = _formerObject.obj3D.scale.x;
+      const _name = _formerObject.obj3D.name;
+      loadFBXModelAsFood(_Filename,_name,_grilledness,_posX,_posY,_posZ,_rotateY,_scale);
+      //delete _Filename;
+      _formerObject.obj3D.clear();
+    }
+
+//========== Mouse Event =================================================================
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // イベントリスナーに対応する処理(追記部分)
     function onMouseDown(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
@@ -220,7 +286,8 @@ function App() {
       if(intersects[0] !== null){
         for (let i = 0; i < intersects.length; i++) {
           if(intersects[i].object.parent !== dragObject.dragTarget && intersects[i].object.parent?.name !== "hera"){
-            hera[0].position.set(intersects[i].point.x + 0.8,intersects[i].point.y + 0.3,intersects[i].point.z - 0.5);
+            other[0].position.set(intersects[i].point.x + 0.8,intersects[i].point.y + 0.7,intersects[i].point.z - 1.5);
+            other[0].rotation.set(0.5,-1,0);
             dragObject.x = intersects[i].point.x;
             dragObject.y = intersects[i].point.y+1;
             dragObject.z = intersects[i].point.z;
@@ -228,7 +295,9 @@ function App() {
               dragObject.dragTarget.position.x = dragObject.x;
               dragObject.dragTarget.position.y = dragObject.y;
               dragObject.dragTarget.position.z = dragObject.z;
-              hera[0].position.y = dragObject.y;
+              other[0].position.y = dragObject.y;
+              other[0].position.z = dragObject.z - 0.5;
+              other[0].rotation.set(0,-0.8,0);
             }
             break;
           }
@@ -240,15 +309,20 @@ function App() {
       event.preventDefault();
       if(dragObject.dragTarget !== null){
         dragObject.dragTarget.position.y += -1;
+        //changeModel(dragObject.dragTarget,"/react/models/niku_yake.fbx");
         dragObject.dragTarget = null;
       }
     }
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//=================================================================================================
 
     // 初回実行
     tick();
     initializeStage();
     initializeCamera();
     initializeHera();
+    initializeManaita();
 
     function tick() {
       requestAnimationFrame(tick);
@@ -258,13 +332,22 @@ function App() {
       //       model.position.y += 0.1;
       //     }
       // });      
+      for(let i = 0; i < foodModels.length; i++){
+        foodModels[i].grill();
+        if(foodModels[i].grillednessCheck() == "yake"){
+          changeModel(foodModels[i],foodModels[i].grilledness,"/react/models/niku_yake.fbx");
+        }else if(foodModels[i].grillednessCheck() == "koge"){
+          changeModel(foodModels[i],foodModels[i].grilledness,"/react/models/niku_koge.fbx");
+        }
 
-      /* テスト用、全オブジェクト回転移動
-      loadedModels.forEach((model) => {
-        model.rotation.y += test; // Rotate the loaded model
-        model.position.y += test; // Translate the loaded model
-      });
-      */
+      }
+
+      //テスト用、全オブジェクト回転移動
+      for(let i = 0; i < foodModels.length; i++){
+        foodModels[i].obj3D.rotation.y += 0.1;
+        console.log(i);
+      }
+
       const outputElement = document.getElementById("output");
       if (outputElement) {
           outputElement.innerText = (100 - clock.getElapsedTime()).toString();
