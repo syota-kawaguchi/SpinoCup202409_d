@@ -4,14 +4,13 @@
   import { spring } from 'svelte/motion'
   import { Group } from 'three'
 
+  export let carPath: string
+
   interactivity()
   let rotation = 0
   useTask((delta:number) => {
     rotation += delta
   })
-
-  // let fileUrl = "/Users/shotakawaguchi/project/SpinoCup202409_d/react/public/models/car01.gltf"
-  let fileUrl = "assets/testmodel.gltf"
 </script>
 
 <T.PerspectiveCamera
@@ -37,6 +36,6 @@
 
 <T.Mesh position={[0, 1.3, 0]}>
   <GLTF
-  	url="assets/testmodel.gltf"
+  	url={carPath}
   />
 </T.Mesh>
