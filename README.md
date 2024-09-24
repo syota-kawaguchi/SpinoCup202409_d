@@ -13,6 +13,10 @@
 5. `docker compose restart reverse-proxy`
   - loacalhostを80番に統一
 
+## アプリケーション構成とルーティング
+- localhost/svelte/title タイトル画面
+- localhost/svelte/selecting-cars 車選択画面
+- localhost/react/play ゲーム画面
 
 ## 共有事項
 - svgファイルを使うとバグが起きるので、使う必要が出たら要検討したい
