@@ -3,6 +3,7 @@
   const increment = () => {
     count += 1
   }
+  console.log("Counter.svelte")
 </script>
 
 <button on:click={increment}>
