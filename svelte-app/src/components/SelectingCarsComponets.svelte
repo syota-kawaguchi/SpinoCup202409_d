@@ -5,19 +5,19 @@
   import { Group } from 'three'
 
   interactivity()
-  const scale = spring(1)
   let rotation = 0
-  useTask((delta) => {
+  useTask((delta:number) => {
     rotation += delta
   })
 
-  console.log("Scene.svelte")
+  // let fileUrl = "/Users/shotakawaguchi/project/SpinoCup202409_d/react/public/models/car01.gltf"
+  let fileUrl = "assets/testmodel.gltf"
 </script>
 
 <T.PerspectiveCamera
   makeDefault
   position={[5, 5, 5]}
-  on:create={({ ref }) => {
+  on:create={({ref}) => {
     ref.lookAt(0, 1, 0)
   }}
 />
@@ -26,21 +26,6 @@
   position={[0, 10, 10]} 
   castShadow
 />
-
-<!-- <T.Mesh 
-  rotation.y={rotation}
-  position.y={1}
-  scale={$scale}
-  on:pointerenter={() => {
-    console.log("on Pointer Enter")
-    scale.set(1.5)}
-  }
-  on:pointerleave={() => scale.set(1)}
-  castShadow
->
-  <T.BoxGeometry args={[1, 2, 1]} />
-  <T.MeshStandardMaterial color="hotpink" />
-</T.Mesh> -->
 
 <T.Mesh
   rotation.x={-Math.PI / 2}
@@ -52,30 +37,6 @@
 
 <T.Mesh position={[0, 1.3, 0]}>
   <GLTF
-  	url="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf"
+  	url="assets/testmodel.gltf"
   />
-  <!-- <GLTF
-  	url="/react/models/testmodel.gltf"
-  /> -->
 </T.Mesh>
-
-<!-- {#if $gltf}
-  <T
-    is={ref}
-    {...$$restProps}
-  >
-    <T.Mesh
-      geometry={$gltf.nodes.Blossom.geometry}
-      material={$gltf.materials.Blossom}
-      rotation={[Math.PI / 2, 0, 0]}
-      scale={1.22}
-    />
-    <T.Mesh
-      geometry={$gltf.nodes.Stem.geometry}
-      material={$gltf.materials.Stem}
-      rotation={[Math.PI / 2, 0, 0]}
-      scale={1.22}
-    />
-    <slot {ref} />
-  </T>
-{/if} -->
