@@ -1,6 +1,6 @@
 <template>
   <div class="image-container">
-    <img src="/result-car.jpg" alt="Car" />
+    <img src="https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result-car.jpg" alt="Car" />
     <div class="text-overlay">
       <span class="large-number">{{ score }}</span> yummy
     </div>
