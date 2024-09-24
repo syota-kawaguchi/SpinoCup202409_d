@@ -14,6 +14,12 @@
     "dev:svelte": "cd svelte-app && npm run dev"
   },
   "devDependencies": {
+    "@types/three": "^0.168.0",
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "@threlte/core": "^7.3.1",
+    "@threlte/extras": "^8.11.5",
+    "three": "^0.168.0"
   }
 }
