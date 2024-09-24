@@ -1,21 +1,30 @@
 <script lang="ts">
   import { T, useTask, useLoader } from '@threlte/core'
-  import { interactivity, useGltf, ContactShadows, GLTF, Grid, OrbitControls, Environment } from '@threlte/extras'
-  // import { spring } from 'svelte/motion'
-  // import { Group } from 'three'
+  import { interactivity, GLTF, Environment } from '@threlte/extras'
+  import { carPaths } from "../const";
 
-  export let carPath: string
+  let carIndex = 0;
+  const showNextCar = () => {
+    console.log(`current car Index : ${carIndex}`);
+    if (carIndex < carPaths.length) {
+      carIndex++;
+    } else {
+      carIndex = 0;
+    }
+  };
+
+  let carPath: string = carPaths[0]
+  useTask((delta:number) => {
+    carPath = carPaths[carIndex];
+  })
+  console.log(`carPath : ${carPath}`)
 
   interactivity()
-  let rotation = 0
-  useTask((delta:number) => {
-    rotation += delta
-  })
 </script>
 
 <T.PerspectiveCamera
   makeDefault
-  position={[5, 5, 5]}
+  position={[7, 7, 7]}
   on:create={({ref}) => {
     ref.lookAt(0, 1, 0)
   }}
@@ -24,6 +33,11 @@
 <T.DirectionalLight 
   position={[0, 10, 10]} 
   castShadow
+/>
+
+<Environment
+	files={'https://static8.depositphotos.com/1035653/917/i/450/depositphotos_9173686-stock-photo-empty-auto-repair-shop-for.jpg'}
+	isBackground={true}
 />
 
 <T.Mesh
@@ -39,3 +53,17 @@
   	url={carPath}
   />
 </T.Mesh>
+
+<button class="next-car-button" on:click={showNextCar}>
+  "Next car"
+</button>
+
+<style>
+  .next-car-button {
+    position: relative;
+    width: 200px;
+    height: 80px;
+    bottom: 10%;
+    left: 50px;
+  }
+</style>
