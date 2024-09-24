@@ -14,4 +14,6 @@
 .canvas {
   min-height: 100vh;
   min-width: 100vw;
+  /* 右にずらして拡大 */
+  transform: translateX(30%) translateY(-10%) scale(1.3);
 }

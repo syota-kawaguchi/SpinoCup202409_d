@@ -57,30 +57,25 @@ const App: Component = () => {
     directionalLight.position.set(5, 10, 7.5);
     scene.add(directionalLight);
 
-
     // model loader
     const fbxloader: FBXLoader = new FBXLoader();
     let mixer: THREE.AnimationMixer;
-    fbxloader.load(
-      "title/models/car03.fbx",
-      (object) => {
-        object.position.set(100, 0, 0);
-        object.scale.set(0.05, 0.05, 0.05);
+    fbxloader.load("title/models/car03.fbx", (object) => {
+      object.position.set(0, 0, 0);
+      object.scale.set(1, 1, 1);
 
-        scene.add(object);
-        // オブジェクトが読み込まれた後にカメラの位置を自動調整
-        const box = new THREE.Box3().setFromObject(object);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-        cameraZ *= 1.5; // 少し余裕を持たせる
-        camera.position.set(center.x, center.y, center.z + cameraZ);
-        camera.lookAt(center);
-        controls.target.copy(center);
-      }
-    );
+      scene.add(object);
+      // オブジェクトが読み込まれた後にカメラの位置を自動調整
+      const box = new THREE.Box3().setFromObject(object);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = camera.fov * (Math.PI / 180);
+      let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+      camera.position.set(center.x + 200, center.y + 200, center.z + cameraZ);
+      camera.lookAt(center);
+      controls.target.copy(center);
+    });
 
     // Animation
     const animate = () => {
