@@ -97,6 +97,7 @@ function App() {
     // let mixer: THREE.AnimationMixer;
     const loadedModels: THREE.Object3D[] = []; // Explicitly define the type
     const stageModels: THREE.Object3D[] = [];
+    const hera: THREE.Object3D[] = [];
 
     //camera move
     function initializeCamera(){
@@ -115,6 +116,19 @@ function App() {
         scene.add(object);
       });
     }
+
+    function initializeHera(){
+      fbxloader.load("/react/models/hera.fbx", (object) => {
+        object.position.set(2, 8, 0);
+        object.rotation.y = -0.8;
+        object.scale.set(0.01, 0.01, 0.01);
+        object.name = "hera";
+        object.castShadow = true;
+        hera.push(object); // Store the model in the array
+        scene.add(object);
+      });
+    }
+
 
     function loadFBXModelAsStage(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
       fbxloader.load(_filename, (object) => {
@@ -182,8 +196,13 @@ function App() {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
-      if(intersects[0].object.parent?.name == "food"){
-        dragObject.dragTarget = intersects[0].object.parent;
+      if(intersects[0] !== null){
+        for (let i = 0; i < intersects.length; i++) {
+          if(intersects[i].object.parent?.name == "food"){
+            dragObject.dragTarget = intersects[i].object.parent;
+            break;
+          }
+        }
       }
     }
     
@@ -200,7 +219,8 @@ function App() {
 
       if(intersects[0] !== null){
         for (let i = 0; i < intersects.length; i++) {
-          if(intersects[i].object.parent !== dragObject.dragTarget){
+          if(intersects[i].object.parent !== dragObject.dragTarget && intersects[i].object.parent?.name !== "hera"){
+            hera[0].position.set(intersects[i].point.x + 0.8,intersects[i].point.y + 0.3,intersects[i].point.z - 0.5);
             dragObject.x = intersects[i].point.x;
             dragObject.y = intersects[i].point.y+1;
             dragObject.z = intersects[i].point.z;
@@ -208,6 +228,7 @@ function App() {
               dragObject.dragTarget.position.x = dragObject.x;
               dragObject.dragTarget.position.y = dragObject.y;
               dragObject.dragTarget.position.z = dragObject.z;
+              hera[0].position.y = dragObject.y;
             }
             break;
           }
@@ -227,6 +248,7 @@ function App() {
     tick();
     initializeStage();
     initializeCamera();
+    initializeHera();
 
     function tick() {
       requestAnimationFrame(tick);
