@@ -2,7 +2,7 @@
   <div class="image-container">
     <img src="/result-car.jpg" alt="Car" />
     <div class="text-overlay">
-      <span class="large-number">80000</span> yummy
+      <span class="large-number">{{ score }}</span> yummy
     </div>
 
     <!-- SNSシェアボタン -->
@@ -38,6 +38,11 @@
 <script>
 export default {
   name: "ImageWithText",
+  data() {
+    return {
+      score: 0
+    };
+  },
   mounted() {
     // Google Fonts をダイナミックに読み込む
     const link = document.createElement("link");
@@ -52,6 +57,14 @@ export default {
       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css";
     fontAwesome.rel = "stylesheet";
     document.head.appendChild(fontAwesome);
+
+    // localStorageからスコアを取得
+    const storedScore = localStorage.getItem("score");
+    if (storedScore) {
+      this.score = parseInt(storedScore, 10);
+    }else{
+      this.score = 0;
+    }
   },
 };
 </script>
