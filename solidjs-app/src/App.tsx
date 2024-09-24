@@ -7,6 +7,12 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 const App: Component = () => {
   let canvasRef: any;
 
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "g" || e.key === "G") {
+      window.location.href = "/svelte/selecting-cars";
+    }
+  });
+
   onMount(() => {
     if (!canvasRef) return;
     // camera size settings
