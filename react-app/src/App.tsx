@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -6,6 +6,22 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
 
 function App() {
+  const [carID, setCarID] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  // TODO: Loading画面の追加
+  console.log(`carID: ${carID}, loading: ${loading}`);
+
+  useEffect(() => {
+    const selectedCarID = localStorage.getItem("selectedCarID");
+    if (selectedCarID) {
+      setCarID(selectedCarID);
+      setLoading(false);
+    } else {
+      setCarID("1");
+      setLoading(false);
+    }
+  }, []);
+
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
 
