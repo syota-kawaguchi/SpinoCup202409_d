@@ -1,18 +1,37 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+import { niku,tamanegi,medamayaki,timeMax } from "./const";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
 
-class Food {
+class manager {
   constructor(
-    public isOnBonnet: boolean,
-    public grilledness: number, 
-    public obj3D: THREE.Object3D
+    public score: number,
+    public sunpower: number
   ) 
   {
+    
+  }
+  addScore(_num:number){
+    this.score += _num;
+  }
+  sunpowerCalc(_time:number){
+    this.sunpower = Math.sin(_time/timeMax*Math.PI);
+  }
+}
+
+class FoodInfo{
+  constructor(
+    public name: string,
+    public isOnBonnet: boolean,
+    public maxGrilledness: number,
+    public grilledness: number,
+  )
+  {
+    
   }
   grill(){
     //if(this.isOnBonnet == true){
@@ -20,17 +39,33 @@ class Food {
     //}
   }
   grillednessCheck() {
-    if (this.grilledness == 200) {
+    if (this.grilledness == this.maxGrilledness) {
       return "koge";
-    }else if(this.grilledness == 100){
+    }else if(this.grilledness == this.maxGrilledness/2){
       return "yake";
     }
   }
 }
 
-
-
 function App() {
+  function getGrillTime(_name: string) {
+    let _grillednessMax = 0;
+          switch (_name) {
+            case "niku":
+              _grillednessMax = niku;
+              break;
+            case "tamanegi":
+              _grillednessMax = tamanegi;
+              break;
+            case "medamayaki":
+              _grillednessMax = medamayaki;
+              break;
+            default:
+              _grillednessMax = 1000;
+              break;
+          }
+    return _grillednessMax;
+  }
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
 
@@ -120,7 +155,8 @@ function App() {
     const fbxloader: FBXLoader = new FBXLoader();
     // let mixer: THREE.AnimationMixer;
     const loadedModels: THREE.Object3D[] = []; // Explicitly define the type
-    const foodModels: Food[] = []; // Explicitly define the type
+    const foodArray: FoodInfo[] = [];
+    const foodModels: THREE.Object3D[] = []; // Explicitly define the type
     const stageModels: THREE.Object3D[] = [];
     const other: THREE.Object3D[] = []; //otherにはヘラ[0]、まな板[1]
 
@@ -142,14 +178,15 @@ function App() {
       });
     }
 
-    function loadFBXModelAsFood(_filename: string, _tag: string, _grillednessMax: number, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+    function loadFBXModelAsFood(_filename: string, _tag: string, _name: string, _grillednessMax: number, _currentGrilledness: number, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
         object.rotation.y = _rotate;
         object.scale.set(_scale, _scale, _scale);
         object.name = _tag;
         object.castShadow = true;
-        foodModels.push(new Food(false, _grillednessMax, object)); // Store the model in the array
+        foodModels.push(object); // Store the model in the array
+        foodArray.push(new FoodInfo(_name,false,_grillednessMax,_currentGrilledness));
         scene.add(object);
       });
     }
@@ -191,20 +228,23 @@ function App() {
       });
     }
 
-    function loadMultipleFBXModels(_filename: string, _tag: string, _count: number, _scale: number) {
+    function loadMultipleFBXModels(_filename: string, _tag: string, _name: string, _count: number, _scale: number) {
       for (let i = 0; i < _count; i++) {
         const posX = Math.random() * 8 - 4; // Random X position between -50 and 50
         const posY = 6;// Math.random() * 100 - 50; // Random Y position between -50 and 50
         const posZ = Math.random() * 6 - 3; // Random Z position between -50 and 50
+        const rotate = Math.random() * 3;
 
-        loadFBXModelAsFood(_filename, _tag, 0, posX, posY, posZ, 0, _scale);
+        loadFBXModelAsFood(_filename, _tag, _name, getGrillTime(_name),0, posX, posY, posZ, rotate, _scale);
       }
     }
 
     function initializeStage(){ // stageを既定の位置に配置
       loadFBXModelAsStage("/react/models/stage01.fbx","stage",0,0,0,0,0.1);
       loadFBXModelAsStage("/react/models/car02.fbx","car",0,5,-10,0,0.05);
-      loadMultipleFBXModels("/react/models/niku.fbx","food",5,0.05);
+      loadMultipleFBXModels("/react/models/niku.fbx","food","niku",5,0.05);
+      loadMultipleFBXModels("/react/models/tamanegi.fbx","food","tamanegi",5,0.05);
+      loadMultipleFBXModels("/react/models/medamayaki.fbx","food","medamayaki",5,0.05);
     }
 
     /* テスト用、オブジェクト配置テスト
@@ -233,18 +273,21 @@ function App() {
     */
     //カメラ関連、上の記述を参考に
 
-    function changeModel(_formerObject: Food, _grilledness: number, _Filename: string){
-      const _posX = _formerObject.obj3D.position.x;
-      const _posY = _formerObject.obj3D.position.y;
-      const _posZ = _formerObject.obj3D.position.z;
+    function changeModel(_formerObject: THREE.Object3D, _grilledness: number, _num: number, _Filename: string){
+      const _posX = _formerObject.position.x;
+      const _posY = _formerObject.position.y;
+      const _posZ = _formerObject.position.z;
       //const _rotateX = _formerObject.obj3D.rotation.x;
-      const _rotateY = _formerObject.obj3D.rotation.y;
+      const _rotateY = _formerObject.rotation.y;
       //const _rotateZ = _formerObject.obj3D.rotation.z;
-      const _scale = _formerObject.obj3D.scale.x;
-      const _name = _formerObject.obj3D.name;
-      loadFBXModelAsFood(_Filename,_name,_grilledness,_posX,_posY,_posZ,_rotateY,_scale);
+      const _scale = _formerObject.scale.x;
+      const _tag = _formerObject.name;
+      const _name = foodArray[_num].name;
+      loadFBXModelAsFood(_Filename,_tag,_name, getGrillTime(_name),_grilledness,_posX,_posY,_posZ,_rotateY,_scale);
       //delete _Filename;
-      _formerObject.obj3D.clear();
+      scene.remove(_formerObject);
+      foodModels.splice(_num,1);
+      foodArray.splice(_num,1);
     }
 
 //========== Mouse Event =================================================================
@@ -309,7 +352,7 @@ function App() {
       event.preventDefault();
       if(dragObject.dragTarget !== null){
         dragObject.dragTarget.position.y += -1;
-        //changeModel(dragObject.dragTarget,"/react/models/niku_yake.fbx");
+        //changeModel(dragObject.dragTarget,0,"/react/models/niku_yake.fbx");
         dragObject.dragTarget = null;
       }
     }
@@ -332,21 +375,33 @@ function App() {
       //       model.position.y += 0.1;
       //     }
       // });      
-      for(let i = 0; i < foodModels.length; i++){
-        foodModels[i].grill();
-        if(foodModels[i].grillednessCheck() == "yake"){
-          changeModel(foodModels[i],foodModels[i].grilledness,"/react/models/niku_yake.fbx");
-        }else if(foodModels[i].grillednessCheck() == "koge"){
-          changeModel(foodModels[i],foodModels[i].grilledness,"/react/models/niku_koge.fbx");
-        }
+      // for(let i = 0; i < foodModels.length; i++){
+      //   foodModels[i].grill();
+      //   if(foodModels[i].grillednessCheck() == "yake"){
+      //     changeModel(foodModels[i],foodModels[i].grilledness,"/react/models/niku_yake.fbx");
+      //   }else if(foodModels[i].grillednessCheck() == "koge"){
+      //     changeModel(foodModels[i],foodModels[i].grilledness,"/react/models/niku_koge.fbx");
+      //   }
 
+      for(let i = 0; i<foodArray.length; i++){
+        foodArray[i].grill();
+        if(foodArray[i].grillednessCheck() == "koge"){
+              changeModel(foodModels[i],foodArray[i].grilledness,i,"/react/models/" + foodArray[i].name + "_koge.fbx");
+            }else if(foodArray[i].grillednessCheck() == "yake"){
+              changeModel(foodModels[i],foodArray[i].grilledness,i,"/react/models/" + foodArray[i].name + "_yake.fbx");
+        }
       }
+
+      // }
 
       //テスト用、全オブジェクト回転移動
-      for(let i = 0; i < foodModels.length; i++){
-        foodModels[i].obj3D.rotation.y += 0.1;
-        console.log(i);
-      }
+      // for(let i = 0; i < foodModels.length; i++){
+      //   foodModels[i].rotation.y += 0.1;
+      //   console.log(i);
+      // }
+
+      console.log(foodArray.length);
+      console.log(foodModels.length);
 
       const outputElement = document.getElementById("output");
       if (outputElement) {
@@ -388,6 +443,8 @@ function App() {
       <div id="output">
 
       </div>
+
+      <button onClick={()=>{debugger;}}>stop</button>
       
     </main>
   );
