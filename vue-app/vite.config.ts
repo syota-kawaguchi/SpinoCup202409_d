@@ -19,5 +19,5 @@ export default defineConfig({
       clientPort: 3002,
     },
   },
-  base: "/vue",
+  base: "/vue/score",
 });
