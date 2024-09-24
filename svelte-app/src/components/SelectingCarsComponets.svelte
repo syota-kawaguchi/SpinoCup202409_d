@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { T, useTask, useLoader } from '@threlte/core'
   import { interactivity, useGltf, ContactShadows, GLTF, Grid, OrbitControls, Environment } from '@threlte/extras'
   import { spring } from 'svelte/motion'

@@ -1,7 +1,9 @@
 <!-- pages/Top.svelte -->
 <script>
-  export let name = "Svelte";
+  import { Canvas } from '@threlte/core'
+  import SelectingCarsComponets from '../components/SelectingCarsComponets.svelte';
 </script>
 
-<h1>SelectingCars Page</h1>
-<p>This is the selecting cars page for {name}!</p>
+<Canvas>
+  <SelectingCarsComponets />
+</Canvas>

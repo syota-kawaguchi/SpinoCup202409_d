@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "install:all": "npm install && npm run install:react && npm run install:vue && npm run install:svelte",
+    "install:all": "npm install && npm run install:react && npm run install:vue && npm run install:svelte && npm install three @threlte/core && npm install three @threlte/extras",
     "install:react": "cd react-app && npm install",
     "install:vue": "cd vue-app && npm install",
     "install:svelte": "cd svelte-app && npm install",
