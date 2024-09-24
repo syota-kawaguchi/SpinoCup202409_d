@@ -66,3 +66,29 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+#info {
+	position: absolute;
+	top: 50px;
+  left: 30px;
+	width: 100%;
+  font-size: 300%;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	text-align: left;
+	z-index: 100;
+	display:block;
+  color: #f9f9f9;
+}
+
+#output {
+	position: absolute;
+	top: 50px;
+  left: 150px;
+	width: 100%;
+  font-size: 300%;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	text-align: left;
+	z-index: 100;
+	display:block;
+  color: #f9f9f9;
+}
