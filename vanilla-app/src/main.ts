@@ -7,7 +7,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class="card">
       <button id="counter" type="button"></button>
     </div>
-    <a href="/solidjs/title" >
+    <a href="/solidjs/title/" >
       Go to SolidJS App
     </a>
     <p class="read-the-docs">
