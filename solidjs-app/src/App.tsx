@@ -113,6 +113,7 @@ const App: Component = () => {
           alt="BONNET GRILLS BBQのタイトルロゴ"
         />
         <canvas class={styles.canvas} ref={canvasRef} />
+        <p class={styles.p}>Press G to start</p>
       </main>
     </div>
   );

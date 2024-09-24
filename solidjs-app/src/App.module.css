@@ -26,3 +26,11 @@
   /* 右にずらして拡大 */
   transform: translateX(30%) translateY(-10%) scale(1.5);
 }
+
+.p{
+  color: white;
+  font-size: 3rem;
+  position: fixed;
+  bottom: 10%;
+  left: 10%;
+}
