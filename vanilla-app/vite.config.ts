@@ -23,5 +23,5 @@ export default defineConfig({
   build: {
     target: "esnext",
   },
-  base: "/vanilla",
+  base: "/vanilla/home",
 });

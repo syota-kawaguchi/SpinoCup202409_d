@@ -16,13 +16,13 @@ function App() {
     x: number;
     y: number;
     z: number;
-} = {
+  } = {
     mode: 0,
     dragTarget: null,
     x: 0,
     y: 0,
-    z: 0
-};
+    z: 0,
+  };
 
   useEffect(() => {
     if (!ref.current) return;
@@ -34,16 +34,16 @@ function App() {
     };
 
     // mouse
-        // レイキャスターの初期化(追記部分)
-        raycaster = new THREE.Raycaster();
+    // レイキャスターの初期化(追記部分)
+    raycaster = new THREE.Raycaster();
 
-        //マウスベクトルの初期化(追記部分)
-        mouse = new THREE.Vector2();
-    
-        // イベントリスナーの追加(追記部分)
-        document.addEventListener('mousedown', onMouseDown, false);
-        document.addEventListener('mouseup', onMouseUp, false);
-        document.addEventListener('mousemove', onMouseMove, false);
+    //マウスベクトルの初期化(追記部分)
+    mouse = new THREE.Vector2();
+
+    // イベントリスナーの追加(追記部分)
+    document.addEventListener("mousedown", onMouseDown, false);
+    document.addEventListener("mouseup", onMouseUp, false);
+    document.addEventListener("mousemove", onMouseMove, false);
 
     // scene
     const scene: THREE.Scene = new THREE.Scene();
@@ -60,7 +60,7 @@ function App() {
       1000
     );
     camera.position.set(0, 20, 100); // カメラ位置を調整
-    
+
     // renderer
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
       canvas: ref.current,
@@ -99,12 +99,20 @@ function App() {
     const stageModels: THREE.Object3D[] = [];
 
     //camera move
-    function initializeCamera(){
-      camera.position.set(0,13,3);
-      camera.lookAt(0,4,0);
+    function initializeCamera() {
+      camera.position.set(0, 13, 3);
+      camera.lookAt(0, 4, 0);
     }
 
-    function loadFBXModel(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+    function loadFBXModel(
+      _filename: string,
+      _tag: string,
+      _posX: number,
+      _posY: number,
+      _posZ: number,
+      _rotate: number,
+      _scale: number
+    ) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
         object.rotation.y = _rotate;
@@ -116,7 +124,15 @@ function App() {
       });
     }
 
-    function loadFBXModelAsStage(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+    function loadFBXModelAsStage(
+      _filename: string,
+      _tag: string,
+      _posX: number,
+      _posY: number,
+      _posZ: number,
+      _rotate: number,
+      _scale: number
+    ) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
         object.rotation.y = _rotate;
@@ -128,20 +144,34 @@ function App() {
       });
     }
 
-    function loadMultipleFBXModels(_filename: string, _tag: string, _count: number, _scale: number) {
+    function loadMultipleFBXModels(
+      _filename: string,
+      _tag: string,
+      _count: number,
+      _scale: number
+    ) {
       for (let i = 0; i < _count; i++) {
         const posX = Math.random() * 8 - 4; // Random X position between -50 and 50
-        const posY = 6;// Math.random() * 100 - 50; // Random Y position between -50 and 50
+        const posY = 6; // Math.random() * 100 - 50; // Random Y position between -50 and 50
         const posZ = Math.random() * 6 - 3; // Random Z position between -50 and 50
 
         loadFBXModel(_filename, _tag, posX, posY, posZ, 0, _scale);
       }
     }
 
-    function initializeStage(){ // stageを既定の位置に配置
-      loadFBXModelAsStage("/react/models/stage01.fbx","stage",0,0,0,0,0.1);
-      loadFBXModelAsStage("/react/models/car02.fbx","car",0,5,-10,0,0.05);
-      loadMultipleFBXModels("/react/models/niku.fbx","food",5,0.05);
+    function initializeStage() {
+      // stageを既定の位置に配置
+      loadFBXModelAsStage(
+        "/react/models/stage01.fbx",
+        "stage",
+        0,
+        0,
+        0,
+        0,
+        0.1
+      );
+      loadFBXModelAsStage("/react/models/car02.fbx", "car", 0, 5, -10, 0, 0.05);
+      loadMultipleFBXModels("/react/models/niku.fbx", "food", 5, 0.05);
     }
 
     /* テスト用、オブジェクト配置テスト
@@ -171,7 +201,11 @@ function App() {
     //カメラ関連、上の記述を参考に
 
     // イベントリスナーに対応する処理(追記部分)
-    function onMouseDown(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+    function onMouseDown(event: {
+      preventDefault: () => void;
+      clientX: number;
+      clientY: number;
+    }) {
       event.preventDefault();
 
       // 座標を正規化する呪文
@@ -182,12 +216,16 @@ function App() {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
-      if(intersects[0].object.parent?.name == "food"){
+      if (intersects[0].object.parent?.name == "food") {
         dragObject.dragTarget = intersects[0].object.parent;
       }
     }
-    
-    function onMouseMove(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+
+    function onMouseMove(event: {
+      preventDefault: () => void;
+      clientX: number;
+      clientY: number;
+    }) {
       event.preventDefault();
 
       // 座標を正規化する呪文
@@ -198,13 +236,13 @@ function App() {
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
-      if(intersects[0] !== null){
+      if (intersects[0] !== null) {
         for (let i = 0; i < intersects.length; i++) {
-          if(intersects[i].object.parent !== dragObject.dragTarget){
+          if (intersects[i].object.parent !== dragObject.dragTarget) {
             dragObject.x = intersects[i].point.x;
-            dragObject.y = intersects[i].point.y+1;
+            dragObject.y = intersects[i].point.y + 1;
             dragObject.z = intersects[i].point.z;
-            if(dragObject.dragTarget !== null){
+            if (dragObject.dragTarget !== null) {
               dragObject.dragTarget.position.x = dragObject.x;
               dragObject.dragTarget.position.y = dragObject.y;
               dragObject.dragTarget.position.z = dragObject.z;
@@ -215,9 +253,13 @@ function App() {
       }
     }
 
-    function onMouseUp(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+    function onMouseUp(event: {
+      preventDefault: () => void;
+      clientX: number;
+      clientY: number;
+    }) {
       event.preventDefault();
-      if(dragObject.dragTarget !== null){
+      if (dragObject.dragTarget !== null) {
         dragObject.dragTarget.position.y += -1;
         dragObject.dragTarget = null;
       }
@@ -235,7 +277,7 @@ function App() {
       //     if(model.name == "car"){
       //       model.position.y += 0.1;
       //     }
-      // });      
+      // });
 
       /* テスト用、全オブジェクト回転移動
       loadedModels.forEach((model) => {
@@ -245,7 +287,7 @@ function App() {
       */
       const outputElement = document.getElementById("output");
       if (outputElement) {
-          outputElement.innerText = (100 - clock.getElapsedTime()).toString();
+        outputElement.innerText = (100 - clock.getElapsedTime()).toString();
       }
       renderer.render(scene, camera); // レンダリング
     }
@@ -268,22 +310,17 @@ function App() {
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("click", () => {
-      });
+      window.removeEventListener("click", () => {});
     };
-  },);
+  });
 
   return (
-    <main style={{ width: "100%",height:"100%" }}>
-      <canvas ref={ref} style={{ width: "100%",height:"100%" }} />
-      <div id="info">
-        Time:
-      </div>
+    <main style={{ width: "100%", height: "100%" }}>
+      <a href="/vue/score">Go to Result App</a>
+      <canvas ref={ref} style={{ width: "100%", height: "100%" }} />
+      <div id="info">Time:</div>
 
-      <div id="output">
-
-      </div>
-      
+      <div id="output"></div>
     </main>
   );
 }

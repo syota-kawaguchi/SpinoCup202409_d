@@ -1,6 +1,6 @@
-import type { Component } from 'solid-js';
+import type { Component } from "solid-js";
 
-import styles from './App.module.css';
+import styles from "./App.module.css";
 
 const App: Component = () => {
   return (
@@ -9,13 +9,8 @@ const App: Component = () => {
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
-          class={styles.link}
-          href="https://github.com/solidjs/solid"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Solid
+        <a class={styles.link} href="/react/play">
+         Go to Play app
         </a>
       </header>
     </div>

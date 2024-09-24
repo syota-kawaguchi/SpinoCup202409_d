@@ -1,36 +1,42 @@
 <template>
-  <div class="image-container">
-    <img src="/result-car.jpg" alt="Car" />
-    <div class="text-overlay">
-      <span class="large-number">80000</span> yummy
+  <div class="page-container">
+    <div class="image-container">
+      <img src="/result-car.jpg" alt="Car" />
     </div>
-
-    <!-- SNSシェアボタン -->
-    <div class="share-buttons">
-      <a
-        href="https://twitter.com/intent/tweet?text=My%20score%20is%2080000%20yummy!&url=https://example.com"
-        target="_blank"
-        class="share-button twitter"
-        aria-label="Share on Twitter"
-      >
-        <i class="fab fa-twitter"></i>
+    <div class="content-overlay">
+      <div class="text-overlay">
+        <span class="large-number">80000</span> yummy
+      </div>
+      <a href="/vanilla/home" class="btn btn-primary home-button">
+        Go back to Home
       </a>
-      <a
-        href="https://www.facebook.com/sharer/sharer.php?u=https://example.com"
-        target="_blank"
-        class="share-button facebook"
-        aria-label="Share on Facebook"
-      >
-        <i class="fab fa-facebook-f"></i>
-      </a>
-      <a
-        href="https://social-plugins.line.me/lineit/share?url=https://example.com"
-        target="_blank"
-        class="share-button line"
-        aria-label="Share on LINE"
-      >
-        <i class="fab fa-line"></i>
-      </a>
+      <!-- SNSシェアボタン -->
+      <div class="share-buttons">
+        <a
+          href="https://twitter.com/intent/tweet?text=My%20score%20is%2080000%20yummy!&url=https://example.com"
+          target="_blank"
+          class="share-button twitter"
+          aria-label="Share on Twitter"
+        >
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u=https://example.com"
+          target="_blank"
+          class="share-button facebook"
+          aria-label="Share on Facebook"
+        >
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a
+          href="https://social-plugins.line.me/lineit/share?url=https://example.com"
+          target="_blank"
+          class="share-button line"
+          aria-label="Share on LINE"
+        >
+          <i class="fab fa-line"></i>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -57,54 +63,82 @@ export default {
 </script>
 
 <style scoped>
-/* コンテナ設定：画像を固定し、画面全体に表示 */
-.image-container {
+.page-container {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: -1; /* 他の要素の後ろに配置 */
 }
 
-/* 画像設定：画像がコンテナ全体に収まるように表示 */
+.image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
 .image-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 画像の縦横比を保持しつつ、コンテナ全体をカバー */
+  object-fit: cover;
 }
 
-/* テキストオーバーレイ設定 */
+.content-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
 .text-overlay {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(15deg); /* 15度傾ける */
-  color: #fbbde8; /* テキストの色 */
-  font-size: 48px; /* テキストの標準サイズ */
-  font-family: "Pacifico", cursive; /* 可愛いフォント */
+  transform: translate(-50%, -50%) rotate(15deg);
+  color: #fbbde8;
+  font-size: 48px;
+  font-family: "Pacifico", cursive;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   font-weight: bold;
-  z-index: 1; /* 画像の上に表示 */
 }
 
-/* 数字だけを大きくするスタイル */
 .large-number {
-  font-size: 80px; /* 数字を大きく */
-  color: #ff6f61; /* 数字の色を少し変えても良い */
+  font-size: 80px;
+  color: #ff6f61;
 }
 
-/* SNSシェアボタンのスタイル */
+.home-button {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background-color: #4caf50;
+  color: white;
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  pointer-events: auto;
+}
+
+.home-button:hover {
+  background-color: #45a049;
+}
+
 .share-buttons {
   position: absolute;
   bottom: 20px;
   right: 20px;
   display: flex;
   gap: 10px;
+  pointer-events: auto;
 }
 
 .share-button {
