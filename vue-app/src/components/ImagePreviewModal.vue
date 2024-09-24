@@ -1,11 +1,6 @@
 <!-- src/components/ImagePreviewModal.vue -->
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
-
-const props = defineProps<{
-  show: boolean;
-  imageUrl: string;
-}>();
+import { defineEmits } from "vue";
 
 const emit = defineEmits(["close"]);
 
@@ -22,10 +17,10 @@ const shareToTwitter = () => {
 </script>
 
 <template>
-  <div v-if="show" class="modal-overlay" @click="closeModal">
+  <div class="modal-overlay" @click="closeModal">
     <div class="modal-content" @click.stop>
       <h2>画像プレビュー</h2>
-      <img :src="imageUrl" alt="スコア画像" class="preview-image" />
+      <img alt="スコア画像" class="preview-image" />
       <div class="button-container">
         <button @click="shareToTwitter">Twitterで共有</button>
         <button @click="closeModal">閉じる</button>
