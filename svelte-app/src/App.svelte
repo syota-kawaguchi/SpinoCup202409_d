@@ -1,15 +1,11 @@
-<script lang="ts">
-  import { Canvas } from '@threlte/core'
-  import { OrbitControls } from '@threlte/extras'
-
-  import Scene from './Scene.svelte'
+<!-- App.svelte -->
+<script>
+  import { Router, Route } from "svelte-routing";
+  import SelectingCars from "./pages/SelectingCars.svelte";
+  import Title from "./pages/Title.svelte";
 </script>
 
-<main>
-  <Canvas>
-    <Scene/>
-  </Canvas>
-</main>
-
-<style>
-</style>
+<Router>
+  <Route path="/svelte/selecting-cars" component={SelectingCars} />
+  <Route path="/svelte/title" component={Title} />
+</Router>
