@@ -13,5 +13,5 @@ export default defineConfig({
       clientPort: 3001,
     },
   },
-  base: "/react",
+  base: "/react/play",
 });
