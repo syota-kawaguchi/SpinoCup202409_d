@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
-import { niku,tamanegi,medamayaki,timeMax } from "./const";
+import { niku,tamanegi,medamayaki,timeMax,car02Size } from "./const";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
@@ -20,6 +20,7 @@ class manager {
   }
   sunpowerCalc(_time:number){
     this.sunpower = Math.sin(_time/timeMax*Math.PI);
+    if(this.sunpower<0) this.sunpower = 0;
   }
 }
 
@@ -27,27 +28,31 @@ class FoodInfo{
   constructor(
     public name: string,
     public isOnBonnet: boolean,
+    public status: string,
     public maxGrilledness: number,
     public grilledness: number,
   )
   {
     
   }
-  grill(){
-    //if(this.isOnBonnet == true){
-      this.grilledness++;
-    //}
+  grill(_power: number){
+    if(this.isOnBonnet == true){
+      this.grilledness += _power;
+    }
   }
   grillednessCheck() {
-    if (this.grilledness == this.maxGrilledness) {
+    if (this.grilledness >= this.maxGrilledness && this.status == "yake") {
+      // this.status = "koge";
       return "koge";
-    }else if(this.grilledness == this.maxGrilledness/2){
+    }else if(this.grilledness >= this.maxGrilledness/2 && this.status == "nama"){
+      // this.status = "yake";
       return "yake";
     }
   }
 }
 
 function App() {
+  const managerObj = new manager(0,0);
   function getGrillTime(_name: string) {
     let _grillednessMax = 0;
           switch (_name) {
@@ -178,7 +183,7 @@ function App() {
       });
     }
 
-    function loadFBXModelAsFood(_filename: string, _tag: string, _name: string, _grillednessMax: number, _currentGrilledness: number, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+    function loadFBXModelAsFood(_filename: string, _tag: string, _name: string, _isOnBonnet: boolean, _status: string, _grillednessMax: number, _currentGrilledness: number, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
         object.rotation.y = _rotate;
@@ -186,7 +191,7 @@ function App() {
         object.name = _tag;
         object.castShadow = true;
         foodModels.push(object); // Store the model in the array
-        foodArray.push(new FoodInfo(_name,false,_grillednessMax,_currentGrilledness));
+        foodArray.push(new FoodInfo(_name,_isOnBonnet,_status,_grillednessMax,_currentGrilledness));
         scene.add(object);
       });
     }
@@ -206,8 +211,8 @@ function App() {
 
     function initializeManaita(){
       fbxloader.load("/react/models/manaita.fbx", (object) => {
-        object.position.set(10, 5, -2);
-        object.scale.set(0.02, 0.02, 0.02);
+        object.position.set(8, 7, -2);
+        object.scale.set(0.015, 0.015, 0.015);
         object.name = "manaita";
         object.castShadow = true;
         //other.push(object); // Store the model in the array
@@ -230,12 +235,12 @@ function App() {
 
     function loadMultipleFBXModels(_filename: string, _tag: string, _name: string, _count: number, _scale: number) {
       for (let i = 0; i < _count; i++) {
-        const posX = Math.random() * 8 - 4; // Random X position between -50 and 50
-        const posY = 6;// Math.random() * 100 - 50; // Random Y position between -50 and 50
-        const posZ = Math.random() * 6 - 3; // Random Z position between -50 and 50
+        const posX = Math.random() * 3 + 6; // Random X position between -50 and 50
+        const posY = 7.5;// Math.random() * 100 - 50; // Random Y position between -50 and 50
+        const posZ = Math.random() * 4 - 4; // Random Z position between -50 and 50
         const rotate = Math.random() * 3;
 
-        loadFBXModelAsFood(_filename, _tag, _name, getGrillTime(_name),0, posX, posY, posZ, rotate, _scale);
+        loadFBXModelAsFood(_filename, _tag, _name, false, "nama", getGrillTime(_name),0, posX, posY, posZ, rotate, _scale);
       }
     }
 
@@ -283,8 +288,14 @@ function App() {
       const _scale = _formerObject.scale.x;
       const _tag = _formerObject.name;
       const _name = foodArray[_num].name;
-      loadFBXModelAsFood(_Filename,_tag,_name, getGrillTime(_name),_grilledness,_posX,_posY,_posZ,_rotateY,_scale);
+      loadFBXModelAsFood(_Filename,_tag,_name, foodArray[_num].isOnBonnet, foodArray[_num].status, getGrillTime(_name),_grilledness,_posX,_posY,_posZ,_rotateY,_scale);
       //delete _Filename;
+      scene.remove(_formerObject);
+      foodModels.splice(_num,1);
+      foodArray.splice(_num,1);
+    }
+
+    function deleteModel(_formerObject: THREE.Object3D, _num: number){
       scene.remove(_formerObject);
       foodModels.splice(_num,1);
       foodArray.splice(_num,1);
@@ -348,10 +359,31 @@ function App() {
       }
     }
 
+    function checkFoodsOnBonnet(){
+      // console.log(foodArray.length);
+      for(let i = 0; i<foodArray.length; i++){
+        if(foodModels[i].position.x*foodModels[i].position.x < car02Size 
+          && foodModels[i].position.z*foodModels[i].position.z < car02Size){
+            foodArray[i].isOnBonnet = true;
+          }else{
+            foodArray[i].isOnBonnet = false;
+          }
+      }
+    }
+
+    function checkFoodsDelete(){
+      for(let i = 0; i<foodArray.length; i++){
+        if(foodModels[i].position.y < 0.5){
+          deleteModel(foodModels[i],i);
+        }
+      }
+    }
+
     function onMouseUp(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
       event.preventDefault();
       if(dragObject.dragTarget !== null){
-        dragObject.dragTarget.position.y += -1;
+        dragObject.dragTarget.position.y += -0.94;
+        //checkFoodsOnBonnet();
         //changeModel(dragObject.dragTarget,0,"/react/models/niku_yake.fbx");
         dragObject.dragTarget = null;
       }
@@ -369,6 +401,8 @@ function App() {
 
     function tick() {
       requestAnimationFrame(tick);
+      checkFoodsOnBonnet();
+      checkFoodsDelete();
 
       // stageModels.forEach((model) => {
       //     if(model.name == "car"){
@@ -384,10 +418,12 @@ function App() {
       //   }
 
       for(let i = 0; i<foodArray.length; i++){
-        foodArray[i].grill();
+        foodArray[i].grill(managerObj.sunpower);
         if(foodArray[i].grillednessCheck() == "koge"){
+              foodArray[i].status = "koge";
               changeModel(foodModels[i],foodArray[i].grilledness,i,"/react/models/" + foodArray[i].name + "_koge.fbx");
             }else if(foodArray[i].grillednessCheck() == "yake"){
+              foodArray[i].status = "yake";
               changeModel(foodModels[i],foodArray[i].grilledness,i,"/react/models/" + foodArray[i].name + "_yake.fbx");
         }
       }
@@ -400,12 +436,15 @@ function App() {
       //   console.log(i);
       // }
 
-      console.log(foodArray.length);
-      console.log(foodModels.length);
+      //console.log(foodArray.length);
+      //console.log(foodModels.length);
+
+      managerObj.sunpowerCalc(clock.getElapsedTime());
+      ambientLight.color.set(managerObj.sunpower*8,managerObj.sunpower*7,1+managerObj.sunpower*7);
 
       const outputElement = document.getElementById("output");
       if (outputElement) {
-          outputElement.innerText = (100 - clock.getElapsedTime()).toString();
+          outputElement.innerText = (timeMax - clock.getElapsedTime()).toString();
       }
       renderer.render(scene, camera); // レンダリング
     }
