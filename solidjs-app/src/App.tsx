@@ -85,15 +85,6 @@ const App: Component = () => {
       controls.target.copy(center);
     });
 
-    // 具材の表示
-    fbxloader.load("title/models/ingredient.fbx", (object) => {
-      object.position.set(0, 0, 0);
-      object.scale.set(1, 1, 1);
-      
-
-      scene.add(object);
-    });
-
     // Animation
     const animate = () => {
       requestAnimationFrame(animate);
