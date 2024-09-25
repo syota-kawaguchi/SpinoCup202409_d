@@ -20,6 +20,7 @@
     "dev:vanilla": "cd vanilla-app && npm run dev"
   },
   "devDependencies": {
+    "@types/three": "^0.168.0",
     "concurrently": "^9.0.1"
   },
   "dependencies": {
