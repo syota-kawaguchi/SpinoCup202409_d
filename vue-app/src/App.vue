@@ -1,16 +1,14 @@
 <template>
   <div class="image-container">
     <TresCanvas style="max-height: 100vh; min-height: 100vh">
-      <TresPerspectiveCamera
-        :position="[cameraDistance, 0, cameraDistance]"
-        :rotation="[0, Math.PI / 4, 0]"
-      />
+      <TresPerspectiveCamera :position="[0, 0, 2]" />
       <TresAmbientLight intensity="2" />
       <!-- 環境光の追加 -->
       <TresDirectionalLight intensity="1" position="[1, 1, 1]" />
       <!-- 方向性光の追加 -->
       <TresObject3D
-        :rotation="[0, Math.PI - ((4 - driftRotation) * Math.PI) / 4, 0]"
+        :position="[driftPosition, 0, -cameraDistance + 2 * driftPosition]"
+        :rotation="[0, driftRotation, 0]"
         ref="gltfModel"
       />
     </TresCanvas>
@@ -65,7 +63,9 @@ export default {
       score: 0,
       displayScore: 0,
       cameraDistance: 150,
-      driftRotation: 1,
+      driftRate: 1,
+      driftRotation: 0,
+      driftPosition: 0,
       selectedCarID: "car01",
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
@@ -96,7 +96,6 @@ export default {
     // localStorageからスコアを取得
     const storedSelectedCarID = localStorage.getItem("selectedCarID");
     // consoleにスコアを表示
-    console.log(storedSelectedCarID);
     if (storedScore) {
       this.selectedCarID = storedSelectedCarID;
     } else {
@@ -127,10 +126,27 @@ export default {
       // 4になるまでカメラの距離を減らす
       if (this.cameraDistance > 4) {
         this.cameraDistance -= 1;
+        console.log(this.driftRate)
         // 後半だけカメラを回転させる
-        if (this.cameraDistance < 34) {
-          this.driftRotation = (this.cameraDistance - 4) / 30;
-          this.$refs.gltfModel.rotation.y = this.driftRotation;
+        if (this.cameraDistance < 54) {
+          switch (true) {
+            case this.score < 300:
+              this.driftRate += 0.2;
+              break;
+            case this.score < 1000:
+              break;
+            default:
+              this.driftRate = (this.cameraDistance - 4) / 50;
+              this.driftPosition = 5 * Math.sin((1 - this.driftRate) * Math.PI);
+              if (this.driftRotation > -0.7) {
+                this.driftRotation = Math.sin(
+                  ((1 - this.driftRate) * 3 * Math.PI) / 2
+                );
+              } else {
+                this.driftRotation = -0.7;
+              }
+              break;
+          }
         }
         // スコアをカウントアップする
         if (this.displayScore < this.score) {
