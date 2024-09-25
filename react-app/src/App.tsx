@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
-import { niku,tamanegi,medamayaki,timeMax,car02Size } from "./const";
+import { niku,tamanegi,medamayaki,timeMax,carSizes } from "./const";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
@@ -63,10 +63,31 @@ function App() {
       setCarID(selectedCarID);
       setLoading(false);
     } else {
-      setCarID("1");
+      setCarID("car03");
       setLoading(false);
     }
   }, []);
+
+  let carSizeX: number;
+  let carSizeY: number;
+
+  switch (carID) {
+    case "car01":
+    carSizeX = carSizes[0][0];
+    carSizeY = carSizes[0][1];
+      break;
+    case "car02":
+    carSizeX = carSizes[1][0];  
+    carSizeY = carSizes[1][1];  
+      break;
+    case "car03":
+    carSizeX = carSizes[2][0];  
+    carSizeY = carSizes[2][1];  
+      break;
+  
+    default:
+      break;
+  }
 
   // ゲームが終わった時にスコアをlocalstorageに保存する
   // const _saveScore = (score: number) => {
@@ -235,7 +256,7 @@ function App() {
 
     function initializeManaita(){
       fbxloader.load("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx", (object) => {
-        object.position.set(8, 7, -2);
+        object.position.set(7.5, 7.3, -1);
         object.scale.set(0.015, 0.015, 0.015);
         object.name = "manaita";
         object.castShadow = true;
@@ -257,10 +278,22 @@ function App() {
       });
     }
 
+    // function test_GuideTamanegi(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+    //   fbxloader.load(_filename, (object) => {
+    //     object.position.set(_posX, _posY, _posZ);
+    //     object.rotation.y = _rotate;
+    //     object.scale.set(_scale, _scale*100, _scale);
+    //     object.name = _tag; // 作成したオブジェクトに"stage"タグを適用
+    //     object.receiveShadow = true;
+    //     stageModels.push(object); // Store the model in the array
+    //     scene.add(object);
+    //   });
+    // }
+
     function loadMultipleFBXModels(_filename: string, _tag: string, _name: string, _count: number, _scale: number) {
       for (let i = 0; i < _count; i++) {
         const posX = Math.random() * 3 + 6; // Random X position between -50 and 50
-        const posY = 7.5;// Math.random() * 100 - 50; // Random Y position between -50 and 50
+        const posY = 7.8;// Math.random() * 100 - 50; // Random Y position between -50 and 50
         const posZ = Math.random() * 4 - 4; // Random Z position between -50 and 50
         const rotate = Math.random() * 3;
 
@@ -270,10 +303,16 @@ function App() {
 
     function initializeStage(){ // stageを既定の位置に配置
       loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx","stage",0,0,0,0,0.1);
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/car02.fbx","car",0,5,-10,0,0.05);
+      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/"+carID+".fbx","car",0,5,-10,0,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",5,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",5,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",5,0.05);
+      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-11,8,2,-1.57,0.03);
+      
+      //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
+      //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,-Math.sqrt(carSizeY),0,0.03);
+      //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",-Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
+      //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",-Math.sqrt(carSizeX),7,-Math.sqrt(carSizeY),0,0.03);
     }
 
     /* テスト用、オブジェクト配置テスト
@@ -386,18 +425,30 @@ function App() {
     function checkFoodsOnBonnet(){
       // console.log(foodArray.length);
       for(let i = 0; i<foodArray.length; i++){
-        if(foodModels[i].position.x*foodModels[i].position.x < car02Size 
-          && foodModels[i].position.z*foodModels[i].position.z < car02Size){
+        if(  foodModels[i] != dragObject.dragTarget
+          && foodModels[i].position.x*foodModels[i].position.x < carSizeX
+          && foodModels[i].position.z*foodModels[i].position.z < carSizeY
+          && foodModels[i].position.y > 3
+          && foodModels[i].position.y < 7.8){
             foodArray[i].isOnBonnet = true;
           }else{
             foodArray[i].isOnBonnet = false;
+            if(foodModels[i].position.x < -5 && foodModels[i].position.y > 8){
+              if(foodArray[i].status != "yake"){
+                deleteModel(foodModels[i],i);
+              }else{
+                managerObj.addScore(1);
+                deleteModel(foodModels[i],i);
+                console.log(managerObj.score);
+              }
+            }
           }
       }
     }
 
     function checkFoodsDelete(){
       for(let i = 0; i<foodArray.length; i++){
-        if(foodModels[i].position.y < 0.5){
+        if(foodModels[i].position.y < 5 && foodModels[i] != dragObject.dragTarget){
           deleteModel(foodModels[i],i);
         }
       }

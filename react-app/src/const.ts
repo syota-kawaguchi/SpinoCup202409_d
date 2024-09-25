@@ -1,5 +1,5 @@
-export const niku: number = 1500;
-export const tamanegi: number = 1000;
-export const medamayaki: number = 500;
+export const niku: number = 150;
+export const tamanegi: number = 100;
+export const medamayaki: number = 50;
 export const timeMax: number = 100;
-export const car02Size = 18;
+export const carSizes: number[][] = [[26,9],[38,14],[60,36]];
