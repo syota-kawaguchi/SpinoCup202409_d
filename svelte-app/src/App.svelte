@@ -6,9 +6,9 @@
   import CarParameter from "./components/CarParameter.svelte";
 
   const _cars = [
-    { id: 1, name: "Car 1", hot : 2, size : 2 },
-    { id: 2, name: "Car 2", hot : 4, size : 2 },
-    { id: 3, name: "Car 3", hot : 5, size : 5 },
+    { id: 1, name: "チェーズカー", hot : 2, size : 2 },
+    { id: 2, name: "ホットカー", hot : 4, size : 2 },
+    { id: 3, name: "モンスターカー", hot : 5, size : 5 },
   ];
 
   const _handleSelectCar = (_id: number) => {
