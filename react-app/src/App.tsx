@@ -151,13 +151,11 @@ function App() {
     useRef<HTMLCanvasElement>(null);
 
   const dragObject: {
-    mode: number;
     dragTarget: THREE.Object3D | null;
     x: number;
     y: number;
     z: number;
   } = {
-    mode: 0,
     dragTarget: null,
     x: 0,
     y: 0,
