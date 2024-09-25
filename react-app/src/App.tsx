@@ -69,9 +69,9 @@ function App() {
   }, []);
 
   // ゲームが終わった時にスコアをlocalstorageに保存する
-  const _saveScore = (score: number) => {
-    localStorage.setItem("score", String(score));
-  };
+  // const _saveScore = (score: number) => {
+  //   localStorage.setItem("score", String(score));
+  // };
   // TODO: ゲームの終了処理を追加
   
   const managerObj = new manager(0,0);
