@@ -15,11 +15,16 @@ class manager {
     public spawnRate: number = 0.001,
     public score: number = 0,
     public sunpower: number = 0,
-    public initialAnimeTime: number = 1
+    public initialAnimeTime: number = 1,
+    public sunpowerMult: number = 1,
+    public onGame: boolean = true
   ) 
   {
     // this.score = score
     // this.num = 0
+  }
+  gameCheck(_time:number){
+    return _time<timeMax;
   }
   initialAnimeUpdate(){
     if(this.initialAnimeTime<=0){
@@ -73,6 +78,7 @@ class FoodInfo{
 }
 
 function App() {
+  const managerObj = new manager();
   const [carID, setCarID] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   // TODO: Loading画面の追加
@@ -84,7 +90,7 @@ function App() {
       setCarID(selectedCarID);
       setLoading(false);
     } else {
-      setCarID("car01");
+      setCarID("car03");
       setLoading(false);
     }
   }, []);
@@ -98,16 +104,19 @@ function App() {
     carSizeX = carSizes[0][0];
     carSizeY = carSizes[0][1];
     carHeight = carSizes[0][2];
+    managerObj.sunpowerMult = carSizes[0][3];
       break;
     case "car02":
     carSizeX = carSizes[1][0];  
     carSizeY = carSizes[1][1];  
     carHeight = carSizes[1][2];
+    managerObj.sunpowerMult = carSizes[1][3];
     break;
     case "car03":
     carSizeX = carSizes[2][0];  
     carSizeY = carSizes[2][1];  
     carHeight = carSizes[2][2];
+    managerObj.sunpowerMult = carSizes[2][3];
     break;
   
     default:
@@ -120,7 +129,6 @@ function App() {
   // };
   // TODO: ゲームの終了処理を追加
 
-  const managerObj = new manager();
   function getGrillTime(_name: string) {
     let _grillednessMax = 0;
           switch (_name) {
@@ -222,8 +230,8 @@ function App() {
     scene.add(directionalLight);
 
     // grid (本番環境ではコメントアウトすること)
-    // const gridHelper: THREE.GridHelper = new THREE.GridHelper(10, 10);
-    // scene.add(gridHelper);
+    const gridHelper: THREE.GridHelper = new THREE.GridHelper(10, 10);
+    scene.add(gridHelper);
 
     // model loader
     const fbxloader: FBXLoader = new FBXLoader();
@@ -332,7 +340,7 @@ function App() {
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",3,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",3,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",3,0.05);
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-10+(60-carSizeX)*0.05,7,1,-1.57,0.02);
+      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-10.5+(60-carSizeX)*0.05,7,1,-1.57,0.02);
       
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,-Math.sqrt(carSizeY),0,0.03);
@@ -553,7 +561,7 @@ function App() {
       //   }
 
       for(let i = 0; i<foodArray.length; i++){
-        foodArray[i].grill(managerObj.sunpower);
+        foodArray[i].grill(managerObj.sunpower*managerObj.sunpowerMult);
         if(foodArray[i].grillednessCheck() == "koge"){
               foodArray[i].status = "koge";
               changeModel(foodModels[i],foodArray[i].grilledness,i,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" + foodArray[i].name + "_koge.fbx");
@@ -578,12 +586,14 @@ function App() {
       spawnFood(managerObj.spawnGageUpdate());
 
       managerObj.initialAnimeUpdate();
-      //camera.position.set(0+managerObj.initialAnimeTime*40,13-managerObj.initialAnimeTime*5,3+managerObj.initialAnimeTime*35);
-      //camera.lookAt(0,4+managerObj.initialAnimeTime*10,0);
+      camera.position.set(0+managerObj.initialAnimeTime*40,13-managerObj.initialAnimeTime*5,3+managerObj.initialAnimeTime*35);
+      camera.lookAt(0,4+managerObj.initialAnimeTime*10,0);
 
       managerObj.sunpowerCalc(clock.getElapsedTime());
       ambientLight.color.set(managerObj.sunpower*6,managerObj.sunpower*5,1+managerObj.sunpower*5);
       renderer.render(scene, camera); // レンダリング
+
+      managerObj.gameCheck(clock.getElapsedTime()); //これでゲームがおわってるか取得できる return (boolean); false->終わってる
     }
 
     // リサイズ対応
