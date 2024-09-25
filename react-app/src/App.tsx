@@ -79,7 +79,11 @@ class FoodInfo {
     ) {
       // this.status = "yake";
       return "yake";
-    }
+    } else if (
+      this.grilledness >= (3 * this.maxGrilledness) / 2 &&
+      this.status == "koge"
+    )
+      return "marukoge";
   }
 }
 
@@ -236,6 +240,7 @@ function App() {
     // const loadedModels: THREE.Object3D[] = []; // Explicitly define the type
     const foodArray: FoodInfo[] = [];
     const foodModels: THREE.Object3D[] = []; // Explicitly define the type
+    const marukogeUUIDs: string[] = [];
     const stageModels: THREE.Object3D[] = [];
     const other: THREE.Object3D[] = []; //otherにはヘラ[0]、まな板[1]
 
@@ -278,6 +283,11 @@ function App() {
         object.scale.set(_scale, _scale, _scale);
         object.name = _tag;
         object.castShadow = true;
+
+        console.log(_status);
+        if (_status == "marukoge") {
+          marukogeUUIDs.push(object.uuid);
+        }
         foodModels.push(object); // Store the model in the array
         foodArray.push(
           new FoodInfo(
@@ -535,8 +545,17 @@ function App() {
       if (intersects[0] !== null) {
         for (let i = 0; i < intersects.length; i++) {
           if (intersects[i].object.parent?.name == "food") {
-            dragObject.dragTarget = intersects[i].object.parent;
-            break;
+            if (intersects) {
+              const isThisIntersectMarukoge = marukogeUUIDs.filter(
+                (marukogeUUID) =>
+                  marukogeUUID === intersects[i].object.parent?.uuid
+              );
+
+              if (isThisIntersectMarukoge.length == 0) {
+                dragObject.dragTarget = intersects[i].object.parent;
+                break;
+              }
+            }
           }
         }
       }
@@ -738,6 +757,15 @@ function App() {
             "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" +
               foodArray[i].name +
               "_yake.fbx"
+          );
+        } else if (foodArray[i].grillednessCheck() == "marukoge") {
+          foodArray[i].status = "marukoge";
+          changeModel(
+            foodModels[i],
+            foodArray[i].grilledness,
+            i,
+            // TODO: まるこげのモデルを追加する(現在はkogeのモデルを使用)
+            "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku_koge.fbx"
           );
         }
       }
