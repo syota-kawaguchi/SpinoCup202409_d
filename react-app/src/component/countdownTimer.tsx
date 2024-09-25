@@ -7,6 +7,7 @@ import { timeMax } from '../const';
 type ThermoGraphyCircleProps = {
     startTime : number
     text : string
+    onGameFinish: () => void
 }
 
 export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
@@ -16,6 +17,7 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
         const interval = setInterval(() => {
             if (timeMax <= countTime) {
                 console.log(`will running clear interval`)
+                props.onGameFinish()
                 clearInterval(interval)
             }
             else {
@@ -23,7 +25,9 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
                 console.log(`countTime : ${countTime}`)
             }
         }, 1000);
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval)
+        };
     }, [countTime]);
 
     const backgroundColor = colorMapJet(countTime, timeMax)

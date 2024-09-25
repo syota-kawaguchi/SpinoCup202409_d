@@ -54,18 +54,13 @@ class FoodInfo{
 
 function App() {
   const [carID, setCarID] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  // TODO: Loading画面の追加
-  console.log(`carID: ${carID}, loading: ${loading}`);
 
   useEffect(() => {
     const selectedCarID = localStorage.getItem("selectedCarID");
     if (selectedCarID) {
       setCarID(selectedCarID);
-      setLoading(false);
     } else {
       setCarID("car02");
-      setLoading(false);
     }
   }, []);
 
@@ -543,13 +538,17 @@ function App() {
     };
   },);
 
+  const onGameFinish = () => {
+    window.location.href = "/vue/score"
+  }
+
   return (
     <main style={{ width: "100%",height:"100%" }}>
       <canvas ref={ref} style={{ width: "100%",height:"100%" }} />
 
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
-      <ThermoGraphyCircle startTime={0} text=""/>
+      <ThermoGraphyCircle startTime={0} text="" onGameFinish={onGameFinish} />
       
     </main>
   );
