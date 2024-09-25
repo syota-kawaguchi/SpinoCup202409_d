@@ -47,7 +47,7 @@
     <!-- SNSシェアボタン -->
     <div class="share-buttons" ref="shareButtons">
       <a
-        href="https://twitter.com/intent/tweet?text=My%20score%20is%2080000%20yummy!&url=https://example.com"
+        :href="`https://twitter.com/intent/tweet?text=${shareText}`"
         target="_blank"
         class="share-button twitter"
         aria-label="Share on Twitter"
@@ -55,15 +55,7 @@
         <i class="fab fa-twitter"></i>
       </a>
       <a
-        href="https://www.facebook.com/sharer/sharer.php?u=https://example.com"
-        target="_blank"
-        class="share-button facebook"
-        aria-label="Share on Facebook"
-      >
-        <i class="fab fa-facebook-f"></i>
-      </a>
-      <a
-        href="https://social-plugins.line.me/lineit/share?url=https://example.com"
+        :href="`https://social-plugins.line.me/lineit/share?url=https://bonnet-grills-bbq.vercel.app/solidjs/title`"
         target="_blank"
         class="share-button line"
         aria-label="Share on LINE"
@@ -78,6 +70,7 @@
 import { TresCanvas } from "@tresjs/core";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Object3D } from "three";
+import { SHARE_TEXT_TEMPLATE } from "./const";
 
 export default {
   name: "ImageWithText",
@@ -95,6 +88,7 @@ export default {
       showLinks: false, // To control button visibility
       showScore: false, // To control score visibility
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
+      shareText: `I got a score of ${this.score} on the BBQ app!`, // ツイート文言
     };
   },
   mounted() {
@@ -117,6 +111,12 @@ export default {
     // consoleにスコアを表示
     if (storedScore) {
       this.score = parseInt(storedScore, 10);
+      this.shareText = `${SHARE_TEXT_TEMPLATE[
+        Math.floor(Math.random() * SHARE_TEXT_TEMPLATE.length)
+      ].replace(
+        "*",
+        this.score
+      )}%0A%0Ahttps://bonnet-grills-bbq.vercel.app/solidjs/title/`;
     } else {
       this.score = 0;
     }
