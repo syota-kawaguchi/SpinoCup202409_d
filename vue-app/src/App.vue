@@ -22,6 +22,9 @@
 
     <!-- SNSシェアボタン -->
     <div class="share-buttons">
+      <a href="/vanilla" class="btn btn-primary home-button">
+        Go back to Home
+      </a>
       <a
         href="https://twitter.com/intent/tweet?text=My%20score%20is%2080000%20yummy!&url=https://example.com"
         target="_blank"
