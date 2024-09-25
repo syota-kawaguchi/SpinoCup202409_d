@@ -2,14 +2,15 @@
   <div class="image-container">
 
     <TresCanvas style="max-height: 100vh; min-height: 100vh;">
-      <TresPerspectiveCamera :position="[4, 0, 4]" :rotation="[0, Math.PI / 4, 0]" />
+      <TresPerspectiveCamera :position="[cameraDistance, 0, cameraDistance]" :rotation="[0, Math.PI / 4, 0]" />
       <TresAmbientLight intensity="2" /> <!-- 環境光の追加 -->
       <TresDirectionalLight intensity="1" position="[1, 1, 1]" /> <!-- 方向性光の追加 -->
       <TresObject3D :rotation="[0, Math.PI - 3 * Math.PI / 4, 0]"  ref="gltfModel" />
     </TresCanvas>
 
     <div class="text-overlay">
-      <p><span>{{ score }}</span><span>YUMMY</span></p>
+      <span class="count-text">{{ displayScore }}</span>
+      <span v-if="displayScore === score">YUMMY</span>
     </div>
 
     <!-- SNSシェアボタン -->
@@ -53,6 +54,8 @@ export default {
   data() {
     return {
       score: 0,
+      displayScore: 0,
+      cameraDistance: 150,
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
   },
@@ -73,6 +76,8 @@ export default {
 
     // localStorageからスコアを取得
     const storedScore = localStorage.getItem("score");
+    // consoleにスコアを表示
+    console.log(storedScore);
     if (storedScore) {
       this.score = parseInt(storedScore, 10);
     }else{
@@ -81,6 +86,9 @@ export default {
   
     // GLTFモデルを読み込み
     this.loadGLTFModel();
+
+    // カメラの距離を設定
+    this.animateCamera();
   },
 
   methods: {
@@ -93,6 +101,22 @@ export default {
         // TresObject3Dにモデルを追加
         this.$refs.gltfModel.add(model);
       });
+    },
+    animateCamera() {
+      // 4になるまでカメラの距離を減らす
+      if (this.cameraDistance > 4) {
+        this.cameraDistance -= 1;
+        // スコアをカウントアップする
+        if (this.displayScore < this.score) {
+          console.log("count up score");
+          console.log(this.displayScore);
+          this.displayScore += 1; // 100ずつ増やす
+        }
+        requestAnimationFrame(this.animateCamera);
+      } else {
+        console.log("Animation finished");
+        this.displayScore = this.score;
+      }
     },
   },
 };
@@ -114,11 +138,18 @@ export default {
   height: 100%;
 }
 
+.count-text {
+  display: inline-block; /* 幅を指定するには block または inline-block が必要 */
+  text-align: center;
+  min-width: 25rem;
+}
+
 /* テキストオーバーレイ設定 */
 .text-overlay {
   span{
-    padding: 1rem;
+    display: inline-block;
   }
+  display: flex;
   position: absolute;
   top: 50%;
   left: 50%;
