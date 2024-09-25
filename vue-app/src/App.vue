@@ -1,7 +1,7 @@
 <template>
   <div class="image-container">
     <TresCanvas style="max-height: 100vh; min-height: 100vh">
-      <TresPerspectiveCamera :position="[0, 0, 2]" />
+      <TresPerspectiveCamera :position="[0, 0, 4]" :fov="40" />
       <TresAmbientLight intensity="2" />
       <!-- 環境光の追加 -->
       <TresDirectionalLight intensity="1" position="[1, 1, 1]" />
@@ -9,7 +9,17 @@
       <TresObject3D
         :position="[driftPositionX, 0, driftPositionZ]"
         :rotation="[0, driftRotation, 0]"
-        ref="gltfModel"
+        ref="gltfModelCenter"
+      />
+      <TresObject3D
+        :position="[driftPositionX - 6, 0, driftPositionZSub]"
+        :rotation="[0, driftRotation, 0]"
+        ref="gltfModelLeft"
+      />
+      <TresObject3D
+        :position="[driftPositionX + 6, 0, driftPositionZSub]"
+        :rotation="[0, driftRotation, 0]"
+        ref="gltfModelRight"
       />
     </TresCanvas>
 
@@ -67,6 +77,7 @@ export default {
       driftRotation: 0,
       driftPositionX: 0,
       driftPositionZ: 0,
+      driftPositionZSub: 0,
       selectedCarID: "car01",
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
@@ -104,14 +115,21 @@ export default {
     }
 
     // GLTFモデルを読み込み
-    this.loadGLTFModel();
+    this.loadGLTFModel("gltfModelCenter");
+
+    if (this.score > 1000) {
+      this.loadGLTFModel("gltfModelLeft");
+      this.loadGLTFModel("gltfModelRight");
+    }
 
     // カメラの距離を設定
     this.animateCamera();
   },
 
   methods: {
-    loadGLTFModel() {
+    loadGLTFModel(
+      modelName = "gltfModelCenter" // モデル名のデフォルト値を設定
+    ) {
       // selectedCarIDに基づいてモデルのパスを決定する
       const modelPath = `https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/${this.selectedCarID}.gltf`;
 
@@ -120,15 +138,18 @@ export default {
         const model = gltf.scene || new Object3D(); // モデルを取得
 
         // TresObject3Dにモデルを追加
-        this.$refs.gltfModel.add(model);
+        this.$refs[modelName].add(model);
       });
     },
     animateCamera() {
       // 4になるまでカメラの距離を減らす
       if (this.time > 4) {
         this.time -= 1;
-        console.log(this.driftRate);
         this.driftPositionZ = -this.time + 2 * this.driftPositionX;
+        this.driftPositionZSub =
+          this.driftPositionZ > -15
+            ? -15
+            : -this.time + 2 * this.driftPositionX;
         // 後半だけカメラを回転させる
         if (this.time < 54) {
           switch (true) {
