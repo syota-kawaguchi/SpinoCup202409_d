@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { niku,tamanegi,medamayaki,timeMax,car02Size } from "./const";
@@ -52,25 +52,6 @@ class FoodInfo{
 }
 
 function App() {
-  const managerObj = new manager(0,0);
-  function getGrillTime(_name: string) {
-    let _grillednessMax = 0;
-          switch (_name) {
-            case "niku":
-              _grillednessMax = niku;
-              break;
-            case "tamanegi":
-              _grillednessMax = tamanegi;
-              break;
-            case "medamayaki":
-              _grillednessMax = medamayaki;
-              break;
-            default:
-              _grillednessMax = 1000;
-              break;
-          }
-    return _grillednessMax;
-  }
   const [carID, setCarID] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   // TODO: Loading画面の追加
@@ -92,6 +73,26 @@ function App() {
     localStorage.setItem("score", String(score));
   };
   // TODO: ゲームの終了処理を追加
+  
+  const managerObj = new manager(0,0);
+  function getGrillTime(_name: string) {
+    let _grillednessMax = 0;
+          switch (_name) {
+            case "niku":
+              _grillednessMax = niku;
+              break;
+            case "tamanegi":
+              _grillednessMax = tamanegi;
+              break;
+            case "medamayaki":
+              _grillednessMax = medamayaki;
+              break;
+            default:
+              _grillednessMax = 1000;
+              break;
+          }
+    return _grillednessMax;
+  }
 
   const ref: React.RefObject<HTMLCanvasElement> =
     useRef<HTMLCanvasElement>(null);
