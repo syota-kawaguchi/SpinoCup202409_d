@@ -23,7 +23,7 @@
       />
     </TresCanvas>
 
-    <div class="text-overlay">
+    <div class="text-overlay" ref="textOverlay">
       <span class="count-text">{{ displayScore }}</span>
       <span v-if="displayScore === score">YUMMY</span>
     </div>
@@ -170,11 +170,19 @@ export default {
         }
         // スコアをカウントアップする
         if (this.displayScore < this.score) {
-          this.displayScore += 1; // 1ずつ増やす
+          this.displayScore += 1;
+          this.$refs.textOverlay.style.color = `rgba(${
+            100 + Math.min(this.displayScore, 233)
+          }, 44, 44, 1)`;
         }
         requestAnimationFrame(this.animateCamera);
       } else {
         this.displayScore = this.score;
+
+        // スコアが500未満の場合は赤色、500以上の場合は緑色、1000以上の場合は青色
+        this.$refs.textOverlay.style.color = `rgba(${
+          this.score < 500 ? "0" : this.score < 1000 ? "100" : "233"
+        }, 44, 44, 1)`;
       }
     },
   },
