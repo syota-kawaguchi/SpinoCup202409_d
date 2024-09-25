@@ -106,7 +106,6 @@ export default {
 .image-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 画像の縦横比を保持しつつ、コンテナ全体をカバー */
 }
 
 /* テキストオーバーレイ設定 */
