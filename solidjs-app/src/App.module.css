@@ -15,26 +15,69 @@
 
 .title {
   z-index: 1;
-  min-height: 80vh;
   position: fixed;
   top: 0;
   left: 0;
-  overflow: hidden;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  box-sizing: border-box;
 }
 
 .canvas {
   min-height: 100vh;
   min-width: 100vw;
   position: fixed;
-  /* 右にずらして拡大 */
   transform: translateX(30%) translateY(-10%) scale(1.5);
   overflow: hidden;
 }
 
-.p{
+.p {
   color: white;
   font-size: 3rem;
   position: fixed;
   bottom: 10%;
   left: 10%;
+}
+
+.startButton {
+  position: fixed;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 30px;
+  font-size: 1.5rem;
+  background-color: #5ab3bf;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.startButton:hover {
+  background-color: #4a9ba6;
+}
+
+@media (max-width: 768px) {
+  .title {
+    max-height: 60vh;
+  }
+
+  .startButton {
+    font-size: 1.8rem;
+    padding: 18px 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    max-height: 50vh;
+  }
+
+  .startButton {
+    font-size: 1.5rem;
+    padding: 15px 30px;
+  }
 }

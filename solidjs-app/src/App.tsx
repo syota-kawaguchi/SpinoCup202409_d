@@ -1,19 +1,26 @@
-import { onMount, type Component } from "solid-js";
+import { onMount, createSignal, type Component } from "solid-js";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import styles from "./App.module.css";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 const App: Component = () => {
-  let canvasRef: any;
+  let canvasRef: HTMLCanvasElement | undefined;
+  const [isMobile, setIsMobile] = createSignal(false);
 
-  window.addEventListener("keydown", (e) => {
+  const handleStart = () => {
+    window.location.href = "/svelte/selecting-cars";
+  };
+
+  const handleKeydown = (e: KeyboardEvent) => {
     if (e.key === "g" || e.key === "G") {
-      window.location.href = "/svelte/selecting-cars";
+      handleStart();
     }
-  });
+  };
 
   onMount(() => {
+    setIsMobile(window.innerWidth <= 768);
+
     if (!canvasRef) return;
     // camera size settings
     const cameraViewSize = {
@@ -29,12 +36,12 @@ const App: Component = () => {
 
     // camera
     const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(
-      50, // FOVを75から50に減少
+      50,
       cameraViewSize.width / cameraViewSize.height,
       0.1,
       1000
     );
-    camera.position.set(0, 2, 10); // カメラ位置を調整
+    camera.position.set(0, 2, 20);
 
     // renderer
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
@@ -43,7 +50,8 @@ const App: Component = () => {
       alpha: true,
     });
     renderer.setSize(cameraViewSize.width, cameraViewSize.height);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
     // OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
@@ -98,18 +106,28 @@ const App: Component = () => {
     };
 
     animate();
+
     // リサイズ対応
     const handleResize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
+      setIsMobile(width <= 768);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
     };
+
     window.addEventListener("resize", handleResize);
+    if (!isMobile()) {
+      window.addEventListener("keydown", handleKeydown);
+    }
+
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
+      if (!isMobile()) {
+        window.removeEventListener("keydown", handleKeydown);
+      }
     };
   });
 
@@ -122,7 +140,13 @@ const App: Component = () => {
           alt="BONNET GRILLS BBQのタイトルロゴ"
         />
         <canvas class={styles.canvas} ref={canvasRef} />
-        <p class={styles.p}>Press G to start</p>
+        {isMobile() ? (
+          <button class={styles.startButton} onClick={handleStart}>
+            Start
+          </button>
+        ) : (
+          <p class={styles.p}>Press G to start</p>
+        )}
       </main>
     </div>
   );
