@@ -24,5 +24,8 @@ export default defineConfig({
       clientPort: 3002,
     },
   },
+  build:{
+    outDir: 'dist/vue/score'
+  },
   base: "/vue/score",
 });
