@@ -1,12 +1,30 @@
 <template>
   <div class="image-container">
-    <img src="https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result-car.jpg" alt="Car" />
+    <TresCanvas style="max-height: 100vh; min-height: 100vh">
+      <TresPerspectiveCamera
+        :position="[cameraDistance, 0, cameraDistance]"
+        :rotation="[0, Math.PI / 4, 0]"
+      />
+      <TresAmbientLight intensity="2" />
+      <!-- 環境光の追加 -->
+      <TresDirectionalLight intensity="1" position="[1, 1, 1]" />
+      <!-- 方向性光の追加 -->
+      <TresObject3D
+        :rotation="[0, Math.PI - ((4 - driftRotation) * Math.PI) / 4, 0]"
+        ref="gltfModel"
+      />
+    </TresCanvas>
+
     <div class="text-overlay">
-      <span class="large-number">{{ score }}</span> yummy
+      <span class="count-text">{{ displayScore }}</span>
+      <span v-if="displayScore === score">YUMMY</span>
     </div>
 
     <!-- SNSシェアボタン -->
     <div class="share-buttons">
+      <a href="/vanilla" class="btn btn-primary home-button">
+        Go back to Home
+      </a>
       <a
         href="https://twitter.com/intent/tweet?text=My%20score%20is%2080000%20yummy!&url=https://example.com"
         target="_blank"
@@ -36,18 +54,27 @@
 </template>
 
 <script>
+import { TresCanvas } from "@tresjs/core";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Object3D } from "three";
+
 export default {
   name: "ImageWithText",
   data() {
     return {
-      score: 0
+      score: 0,
+      displayScore: 0,
+      cameraDistance: 150,
+      driftRotation: 1,
+      selectedCarID: "car01",
+      gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
   },
   mounted() {
     // Google Fonts をダイナミックに読み込む
     const link = document.createElement("link");
     link.href =
-      "https://fonts.googleapis.com/css2?family=Pacifico&display=swap";
+      "https://fonts.googleapis.com/css2?family=Lilita+One&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
 
@@ -60,59 +87,109 @@ export default {
 
     // localStorageからスコアを取得
     const storedScore = localStorage.getItem("score");
+    // consoleにスコアを表示
     if (storedScore) {
       this.score = parseInt(storedScore, 10);
-    }else{
+    } else {
       this.score = 0;
     }
+    // localStorageからスコアを取得
+    const storedSelectedCarID = localStorage.getItem("selectedCarID");
+    // consoleにスコアを表示
+    console.log(storedSelectedCarID);
+    if (storedScore) {
+      this.selectedCarID = storedSelectedCarID;
+    } else {
+      this.selectedCarID = "car01";
+    }
+
+    // GLTFモデルを読み込み
+    this.loadGLTFModel();
+
+    // カメラの距離を設定
+    this.animateCamera();
+  },
+
+  methods: {
+    loadGLTFModel() {
+      // selectedCarIDに基づいてモデルのパスを決定する
+      const modelPath = `https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/${this.selectedCarID}.gltf`;
+
+      // GLTFモデルをロード
+      this.gltfLoader.load(modelPath, (gltf) => {
+        const model = gltf.scene || new Object3D(); // モデルを取得
+
+        // TresObject3Dにモデルを追加
+        this.$refs.gltfModel.add(model);
+      });
+    },
+    animateCamera() {
+      // 4になるまでカメラの距離を減らす
+      if (this.cameraDistance > 4) {
+        this.cameraDistance -= 1;
+        // 後半だけカメラを回転させる
+        if (this.cameraDistance < 34) {
+          this.driftRotation = (this.cameraDistance - 4) / 30;
+          this.$refs.gltfModel.rotation.y = this.driftRotation;
+        }
+        // スコアをカウントアップする
+        if (this.displayScore < this.score) {
+          this.displayScore += 1; // 1ずつ増やす
+        }
+        requestAnimationFrame(this.animateCamera);
+      } else {
+        this.displayScore = this.score;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-/* コンテナ設定：画像を固定し、画面全体に表示 */
+/* コンテナ全体のスタイル */
 .image-container {
-  position: fixed;
-  top: 0;
-  left: 0;
+  margin: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: -1; /* 他の要素の後ろに配置 */
 }
 
 /* 画像設定：画像がコンテナ全体に収まるように表示 */
 .image-container img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 画像の縦横比を保持しつつ、コンテナ全体をカバー */
+}
+
+.count-text {
+  display: inline-block; /* 幅を指定するには block または inline-block が必要 */
+  text-align: center;
+  min-width: 25rem;
 }
 
 /* テキストオーバーレイ設定 */
 .text-overlay {
+  span {
+    display: inline-block;
+  }
+  display: flex;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(15deg); /* 15度傾ける */
-  color: #fbbde8; /* テキストの色 */
-  font-size: 48px; /* テキストの標準サイズ */
-  font-family: "Pacifico", cursive; /* 可愛いフォント */
+  transform: translate(-50%, -50%) rotate(10deg); /* 15度傾ける */
+  color: #e92c2c; /* テキストの色 */
+  font-size: 12rem; /* テキストの標準サイズ */
+  font-family: "Lilita One", cursive; /* 可愛いフォント */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   font-weight: bold;
   z-index: 1; /* 画像の上に表示 */
-}
-
-/* 数字だけを大きくするスタイル */
-.large-number {
-  font-size: 80px; /* 数字を大きく */
-  color: #ff6f61; /* 数字の色を少し変えても良い */
+  line-height: 0.8;
+  -webkit-text-stroke-width: 6px;
+  -webkit-text-stroke-color: rgb(0, 0, 0);
 }
 
 /* SNSシェアボタンのスタイル */
 .share-buttons {
+  z-index: 10;
   position: absolute;
   bottom: 20px;
   right: 20px;
