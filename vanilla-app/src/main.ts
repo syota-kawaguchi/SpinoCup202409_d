@@ -59,7 +59,7 @@ class App {
   private loadModel(): void {
     const fbxloader = new FBXLoader();
     fbxloader.load(
-      "https://bonnet-grills-bbq-app-bucket.s3.amazonaws.com/models/fbx/car03.fbx",
+      "vanilla/models/car03.fbx",
       (object) => {
         object.position.set(0.5, 0.5, 0.5);
         object.scale.set(1, 1, 1);

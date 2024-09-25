@@ -20,6 +20,7 @@ export default defineConfig({
       clientPort: 3005,
     },
   },
+  publicDir: "public",
   build: {
     target: "esnext",
     outDir: "dist/vanilla",
