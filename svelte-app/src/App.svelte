@@ -3,7 +3,7 @@
   import { Canvas, useTask } from "@threlte/core";
   import SelectingCarsComponets from "./components/SelectingCarsComponets.svelte";
   import { carPaths } from "./const";
-    import CarParameter from "./components/CarParameter.svelte";
+  import CarParameter from "./components/CarParameter.svelte";
 
   const _cars = [
     { id: 1, name: "Car 1" },
@@ -60,6 +60,7 @@
     //TODO(kawaguchi): go to next page
     let item = localStorage.getItem("selectedCarID")
     console.log(`localStorageItem : ${item}`)
+    window.location.href = "/react/play"
   }
 
   const OnAnimationStart = () => {
