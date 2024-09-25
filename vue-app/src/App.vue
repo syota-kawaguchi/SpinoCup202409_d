@@ -1,13 +1,14 @@
 <template>
   <div class="image-container">
 
-    <TresCanvas window-size>
-      <TresPerspectiveCamera />
-      <TresMesh>
-        <TresTorusGeometry :args="[1, 0.5, 16, 32]" />
-        <TresMeshBasicMaterial color="orange" />
-      </TresMesh>
-    </TresCanvas>
+    <div class="model-container">
+      <TresCanvas window-size>
+        <TresPerspectiveCamera :position="[5, 0, 5]" :rotation="[0, Math.PI / 4, 0]" />
+        <TresAmbientLight intensity="1" /> <!-- 環境光の追加 -->
+        <TresDirectionalLight intensity="1" position="[1, 1, 1]" /> <!-- 方向性光の追加 -->
+        <TresObject3D :rotation="[0, Math.PI - 3 * Math.PI / 4, 0]"  ref="gltfModel" />
+      </TresCanvas>
+    </div>
 
     <div class="text-overlay">
       <span class="large-number">{{ score }}</span> yummy
@@ -46,12 +47,15 @@
 
 <script>
 import { TresCanvas } from '@tresjs/core'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Object3D } from 'three';
 
 export default {
   name: "ImageWithText",
   data() {
     return {
-      score: 0
+      score: 0,
+      gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
   },
   mounted() {
@@ -76,23 +80,27 @@ export default {
     }else{
       this.score = 0;
     }
+  
+    // GLTFモデルを読み込み
+    this.loadGLTFModel();
+  },
+
+  methods: {
+    loadGLTFModel() {
+      const modelPath = 'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car03.gltf'; // ここにgltfモデルのパスを入れる
+
+      this.gltfLoader.load(modelPath, (gltf) => {
+        const model = gltf.scene || new Object3D(); // モデルを取得
+
+        // TresObject3Dにモデルを追加
+        this.$refs.gltfModel.add(model);
+      });
+    },
   },
 };
 </script>
 
 <style scoped>
-/* コンテナ設定：画像を固定し、画面全体に表示 */
-.canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 /* 画像設定：画像がコンテナ全体に収まるように表示 */
 .image-container img {
