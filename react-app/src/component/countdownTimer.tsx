@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar } from 'react-circular-progressbar/dist/index.esm.js';
 import 'react-circular-progressbar/dist/styles.css';
 import styles from '../App.module.css'
 import { timeMax } from '../const';
