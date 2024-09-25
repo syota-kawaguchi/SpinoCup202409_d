@@ -1,21 +1,21 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
-    }
-  ],
-  "routes": [
-    { "src": "/react/play/(.*)", "dest": "/react/play/$1" },
-    { "src": "/vue/score/(.*)", "dest": "/vue/score/$1" },
-    {
-      "src": "/svelte/selecting-cars/(.*)",
-      "dest": "/svelte/selecting-cars/$1"
-    },
-    { "src": "/solidjs/title/(.*)", "dest": "/solidjs/title/$1" },
-    { "src": "/vanilla/(.*)", "dest": "/vanilla/$1" },
-    { "src": "/(.*)", "dest": "/$1" }
-  ]
-}
+    "version": 2,
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/static-build",
+        "config": { "distDir": "dist" }
+      }
+    ],
+    "routes": [
+      { "src": "^/$", "status": 307, "headers": { "Location": "/vanilla/" } },
+      { "src": "/react/(.*)", "dest": "/react/$1" },
+      { "src": "/svelte/(.*)", "dest": "/svelte/$1" },
+      { "src": "/solidjs/(.*)", "dest": "/solidjs/$1" },
+      { "src": "/vanilla/(.*)", "dest": "/vanilla/$1" },
+      { "src": "/images/(.*)", "dest": "/images/$1" },
+      { "src": "/models/(.*)", "dest": "/models/$1" },
+      { "handle": "filesystem" },
+      { "src": "/(.*)", "status": 404, "dest": "/404.html" }
+    ]
+  }
