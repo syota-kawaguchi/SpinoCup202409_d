@@ -440,7 +440,7 @@ function App() {
       //console.log(foodModels.length);
 
       managerObj.sunpowerCalc(clock.getElapsedTime());
-      ambientLight.color.set(managerObj.sunpower*8,managerObj.sunpower*7,1+managerObj.sunpower*7);
+      ambientLight.color.set(managerObj.sunpower*6,managerObj.sunpower*5,1+managerObj.sunpower*5);
 
       const outputElement = document.getElementById("output");
       if (outputElement) {
