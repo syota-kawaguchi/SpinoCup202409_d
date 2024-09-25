@@ -6,9 +6,9 @@
   import CarParameter from "./components/CarParameter.svelte";
 
   const _cars = [
-    { id: 1, name: "Car 1" },
-    { id: 2, name: "Car 2" },
-    { id: 3, name: "Car 3" },
+    { id: 1, name: "Car 1", hot : 2, size : 2 },
+    { id: 2, name: "Car 2", hot : 4, size : 2 },
+    { id: 3, name: "Car 3", hot : 5, size : 5 },
   ];
 
   const _handleSelectCar = (_id: number) => {
@@ -20,7 +20,7 @@
   const intensityDart = 0.2
 
   let selectingCarIndex = 0;
-  let selectingCarName  = _cars.find(car => car.id == selectingCarIndex + 1)?.name ?? ""
+  let selectingCarName = _cars.find(car => car.id == selectingCarIndex + 1)?.name ?? ""
   let selectedCarIndex = selectingCarIndex;
   let rotateDirection = -1;
   let onAnimation = false;
@@ -101,8 +101,8 @@
 </button>
 
 <div class="container">
-  <CarParameter label={"Hot"} maxGuage={5} guage={2}/>
-  <CarParameter label={"Size"} maxGuage={5} guage={3}/>
+  <CarParameter label={"Hot"} maxGuage={5} guage={_cars[selectingCarIndex].hot}/>
+  <CarParameter label={"Size"} maxGuage={5} guage={_cars[selectingCarIndex].size}/>
   <button class="done-button" on:click={Decide}>
     決定
   </button>
