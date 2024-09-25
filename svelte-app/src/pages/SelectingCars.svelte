@@ -12,7 +12,12 @@
   let selectingCarIndex = 0;
   let selectedCarIndex = selectingCarIndex;
   let rotateDirection = -1;
+  let onAnimation = false;
   const IncrementCarIndex = () => {
+    if (onAnimation) {
+      console.log("animation running")
+      return
+    }
     selectedCarIndex = selectingCarIndex
     rotateDirection = -1
     if (selectingCarIndex < carPaths.length - 1) {
@@ -21,9 +26,13 @@
     else {
       selectingCarIndex = 0
     }
+    onAnimation = true
   }
 
   const DecrementCarIndex = () => {
+    if (onAnimation) {
+      return
+    }
     selectedCarIndex = selectingCarIndex
     rotateDirection = 1
     if (0 < selectingCarIndex) {
@@ -32,12 +41,22 @@
     else {
       selectingCarIndex = carPaths.length - 1
     }
+    onAnimation = true
+  }
+
+  function onAnimationFinished() {
+    onAnimation = false
   }
 
 </script>
 
 <Canvas>
-  <SelectingCarsComponets selectedCarIndex={selectedCarIndex} selectingCarIndex={selectingCarIndex} rotateDirection={rotateDirection}/>
+  <SelectingCarsComponets 
+    selectedCarIndex={selectedCarIndex} 
+    selectingCarIndex={selectingCarIndex} 
+    rotateDirection={rotateDirection}
+    onAnimationFinished={onAnimationFinished}
+  />
 </Canvas>
 
 <button class="next-car-button" on:click={IncrementCarIndex}>

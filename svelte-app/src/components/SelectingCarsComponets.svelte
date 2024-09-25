@@ -6,6 +6,7 @@
   export let selectedCarIndex: number
   export let selectingCarIndex: number
   export let rotateDirection: number  //時計回り : -1, 反時計回り : 1
+  export let onAnimationFinished: () => void
 
   // 縁を描くように車を等間隔に配置する関数
   const ArrangeCarsCircle = (radius: number, nCars: number, index:number) => {
@@ -40,6 +41,8 @@
       if (radian <= Math.abs(carRotation - carRotationAfterChanged)) {
         selectedCarIndex = selectingCarIndex
         carRotationAfterChanged = carRotation
+        onAnimationFinished()
+        console.log(`selecting Index : ${selectingCarIndex}`)
       }
     }
   })
