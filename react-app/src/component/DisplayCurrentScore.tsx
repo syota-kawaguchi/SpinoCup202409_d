@@ -43,11 +43,11 @@ export const DisplayCurrentScore = ({
 
   return (
     <div className={styles.container}>
-      <p className={styles.score}>{currentScore}</p>
+      <div className={styles.score}>{currentScore}</div>
       <div className={styles.addScore}>
         {addScore.map((score, index) => (
-          <p key={index} className={styles.addScoreText}>
-            {score.additionalScore}
+          <p key={index} className={styles.additionalScore}>
+            +{score.additionalScore}
           </p>
         ))}
       </div>
