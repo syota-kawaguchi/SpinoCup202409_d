@@ -29,7 +29,7 @@
         <span v-if="displayScore === score">YUMMY</span>
       </div>
 
-      <a href="/solidjs/title" class="link" v-if="showLinks">
+      <a href="/solidjs/title" class="link" ref="linkButton">
         Go back to Title
       </a>
     </div>
@@ -44,7 +44,7 @@
     </div>
 
     <!-- SNSシェアボタン -->
-    <div class="share-buttons" v-if="showLinks">
+    <div class="share-buttons" ref="shareButtons">
       <a
         href="https://twitter.com/intent/tweet?text=My%20score%20is%2080000%20yummy!&url=https://example.com"
         target="_blank"
@@ -213,7 +213,8 @@ export default {
 
         // Delay showing the buttons by 3 seconds
         setTimeout(() => {
-          this.showLinks = true;
+          this.$refs.linkButton.style.opacity = 1;
+          this.$refs.shareButtons.style.opacity = 1;
         }, 2000);
       }
     },
@@ -282,6 +283,8 @@ export default {
 }
 
 .link {
+  opacity: 0;
+  transition: opacity 0.5s;
   position: absolute;
   bottom: -10rem;
   transform: translate(-50%, -50%);
@@ -309,6 +312,9 @@ export default {
   right: 20px;
   display: flex;
   gap: 10px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.5s;
 }
 
 .share-button {
