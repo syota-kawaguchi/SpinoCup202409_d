@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { ThermoGraphyCircle } from "./component/countdownTimer";
 import { niku,tamanegi,medamayaki,timeMax,carSizes } from "./const";
+import { FinishPageModal } from "./component/FinishPage";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
@@ -54,6 +55,7 @@ class FoodInfo{
 
 function App() {
   const [carID, setCarID] = useState<string | null>(null);
+  const [isGameFinished, setIsGameFinished] =useState<boolean>(false);
 
   useEffect(() => {
     const selectedCarID = localStorage.getItem("selectedCarID");
@@ -85,11 +87,9 @@ function App() {
       break;
   }
 
-  // ゲームが終わった時にスコアをlocalstorageに保存する
-  // const _saveScore = (score: number) => {
-  //   localStorage.setItem("score", String(score));
-  // };
-  // TODO: ゲームの終了処理を追加
+  const saveScore = (score: number) => {
+    localStorage.setItem("score", String(score));
+  };
 
   const managerObj = new manager(0,0);
   function getGrillTime(_name: string) {
@@ -539,17 +539,19 @@ function App() {
   },);
 
   const onGameFinish = () => {
-    window.location.href = "/vue/score"
+    saveScore(managerObj.score)
+    setIsGameFinished(true)
   }
 
   return (
-    <main style={{ width: "100%",height:"100%" }}>
+    <main style={{ width: "100%",height:"100%", position:"fixed", top: 0, left: 0, bottom: 0, right: 0 }}>
       <canvas ref={ref} style={{ width: "100%",height:"100%" }} />
 
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
       <ThermoGraphyCircle startTime={0} text="" onGameFinish={onGameFinish} />
-      
+
+      <FinishPageModal isGameFinished={isGameFinished} />
     </main>
   );
 }
