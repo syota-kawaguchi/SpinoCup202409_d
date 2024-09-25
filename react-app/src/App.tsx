@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+import { ThermoGraphyCircle } from "./component/countdownTimer";
 import { niku,tamanegi,medamayaki,timeMax,carSizes } from "./const";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
@@ -516,11 +517,6 @@ function App() {
 
       managerObj.sunpowerCalc(clock.getElapsedTime());
       ambientLight.color.set(managerObj.sunpower*6,managerObj.sunpower*5,1+managerObj.sunpower*5);
-
-      const outputElement = document.getElementById("output");
-      if (outputElement) {
-          outputElement.innerText = (timeMax - clock.getElapsedTime()).toString();
-      }
       renderer.render(scene, camera); // レンダリング
     }
 
@@ -550,15 +546,10 @@ function App() {
   return (
     <main style={{ width: "100%",height:"100%" }}>
       <canvas ref={ref} style={{ width: "100%",height:"100%" }} />
-      <div id="info">
-        Time:
-      </div>
-
-      <div id="output">
-
-      </div>
 
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
+
+      <ThermoGraphyCircle startTime={0} text=""/>
       
     </main>
   );
