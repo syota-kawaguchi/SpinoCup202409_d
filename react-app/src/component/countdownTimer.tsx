@@ -3,6 +3,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import styles from '../App.module.css'
 import { timeMax } from '../const';
+import { FinishPageModal } from './FinishPage';
 
 type ThermoGraphyCircleProps = {
     startTime : number
@@ -12,6 +13,7 @@ type ThermoGraphyCircleProps = {
 
 export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
   const [countTime, setCount] = useState<number>(props.startTime)
+  const isGameFinished = countTime >= timeMax
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -38,6 +40,7 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
             <div className={styles.circle}>
                 <CircularProgressbar value={countTime} text={`${props.text}`}></CircularProgressbar>
             </div>
+            <FinishPageModal isGameFinished={isGameFinished} />
         </div>
     )
 }

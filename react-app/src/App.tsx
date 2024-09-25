@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { ThermoGraphyCircle } from "./component/countdownTimer";
 import { niku,tamanegi,medamayaki,timeMax,carSizes,foodScore } from "./const";
-import { FinishPageModal } from "./component/FinishPage";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
@@ -81,7 +80,6 @@ class FoodInfo{
 function App() {
   const managerObj = new manager();
   const [carID, setCarID] = useState<string | null>(null);
-  const [isGameFinished, setIsGameFinished] =useState<boolean>(false);
 
   useEffect(() => {
     const selectedCarID = localStorage.getItem("selectedCarID");
@@ -616,7 +614,6 @@ function App() {
 
   const onGameFinish = () => {
     saveScore(managerObj.score)
-    setIsGameFinished(true)
   }
 
   return (
@@ -626,8 +623,6 @@ function App() {
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
       <ThermoGraphyCircle startTime={0} text="" onGameFinish={onGameFinish} />
-
-      <FinishPageModal isGameFinished={isGameFinished} />
     </main>
   );
 }
