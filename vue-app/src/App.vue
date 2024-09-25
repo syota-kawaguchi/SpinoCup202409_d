@@ -3,8 +3,8 @@
 
     <div class="model-container">
       <TresCanvas window-size>
-        <TresPerspectiveCamera :position="[5, 0, 5]" :rotation="[0, Math.PI / 4, 0]" />
-        <TresAmbientLight intensity="1" /> <!-- 環境光の追加 -->
+        <TresPerspectiveCamera :position="[4, 0, 4]" :rotation="[0, Math.PI / 4, 0]" />
+        <TresAmbientLight intensity="2" /> <!-- 環境光の追加 -->
         <TresDirectionalLight intensity="1" position="[1, 1, 1]" /> <!-- 方向性光の追加 -->
         <TresObject3D :rotation="[0, Math.PI - 3 * Math.PI / 4, 0]"  ref="gltfModel" />
       </TresCanvas>
