@@ -68,7 +68,7 @@ const App: Component = () => {
     // model loader
     const fbxloader: FBXLoader = new FBXLoader();
     let mixer: THREE.AnimationMixer;
-    fbxloader.load("title/models/car03.fbx", (object) => {
+    fbxloader.load("models/car03.fbx", (object) => {
       object.position.set(0, 0, 0);
       object.scale.set(1, 1, 1);
 
@@ -115,7 +115,7 @@ const App: Component = () => {
       <main class={styles.main}>
         <img
           class={styles.title}
-          src="title/title.svg"
+          src="title.svg"
           alt="BONNET GRILLS BBQのタイトルロゴ"
         />
         <canvas class={styles.canvas} ref={canvasRef} />
