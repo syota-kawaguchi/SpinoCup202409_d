@@ -6,76 +6,75 @@
   import CarParameter from "./components/CarParameter.svelte";
 
   const _cars = [
-    { id: 1, name: "チェーズカー", hot : 2, size : 2 },
-    { id: 2, name: "ホットカー", hot : 4, size : 2 },
-    { id: 3, name: "モンスターカー", hot : 5, size : 5 },
+    { id: 1, name: "チェーズカー", hot: 2, size: 2 },
+    { id: 2, name: "ホットカー", hot: 4, size: 2 },
+    { id: 3, name: "モンスターカー", hot: 5, size: 5 },
   ];
 
   const _handleSelectCar = (_id: number) => {
-    const id = `car0${_id}`
+    const id = `car0${_id}`;
     localStorage.setItem("selectedCarID", id);
   };
 
-  const intensityBright = 1.8
-  const intensityDart = 0.2
+  const intensityBright = 1.8;
+  const intensityDart = 0.2;
 
   let selectingCarIndex = 0;
-  let selectingCarName = _cars.find(car => car.id == selectingCarIndex + 1)?.name ?? ""
+  let selectingCarName =
+    _cars.find((car) => car.id == selectingCarIndex + 1)?.name ?? "";
   let selectedCarIndex = selectingCarIndex;
   let rotateDirection = -1;
   let onAnimation = false;
-  let intensity = intensityBright
+  let intensity = intensityBright;
   const IncrementCarIndex = () => {
     if (onAnimation) {
-      console.log("animation running")
-      return
+      console.log("animation running");
+      return;
     }
-    OnAnimationStart()
+    OnAnimationStart();
     if (selectingCarIndex < carPaths.length - 1) {
-      selectingCarIndex++
+      selectingCarIndex++;
+    } else {
+      selectingCarIndex = 0;
     }
-    else {
-      selectingCarIndex = 0
-    }
-    rotateDirection = 1
-    onAnimation = true
-  }
+    rotateDirection = 1;
+    onAnimation = true;
+  };
 
   const DecrementCarIndex = () => {
     if (onAnimation) {
-      return
+      return;
     }
-    OnAnimationStart()
+    OnAnimationStart();
     if (0 < selectingCarIndex) {
-      selectingCarIndex--
+      selectingCarIndex--;
+    } else {
+      selectingCarIndex = carPaths.length - 1;
     }
-    else {
-      selectingCarIndex = carPaths.length - 1
-    }
-    rotateDirection = -1
-    onAnimation = true
-  }
+    rotateDirection = -1;
+    onAnimation = true;
+  };
 
   const Decide = () => {
-    _handleSelectCar(selectingCarIndex + 1)
+    _handleSelectCar(selectingCarIndex + 1);
     //TODO(kawaguchi): go to next page
-    let item = localStorage.getItem("selectedCarID")
-    console.log(`localStorageItem : ${item}`)
-    window.location.href = "/react/play"
-  }
+    let item = localStorage.getItem("selectedCarID");
+    console.log(`localStorageItem : ${item}`);
+    window.location.href = "/react/play";
+  };
 
   const OnAnimationStart = () => {
-    selectedCarIndex = selectingCarIndex
-    intensity = intensityDart
-    selectingCarName = ""
-  }
+    selectedCarIndex = selectingCarIndex;
+    intensity = intensityDart;
+    selectingCarName = "";
+  };
 
   function onAnimationFinished() {
-    selectingCarName = _cars.find(car => car.id == selectingCarIndex + 1)?.name ?? ""
-    onAnimation = false
-    intensity = intensityBright
+    selectingCarName =
+      _cars.find((car) => car.id == selectingCarIndex + 1)?.name ?? "";
+    onAnimation = false;
+    intensity = intensityBright;
   }
-
 </script>
 
 <p class="selecting-car-name">
@@ -83,12 +82,12 @@
 </p>
 
 <Canvas>
-  <SelectingCarsComponets 
-    selectedCarIndex={selectedCarIndex} 
-    selectingCarIndex={selectingCarIndex} 
-    rotateDirection={rotateDirection}
-    onAnimationFinished={onAnimationFinished}
-    intensity={intensity}
+  <SelectingCarsComponets
+    {selectedCarIndex}
+    {selectingCarIndex}
+    {rotateDirection}
+    {onAnimationFinished}
+    {intensity}
   />
 </Canvas>
 
@@ -101,11 +100,17 @@
 </button>
 
 <div class="container">
-  <CarParameter label={"Hot"} maxGuage={5} guage={_cars[selectingCarIndex].hot}/>
-  <CarParameter label={"Size"} maxGuage={5} guage={_cars[selectingCarIndex].size}/>
-  <button class="done-button" on:click={Decide}>
-    決定
-  </button>
+  <CarParameter
+    label={"Hot"}
+    maxGuage={5}
+    guage={_cars[selectingCarIndex].hot}
+  />
+  <CarParameter
+    label={"Size"}
+    maxGuage={5}
+    guage={_cars[selectingCarIndex].size}
+  />
+  <button class="done-button" on:click={Decide}> 決定 </button>
 </div>
 
 <style>
@@ -125,7 +130,7 @@
     text-align: center;
   }
 
-  .change-car-button{
+  .change-car-button {
     padding: 0;
     position: absolute;
     bottom: 50%;
@@ -133,22 +138,22 @@
     width: 80px;
     height: 80px;
     z-index: 1;
-    background-color: rgba(0,0,0,0.4);
-    border-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 0, 0, 0.4);
     text-align: center;
   }
 
-  .change-next{
+  .change-next {
     left: 20%;
   }
 
-  .change-prev{
-    right: 20%
+  .change-prev {
+    right: 20%;
   }
-  
+
   .change-car-button:hover {
     border-color: transparent;
-    border-color: #FFF;
+    border-color: #fff;
     transition: 0s;
   }
 
@@ -167,7 +172,7 @@
     z-index: 1;
   }
 
-  .done-button{
+  .done-button {
     margin: 0 auto;
     padding: 0;
     width: 200px;
@@ -175,7 +180,7 @@
     z-index: 1;
     text-align: center;
     background-color: transparent;
-    color: #FFF;
+    color: #fff;
     font-size: 40px;
     border: 0;
   }
@@ -188,7 +193,7 @@
   .dli-chevron-right {
     display: inline-block;
     vertical-align: middle;
-    color: #FFF;
+    color: #fff;
     line-height: 1;
     width: 2.5em;
     height: 2.5em;
@@ -202,7 +207,7 @@
   .dli-chevron-left {
     display: inline-block;
     vertical-align: middle;
-    color: #FFF;;
+    color: #fff;
     line-height: 1;
     width: 2.5em;
     height: 2.5em;
