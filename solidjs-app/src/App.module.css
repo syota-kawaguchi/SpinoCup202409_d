@@ -18,9 +18,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: auto;
-  max-height: 80vh;
+  width: 80%;
   object-fit: contain;
   box-sizing: border-box;
 }
@@ -43,21 +41,27 @@
 
 .startButton {
   position: fixed;
-  bottom: 10%;
+  bottom: 15%;
   left: 50%;
   transform: translateX(-50%);
-  padding: 15px 30px;
-  font-size: 1.5rem;
+  padding: 20px 40px;
+  font-size: 2rem;
   background-color: #5ab3bf;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .startButton:hover {
   background-color: #4a9ba6;
+  transform: translateX(-50%) scale(1.05);
+}
+
+.startButton:active {
+  transform: translateX(-50%) scale(0.95);
 }
 
 @media (max-width: 768px) {
