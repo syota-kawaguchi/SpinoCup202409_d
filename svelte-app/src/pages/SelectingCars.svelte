@@ -3,11 +3,6 @@
   import { Canvas, useTask } from "@threlte/core";
   import SelectingCarsComponets from "../components/SelectingCarsComponets.svelte";
   import { carPaths } from "../const";
-    import { rotate } from "three/webgpu";
-
-  type RotateDirection = Clockwise | CounterClockwise
-  type Clockwise = {direction : number}
-  type CounterClockwise = {direction : 1}
 
   let selectingCarIndex = 0;
   let selectedCarIndex = selectingCarIndex;
