@@ -1,17 +1,15 @@
 <template>
   <div class="image-container">
 
-    <div class="model-container">
-      <TresCanvas window-size>
-        <TresPerspectiveCamera :position="[4, 0, 4]" :rotation="[0, Math.PI / 4, 0]" />
-        <TresAmbientLight intensity="2" /> <!-- 環境光の追加 -->
-        <TresDirectionalLight intensity="1" position="[1, 1, 1]" /> <!-- 方向性光の追加 -->
-        <TresObject3D :rotation="[0, Math.PI - 3 * Math.PI / 4, 0]"  ref="gltfModel" />
-      </TresCanvas>
-    </div>
+    <TresCanvas>
+      <TresPerspectiveCamera :position="[4, 0, 4]" :rotation="[0, Math.PI / 4, 0]" />
+      <TresAmbientLight intensity="2" /> <!-- 環境光の追加 -->
+      <TresDirectionalLight intensity="1" position="[1, 1, 1]" /> <!-- 方向性光の追加 -->
+      <TresObject3D :rotation="[0, Math.PI - 3 * Math.PI / 4, 0]"  ref="gltfModel" />
+    </TresCanvas>
 
     <div class="text-overlay">
-      <span class="large-number">{{ score }}</span> yummy
+      <p><span>{{ score }}</span><span>YUMMY</span></p>
     </div>
 
     <!-- SNSシェアボタン -->
@@ -62,7 +60,7 @@ export default {
     // Google Fonts をダイナミックに読み込む
     const link = document.createElement("link");
     link.href =
-      "https://fonts.googleapis.com/css2?family=Pacifico&display=swap";
+      "https://fonts.googleapis.com/css2?family=Lilita+One&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
 
@@ -102,6 +100,14 @@ export default {
 
 <style scoped>
 
+/* コンテナ全体のスタイル */
+.image-container {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
 /* 画像設定：画像がコンテナ全体に収まるように表示 */
 .image-container img {
   width: 100%;
@@ -110,24 +116,22 @@ export default {
 
 /* テキストオーバーレイ設定 */
 .text-overlay {
+  span{
+    padding: 1rem;
+  }
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(10deg); /* 15度傾ける */
-  color: #fbbde8; /* テキストの色 */
-  font-size: 6rem; /* テキストの標準サイズ */
-  font-family: "Pacifico", cursive; /* 可愛いフォント */
+  color: #e92c2c; /* テキストの色 */
+  font-size: 12rem; /* テキストの標準サイズ */
+  font-family: "Lilita One", cursive; /* 可愛いフォント */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   font-weight: bold;
   z-index: 1; /* 画像の上に表示 */
-  width: 100%;
   line-height: 0.8;
-}
-
-/* 数字だけを大きくするスタイル */
-.large-number {
-  font-size: 10rem; /* 数字を大きく */
-  color: #ff6f61; /* 数字の色を少し変えても良い */
+  -webkit-text-stroke-width: 6px;
+  -webkit-text-stroke-color: rgb(0, 0, 0);
 }
 
 /* SNSシェアボタンのスタイル */
