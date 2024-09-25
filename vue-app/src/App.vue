@@ -30,7 +30,7 @@
 
     <!-- SNSシェアボタン -->
     <div class="share-buttons">
-      <a href="/vanilla" class="btn btn-primary home-button">
+      <a href="/solidjs/title" class="btn btn-primary home-button">
         Go back to Home
       </a>
       <a

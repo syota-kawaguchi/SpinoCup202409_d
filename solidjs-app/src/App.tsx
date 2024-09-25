@@ -9,7 +9,7 @@ const App: Component = () => {
   const [isMobile, setIsMobile] = createSignal(false);
 
   const handleStart = () => {
-    window.location.href = "/vanilla/home";
+    window.location.href = "/vanilla";
   };
 
   const handleKeydown = (e: KeyboardEvent) => {
