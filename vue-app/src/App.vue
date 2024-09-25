@@ -95,18 +95,20 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(15deg); /* 15度傾ける */
+  transform: translate(-50%, -50%) rotate(10deg); /* 15度傾ける */
   color: #fbbde8; /* テキストの色 */
-  font-size: 48px; /* テキストの標準サイズ */
+  font-size: 6rem; /* テキストの標準サイズ */
   font-family: "Pacifico", cursive; /* 可愛いフォント */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   font-weight: bold;
   z-index: 1; /* 画像の上に表示 */
+  width: 100%;
+  line-height: 0.8;
 }
 
 /* 数字だけを大きくするスタイル */
 .large-number {
-  font-size: 80px; /* 数字を大きく */
+  font-size: 10rem; /* 数字を大きく */
   color: #ff6f61; /* 数字の色を少し変えても良い */
 }
 
