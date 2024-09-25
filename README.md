@@ -13,6 +13,20 @@
 5. `docker compose restart reverse-proxy`
   - loacalhostを80番に統一
 
+## デプロイ方法
+前提条件
+- AWS IAM ユーザーのログインができている(Slackでパスワード等配った)
+
+1. `aws configure`
+2. デプロイ(例：vue)
+  - `aws s3 cp ./vue-app/dist s3://***bucket-name***/vue --recursive`
+
+## アプリケーション構成とルーティング
+- localhost/vanilla タイトル画面
+- localhost/solidjs/title 車選択画面
+- localhost/svelte/selecting-cars 車選択画面
+- localhost/react/play ゲーム画面
+- localhost/vue/score スコア画面
 
 ## 共有事項
 - svgファイルを使うとバグが起きるので、使う必要が出たら要検討したい

@@ -1,0 +1,40 @@
+.App {
+  text-align: center;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(45deg, #2e2f30, #5ab3bf);
+  overflow: hidden;
+}
+
+.title {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80%;
+  object-fit: contain;
+  box-sizing: border-box;
+}
+
+.canvas {
+  min-height: 100vh;
+  min-width: 100vw;
+  position: fixed;
+  transform: translateX(30%) translateY(-10%) scale(1.5);
+  overflow: hidden;
+}
+
+.p {
+  color: white;
+  font-size: 3rem;
+  position: fixed;
+  bottom: 10%;
+  left: 10%;
+}
