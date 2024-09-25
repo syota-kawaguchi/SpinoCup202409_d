@@ -6,7 +6,7 @@
   import CarParameter from "./components/CarParameter.svelte";
 
   const _cars = [
-    { id: 1, name: "チェーズカー", hot: 2, size: 2 },
+    { id: 1, name: "チューズカー", hot: 2, size: 2 },
     { id: 2, name: "ホットカー", hot: 4, size: 2 },
     { id: 3, name: "モンスターカー", hot: 5, size: 5 },
   ];
