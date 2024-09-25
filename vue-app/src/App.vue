@@ -34,13 +34,14 @@
       </a>
     </div>
 
-    <img
-      class="background"
-      src="https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result_stamp02_light_2.webp"
-      alt="背景"
-    />
-
-    <div class="overlay"></div>
+    <div class="overlay-and-background" ref="overlayAndBackground">
+      <img
+        class="background"
+        src="https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result_stamp02_light_2.webp"
+        alt="背景"
+      />
+      <div class="overlay"></div>
+    </div>
 
     <!-- SNSシェアボタン -->
     <div class="share-buttons" v-if="showLinks">
@@ -91,6 +92,7 @@ export default {
       driftPositionZSub: 0,
       selectedCarID: "car01",
       showLinks: false, // To control button visibility
+      showScore: false, // To control score visibility
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
   },
@@ -206,6 +208,9 @@ export default {
             ? "#372b14"
             : "#471610";
 
+        // overlay-and-backgroundのopacityを0にする
+        this.$refs.overlayAndBackground.style.opacity = 1;
+
         // Delay showing the buttons by 3 seconds
         setTimeout(() => {
           this.showLinks = true;
@@ -245,6 +250,10 @@ export default {
   left: 50%;
 }
 
+.overlay-and-background {
+  opacity: 0;
+}
+
 /* テキストオーバーレイ設定 */
 .text-overlay {
   span {
@@ -262,7 +271,7 @@ export default {
   -webkit-text-stroke-color: rgb(0, 0, 0);
 }
 
-.overlay{
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -289,6 +298,7 @@ export default {
   border-radius: 10px;
   border: 1px solid white;
   letter-spacing: 2px;
+  z-index: 10;
 }
 
 /* SNSシェアボタンのスタイル */
