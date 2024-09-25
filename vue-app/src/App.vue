@@ -1,7 +1,7 @@
 <template>
   <div class="image-container">
 
-    <TresCanvas>
+    <TresCanvas style="max-height: 100vh; min-height: 100vh;">
       <TresPerspectiveCamera :position="[4, 0, 4]" :rotation="[0, Math.PI / 4, 0]" />
       <TresAmbientLight intensity="2" /> <!-- 環境光の追加 -->
       <TresDirectionalLight intensity="1" position="[1, 1, 1]" /> <!-- 方向性光の追加 -->
