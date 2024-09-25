@@ -825,8 +825,8 @@ function App() {
     const marukogeCount = managerObj.marukogeUUIDs.length;
     console.log("marukoge ペナルティ: ", marukogeCount * foodScore[3]);
     const finalScore = managerObj.score + marukogeCount * foodScore[3];
-    console.log("finalScore: ", finalScore);
-    saveScore(finalScore);
+    console.log("finalScore: ", finalScore > 0 ? finalScore : 0);
+    saveScore(finalScore > 0 ? finalScore : 0);
   };
 
   return (
