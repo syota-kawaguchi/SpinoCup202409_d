@@ -348,6 +348,8 @@ export default {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  width: 40px;
+  height: 40px;
 }
 
 .share-button.twitter {
