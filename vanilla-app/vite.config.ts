@@ -22,6 +22,7 @@ export default defineConfig({
   },
   build: {
     target: "esnext",
+    outDir: "dist/solidjs/title",
   },
   base: "/vanilla",
 });

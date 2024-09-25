@@ -1,4 +1,5 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { build } from 'vite';
 
 export default {
 	plugins: [svelte()],
@@ -10,6 +11,9 @@ export default {
 			protocol: 'ws',
 			clientPort: 3003
 		}
+	},
+	build:{
+		outDir: 'dist/svelte/selecting-cars'
 	},
 	base: '/svelte/selecting-cars'
 };

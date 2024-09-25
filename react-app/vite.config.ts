@@ -14,4 +14,7 @@ export default defineConfig({
     },
   },
   base: "/react/play",
+  build: {
+    outDir: 'dist/react/play'
+  }
 });
