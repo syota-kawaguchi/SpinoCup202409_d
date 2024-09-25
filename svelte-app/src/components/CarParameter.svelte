@@ -4,7 +4,7 @@
     export let guage: number
 </script>
 
-<div class="container">
+<div class="car-param-wrapper">
     <div><p class="label">{label}</p></div>
     <ul class="guage">
         {#each { length: maxGuage } as _, i}
@@ -18,7 +18,7 @@
 </div>
 
 <style>
-    div.container {
+    div.car-param-wrapper {
         margin: 0 auto;
         display: flex;
         width: 300px;
