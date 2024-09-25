@@ -56,6 +56,7 @@ export default {
       score: 0,
       displayScore: 0,
       cameraDistance: 150,
+      selectedCarID: "car01",
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
   },
@@ -77,11 +78,19 @@ export default {
     // localStorageからスコアを取得
     const storedScore = localStorage.getItem("score");
     // consoleにスコアを表示
-    console.log(storedScore);
     if (storedScore) {
       this.score = parseInt(storedScore, 10);
     }else{
       this.score = 0;
+    }
+    // localStorageからスコアを取得
+    const storedSelectedCarID = localStorage.getItem("selectedCarID");
+    // consoleにスコアを表示
+    console.log(storedSelectedCarID);
+    if (storedScore) {
+      this.selectedCarID = storedSelectedCarID;
+    }else{
+      this.selectedCarID = "car01";
     }
   
     // GLTFモデルを読み込み
@@ -93,8 +102,10 @@ export default {
 
   methods: {
     loadGLTFModel() {
-      const modelPath = 'https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/car03.gltf'; // ここにgltfモデルのパスを入れる
+      // selectedCarIDに基づいてモデルのパスを決定する
+      const modelPath = `https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/${this.selectedCarID}.gltf`; 
 
+      // GLTFモデルをロード
       this.gltfLoader.load(modelPath, (gltf) => {
         const model = gltf.scene || new Object3D(); // モデルを取得
 
@@ -108,13 +119,10 @@ export default {
         this.cameraDistance -= 1;
         // スコアをカウントアップする
         if (this.displayScore < this.score) {
-          console.log("count up score");
-          console.log(this.displayScore);
           this.displayScore += 1; // 100ずつ増やす
         }
         requestAnimationFrame(this.animateCamera);
       } else {
-        console.log("Animation finished");
         this.displayScore = this.score;
       }
     },
