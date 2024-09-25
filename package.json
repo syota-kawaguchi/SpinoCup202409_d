@@ -13,7 +13,7 @@
     "build:svelte": "cd svelte-app && npm run build",
     "build:solidjs": "cd solidjs-app && npm run build",
     "build:vanilla": "cd vanilla-app && npm run build",
-    "collect:dist": "mkdir -p dist && cp -R react-app/dist/* vue-app/dist/* svelte-app/dist/* solidjs-app/dist/* vanilla-app/dist/* dist/",
+    "collect:dist": "rm -rf dist && mkdir -p dist && cp -R react-app/dist dist/react && cp -R vue-app/dist dist/vue && cp -R svelte-app/dist dist/svelte && cp -R solidjs-app/dist dist/solidjs && cp -R vanilla-app/dist dist/vanilla",
     "dev": "concurrently \"npm run dev:react\" \"npm run dev:vue\" \"npm run dev:svelte\" \"npm run dev:solidjs\" \"npm run dev:vanilla\"",
     "dev:react": "cd react-app && npm run dev",
     "dev:vue": "cd vue-app && npm run dev",
