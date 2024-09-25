@@ -8,7 +8,7 @@
       }
     ],
     "routes": [
-      { "src": "^/$", "status": 307, "headers": { "Location": "/vanilla/" } },
+      { "src": "^/$", "status": 307, "headers": { "Location": "/solidjs/title/" } },
       { "src": "/react/(.*)", "dest": "/react/$1" },
       { "src": "/svelte/(.*)", "dest": "/svelte/$1" },
       { "src": "/solidjs/(.*)", "dest": "/solidjs/$1" },
