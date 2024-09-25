@@ -40,3 +40,33 @@
 .read-the-docs {
   color: #888;
 }
+.hoge{
+  font-weight: bold;
+}
+
+/* TODO(kawaguchi) : rename */
+.circle {
+  margin: 2rem;
+  padding: 0;
+  position: absolute;
+  top: 0%;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  font-size: 40px;
+  z-index: 1;
+  /* display: block; */
+  text-align: center;
+}
+
+.thermo {
+  margin: 2.1rem;
+  padding: 0;
+  position: absolute;
+  top: 0%;
+  left: 0;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background-color: #FFF;
+}

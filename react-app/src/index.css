@@ -92,3 +92,15 @@ button:focus-visible {
 	display:block;
   color: #f9f9f9;
 }
+
+.circle-progress-value {
+	stroke-width: 6px;
+	stroke: hsl(39, 100%, 50%);
+}
+.circle-progress-circle {
+	stroke-width: 6px;
+	stroke: hsl(39, 100%, 85%);
+}
+.circle-progress-text {
+	fill: hsl(39, 100%, 50%);
+}
