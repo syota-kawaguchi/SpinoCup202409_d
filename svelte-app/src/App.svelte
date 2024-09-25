@@ -100,19 +100,27 @@
 </button>
 
 <div class="container">
-  <CarParameter
-    label={"Hot"}
-    maxGuage={5}
-    guage={_cars[selectingCarIndex].hot}
-    isSelecting={!onAnimation}
-  />
-  <CarParameter
-    label={"Size"}
-    maxGuage={5}
-    guage={_cars[selectingCarIndex].size}
-    isSelecting={!onAnimation}
-  />
-  <button class="done-button" on:click={Decide}> 決定 </button>
+  <div>
+    <CarParameter
+      label={"Hot"}
+      maxGuage={5}
+      guage={_cars[selectingCarIndex].hot}
+      isSelecting={!onAnimation}
+    />
+    <CarParameter
+      label={"Size"}
+      maxGuage={5}
+      guage={_cars[selectingCarIndex].size}
+      isSelecting={!onAnimation}
+    />
+  </div>
+  <button
+    class="done-button"
+    on:click={Decide}
+    disabled={selectingCarName === ""}
+  >
+    決定
+  </button>
 </div>
 
 <style>

@@ -53,18 +53,19 @@ html, body, #canvas {
   .change-prev{
     right: 20%
   }
-  
-  .change-car-button:hover {
-    border-color: transparent;
-    border-color: #FFF;
-    transition: 0s;
-  }
 
   .change-car-button:focus {
     outline: none;
   }
 
   .container {
+    width: 100%;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
     margin: 0 auto;
     padding: 0;
     position: absolute;
@@ -76,16 +77,24 @@ html, body, #canvas {
   }
 
   .done-button{
-    margin: 0 auto;
-    padding: 0;
-    width: 200px;
-    height: 80px;
-    z-index: 1;
-    text-align: center;
-    background-color: transparent;
-    color: #FFF;
-    font-size: 40px;
-    border: 0;
+    opacity: 1;
+    color: white;
+    background-color: #000;
+    text-decoration: none;
+    font-size: 24px;
+    padding: 10px 100px;
+    border-radius: 10px;
+    border: 1px solid white;
+    letter-spacing: 2px;
+    z-index: 10;
+    width: fit-content;
+    height: fit-content;
+    &:hover {
+      background-color: #2e2f30;
+    }
+    &:disabled {
+      opacity: 0.3;
+    }
   }
 
   .done-button:focus {
