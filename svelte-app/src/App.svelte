@@ -79,7 +79,7 @@
 </script>
 
 <p class="selecting-car-name">
-  {selectingCarName}
+  <span>{selectingCarName}</span>
 </p>
 
 <Canvas>
