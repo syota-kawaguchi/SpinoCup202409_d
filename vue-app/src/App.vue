@@ -34,6 +34,14 @@
       </a>
     </div>
 
+    <img
+      class="background"
+      src="https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result_stamp02_light_2.webp"
+      alt="背景"
+    />
+
+    <div class="overlay"></div>
+
     <!-- SNSシェアボタン -->
     <div class="share-buttons" v-if="showLinks">
       <a
@@ -184,9 +192,19 @@ export default {
         this.displayScore = this.score;
 
         // スコアが500未満の場合は赤色、500以上の場合は緑色、1000以上の場合は青色
-        this.$refs.textOverlay.style.color = `rgba(${
-          this.score < 500 ? "0" : this.score < 1000 ? "100" : "233"
-        }, 44, 44, 1)`;
+        this.$refs.textOverlay.style.color =
+          this.score < 500
+            ? "#9aa3d3"
+            : this.score < 1000
+            ? "#d3bf9a"
+            : "#ff1e00";
+        // 縁の色を設定
+        this.$refs.textOverlay.style.webkitTextStrokeColor =
+          this.score < 500
+            ? "#1f2440"
+            : this.score < 1000
+            ? "#372b14"
+            : "#471610";
 
         // Delay showing the buttons by 3 seconds
         setTimeout(() => {
@@ -238,10 +256,20 @@ export default {
   font-family: "Lilita One", cursive; /* 可愛いフォント */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   font-weight: bold;
-  z-index: 1; /* 画像の上に表示 */
+  z-index: 2; /* 画像の上に表示 */
   line-height: 0.8;
-  -webkit-text-stroke-width: 6px;
+  -webkit-text-stroke-width: 3px;
   -webkit-text-stroke-color: rgb(0, 0, 0);
+}
+
+.overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 0;
 }
 
 .link {
@@ -299,5 +327,14 @@ export default {
 
 .share-button:hover {
   opacity: 0.8;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
 }
 </style>
