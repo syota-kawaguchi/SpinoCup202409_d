@@ -1,124 +1,129 @@
-import * as THREE from 'three'
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'; // FBXLoaderをインポート
+import * as THREE from "three";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-// シーンの作成
-const scene = new THREE.Scene()
 
-// カメラの作成
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-camera.position.set(0, 5, 7)
-camera.lookAt(0, 0, 0)
+// class記法でAppクラスを定義して、constructorで初期化をする方法で実施します！
+class App {
+  private canvasElement: HTMLCanvasElement;
+  private scene: THREE.Scene;
+  private camera: THREE.PerspectiveCamera;
+  private renderer: THREE.WebGLRenderer;
+  private controls: OrbitControls;
+  private clock: THREE.Clock;
+  private mixer: THREE.AnimationMixer | undefined;
+  private audio: HTMLAudioElement | undefined;
 
-// レンダラーの作成
-const renderer = new THREE.WebGLRenderer({ antialias: true })
-renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
+  constructor() {
+    this.canvasElement = document.getElementById('canvas') as HTMLCanvasElement;
+    this.scene = new THREE.Scene();
+    this.clock = new THREE.Clock();
 
-// 照明の追加
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-scene.add(ambientLight)
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-directionalLight.position.set(5, 10, 7.5)
-scene.add(directionalLight)
+    this.camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    this.camera.position.set(0, 2, 20);
 
-// FBXローダーを使用してボンネットのFBXモデルを読み込み
-const loader = new FBXLoader();
-loader.load('https://bonnet-grills-bbq-app-bucket.s3.amazonaws.com/models/fbx/car03.fbx', (fbx: any) => {
-  fbx.scale.set(0.02, 0.02, 0.02); // サイズ調整
-  fbx.position.set(0, -1, -5); // 位置調整
-  scene.add(fbx);
-}, undefined, (error: any) => {
-  console.error('FBXモデルの読み込みに失敗しました:', error);
-});
+    this.renderer = new THREE.WebGLRenderer({
+      canvas: this.canvasElement,
+      antialias: true,
+      alpha: true,
+    });
+    this.renderer.setSize(width, height);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-// 食材クラスの定義
-class Ingredient extends THREE.Mesh {
-  velocity: THREE.Vector3;
-  rotationSpeed: THREE.Vector3;
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.05;
+    this.controls.enableRotate = false;
+    this.controls.enablePan = false;
+    this.controls.enableZoom = false;
 
-  constructor(geometry: THREE.BufferGeometry, material: THREE.Material) {
-    super(geometry, material);
-    this.velocity = new THREE.Vector3(0, -0.05, 0);
-    this.rotationSpeed = new THREE.Vector3(
-      Math.random() * 0.1,
-      Math.random() * 0.1,
-      Math.random() * 0.1
+    this.setupLights();
+    this.loadModel();
+    this.setupEventListeners();
+    this.animate();
+    this.audio = document.getElementById('click-sound') as HTMLAudioElement;
+  }
+
+  private setupLights(): void {
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    this.scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(5, 10, 7.5);
+    this.scene.add(directionalLight);
+  }
+
+  private loadModel(): void {
+    const fbxloader = new FBXLoader();
+    fbxloader.load(
+      "https://bonnet-grills-bbq-app-bucket.s3.amazonaws.com/models/fbx/car03.fbx",
+      (object) => {
+        object.position.set(0.5, 0.5, 0.5);
+        object.scale.set(1, 1, 1);
+
+        this.scene.add(object);
+
+        const box = new THREE.Box3().setFromObject(object);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = this.camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+        this.camera.position.set(center.x + 200, center.y + 200, center.z + cameraZ);
+        this.camera.lookAt(center);
+        this.controls.target.copy(center);
+      }
     );
   }
 
-  update() {
-    this.position.add(this.velocity);
-    this.rotation.x += this.rotationSpeed.x;
-    this.rotation.y += this.rotationSpeed.y;
-    this.rotation.z += this.rotationSpeed.z;
+  private setupEventListeners(): void {
+    window.addEventListener("resize", () => this.handleResize());
+    window.addEventListener("keydown", (e) => this.handleKeydown(e));
+    window.addEventListener("click", () => this.handleAudio());
+  }
 
-    if (this.position.y <= 0.1) {
-      this.position.y = 0.1;
-      this.velocity.set(0, 0, 0);
-      if (this.material instanceof THREE.MeshStandardMaterial) {
-        this.material.color.setHex(0x8B4513);
-      }
+  private handleAudio(): void {
+    this.audio = new Audio("https://bonnet-grills-bbq-app-bucket.s3.amazonaws.com/sounds/rev.mp3");
+    this.audio.play();
+  }
+
+  private handleResize(): void {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+  }
+
+  private handleKeydown(e: KeyboardEvent): void {
+    switch (e.key) {
+      case "g":
+      case "G":
+        // 次のページへ進む
+        window.location.href = "/svelte/selecting-cars";
+        break;
+      case "b":
+      case "B":
+        // 前のページへ戻る
+        window.location.href = "/solidjs/title";
+        break;
     }
   }
-}
 
-// 食材の配列
-const ingredients: Ingredient[] = [];
-
-// 食材を生成する関数
-function createIngredient() {
-  const geometries = [
-    new THREE.SphereGeometry(0.2),  // ミートボール
-    new THREE.CylinderGeometry(0.1, 0.1, 0.3),  // ソーセージ
-    new THREE.BoxGeometry(0.3, 0.1, 0.3)  // ステーキ
-  ];
-  const materials = [
-    new THREE.MeshStandardMaterial({ color: 0xFF6347 }),  // トマト色
-    new THREE.MeshStandardMaterial({ color: 0xFFA07A }),  // 薄いサーモン色
-    new THREE.MeshStandardMaterial({ color: 0x8B0000 })   // 暗い赤色
-  ];
-
-  const randomGeometry = geometries[Math.floor(Math.random() * geometries.length)];
-  const randomMaterial = materials[Math.floor(Math.random() * materials.length)];
-
-  const ingredient = new Ingredient(randomGeometry, randomMaterial);
-  ingredient.position.set(
-    (Math.random() - 0.5) * 3,
-    5 + Math.random() * 2,
-    (Math.random() - 0.5) * 2
-  );
-  scene.add(ingredient);
-  ingredients.push(ingredient);
-}
-
-// アニメーションループ
-const animate = () => {
-  requestAnimationFrame(animate);
-
-  if (Math.random() < 0.02) {
-    createIngredient();
+  private animate(): void {
+    requestAnimationFrame(() => this.animate());
+    const delta = this.clock.getDelta();
+    if (this.mixer) this.mixer.update(delta);
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera);
   }
-
-  ingredients.forEach(ingredient => ingredient.update());
-
-  renderer.render(scene, camera);
 }
-animate();
 
-// リサイズ対応
-window.addEventListener('resize', () => {
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+// Initialize the app when the DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  new App();
 });
-
-// スタートボタンのクリックイベント
-const startButton = document.getElementById('start');
-if (startButton instanceof HTMLButtonElement) {
-  startButton.addEventListener('click', () => {
-    window.location.href = '/solidjs/title';
-  });
-} else {
-  console.error('Start button not found!');
-}

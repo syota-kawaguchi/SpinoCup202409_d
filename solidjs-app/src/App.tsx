@@ -9,7 +9,7 @@ const App: Component = () => {
   const [isMobile, setIsMobile] = createSignal(false);
 
   const handleStart = () => {
-    window.location.href = "/svelte/selecting-cars";
+    window.location.href = "/vanilla/home";
   };
 
   const handleKeydown = (e: KeyboardEvent) => {
@@ -140,13 +140,7 @@ const App: Component = () => {
           alt="BONNET GRILLS BBQのタイトルロゴ"
         />
         <canvas class={styles.canvas} ref={canvasRef} />
-        {isMobile() ? (
-          <button class={styles.startButton} onClick={handleStart}>
-            Start
-          </button>
-        ) : (
-          <p class={styles.p}>Press G to start</p>
-        )}
+        <p class={styles.p}>Press G to start</p>
       </main>
     </div>
   );
