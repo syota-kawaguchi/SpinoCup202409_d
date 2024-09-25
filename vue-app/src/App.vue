@@ -81,7 +81,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: -1; /* 他の要素の後ろに配置 */
 }
 
 /* 画像設定：画像がコンテナ全体に収まるように表示 */
@@ -113,6 +112,7 @@ export default {
 
 /* SNSシェアボタンのスタイル */
 .share-buttons {
+  z-index: 10;
   position: absolute;
   bottom: 20px;
   right: 20px;
