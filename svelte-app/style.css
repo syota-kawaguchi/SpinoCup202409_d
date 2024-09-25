@@ -156,3 +156,18 @@ html, body, #canvas {
         padding: 5px 15px;
         background-color:#AAAAAA;
     }
+    li.flash {
+      position: relative;
+      padding: 5px 15px;
+      background-color: #de5901;
+      animation: flash-animation 0.3s alternate infinite;
+    }
+    
+    @keyframes flash-animation {
+      from {
+        background-color: #de5901;
+      }
+      to {
+        background-color: #AAAAAA;
+      }
+    }
