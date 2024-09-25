@@ -63,7 +63,7 @@ function App() {
       setCarID(selectedCarID);
       setLoading(false);
     } else {
-      setCarID("car03");
+      setCarID("car02");
       setLoading(false);
     }
   }, []);
@@ -303,11 +303,11 @@ function App() {
 
     function initializeStage(){ // stageを既定の位置に配置
       loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx","stage",0,0,0,0,0.1);
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/"+carID+".fbx","car",0,5,-10,0,0.05);
+      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/"+carID+".fbx","car",0,5,-10+(60-carSizeX)*0.05,0,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",5,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",5,0.05);
       loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",5,0.05);
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-11,8,2,-1.57,0.03);
+      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-10.4+(60-carSizeX)*0.05,7,1,-1.57,0.02);
       
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,-Math.sqrt(carSizeY),0,0.03);
