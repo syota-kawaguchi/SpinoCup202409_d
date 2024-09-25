@@ -24,7 +24,7 @@ class manager {
     public sunpower: number = 0,
     public initialAnimeTime: number = 1,
     public sunpowerMult: number = 1,
-    public onGame: boolean = true
+    public marukogeUUIDs: string[] = []
   ) {
     // this.score = score
     // this.num = 0
@@ -240,7 +240,6 @@ function App() {
     // const loadedModels: THREE.Object3D[] = []; // Explicitly define the type
     const foodArray: FoodInfo[] = [];
     const foodModels: THREE.Object3D[] = []; // Explicitly define the type
-    const marukogeUUIDs: string[] = [];
     const stageModels: THREE.Object3D[] = [];
     const other: THREE.Object3D[] = []; //otherにはヘラ[0]、まな板[1]
 
@@ -284,9 +283,8 @@ function App() {
         object.name = _tag;
         object.castShadow = true;
 
-        console.log(_status);
         if (_status == "marukoge") {
-          marukogeUUIDs.push(object.uuid);
+          managerObj.marukogeUUIDs.push(object.uuid);
         }
         foodModels.push(object); // Store the model in the array
         foodArray.push(
@@ -546,7 +544,7 @@ function App() {
         for (let i = 0; i < intersects.length; i++) {
           if (intersects[i].object.parent?.name == "food") {
             if (intersects) {
-              const isThisIntersectMarukoge = marukogeUUIDs.filter(
+              const isThisIntersectMarukoge = managerObj.marukogeUUIDs.filter(
                 (marukogeUUID) =>
                   marukogeUUID === intersects[i].object.parent?.uuid
               );
@@ -824,7 +822,11 @@ function App() {
   });
 
   const onGameFinish = () => {
-    saveScore(managerObj.score);
+    const marukogeCount = managerObj.marukogeUUIDs.length;
+    console.log("marukoge ペナルティ: ", marukogeCount * foodScore[3]);
+    const finalScore = managerObj.score + marukogeCount * foodScore[3];
+    console.log("finalScore: ", finalScore);
+    saveScore(finalScore);
   };
 
   return (
