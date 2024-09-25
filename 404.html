@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - ページが見つかりません</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            overflow: hidden;
+        }
+        #scene-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            text-align: right;
+        }
+        h1 {
+            font-size: 4em;
+            margin: 0;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        p {
+            font-size: 1.2em;
+            margin: 0.5em 0;
+            color: #ccc;
+        }
+        a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="scene-container"></div>
+    <div class="container">
+        <h1>404</h1>
+        <p>ページが見つかりません</p>
+        <p><a href="/solidjs/title">ホームに戻る</a></p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fflate@0.7.4/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/inflate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/FBXLoader.js"></script>
+    <script>
+        // Three.jsのシーンを設定
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('scene-container').appendChild(renderer.domElement);
+
+        // ライティングを設定
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+        scene.add(ambientLight);
+
+        // メインの照明（斜め上から）
+        const mainLight = new THREE.SpotLight(0xffffff, 1);
+        mainLight.position.set(3, 5, 3);
+        mainLight.angle = Math.PI / 4;
+        mainLight.penumbra = 0.1;
+        mainLight.decay = 2;
+        mainLight.distance = 200;
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+
+        // 補助光（反対側から弱く）
+        const fillLight = new THREE.DirectionalLight(0x9090ff, 0.3);
+        fillLight.position.set(-3, 3, -3);
+        scene.add(fillLight);
+
+        // 車のオブジェクトを格納する変数
+        let carObject;
+
+        // FBXモデルをロード
+        const loader = new THREE.FBXLoader();
+        loader.load(
+            "https://bonnet-grills-bbq-app-bucket.s3.amazonaws.com/models/fbx/car03.fbx",
+            (object) => {
+                // モデルのスケールを調整（より小さく）
+                object.scale.set(0.008, 0.008, 0.008);
+                
+                // モデルを配置
+                object.position.set(0, -0.25, 0);
+                
+                // シャドウの設定
+                object.traverse(function(child) {
+                    if (child.isMesh) {
+                        child.castShadow = true;
+                        child.receiveShadow = true;
+                    }
+                });
+
+                carObject = object;
+                scene.add(carObject);
+            },
+            (xhr) => {
+                console.log((xhr.loaded / xhr.total) * 100 + '% loaded');
+            },
+            (error) => {
+                console.error('An error happened', error);
+            }
+        );
+
+        // カメラの位置を設定（より近くに）
+        camera.position.set(10, 1, 2.5);
+        camera.lookAt(0, 0, 0);
+
+        // 地面を追加
+        const planeGeometry = new THREE.PlaneGeometry(5, 5);
+        const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.rotation.x = -Math.PI / 2;
+        plane.position.y = -2;
+        plane.receiveShadow = true;
+        scene.add(plane);
+
+        // レンダラーのシャドウを有効化
+        renderer.shadowMap.enabled = true;
+
+        // アニメーション関数
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (carObject) {
+                carObject.rotation.y += 0.005; // 車をゆっくり回転
+            }
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // ウィンドウのリサイズに対応
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
