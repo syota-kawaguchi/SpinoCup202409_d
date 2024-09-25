@@ -236,7 +236,7 @@ export default {
         setTimeout(() => {
           this.$refs.linkButton.style.opacity = 1;
           this.$refs.shareButtons.style.opacity = 1;
-        }, 2000);
+        }, 1000);
       }
     },
   },
