@@ -73,7 +73,7 @@ function App() {
     localStorage.setItem("score", String(score));
   };
   // TODO: ゲームの終了処理を追加
-  
+
   const managerObj = new manager(0,0);
   function getGrillTime(_name: string) {
     let _grillednessMax = 0;
@@ -220,7 +220,7 @@ function App() {
     }
 
     function initializeHera(){ //初期化の順番守って。Hera->Manaita->
-      fbxloader.load("/react/models/hera.fbx", (object) => {
+      fbxloader.load("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/hera.fbx", (object) => {
         object.position.set(2, 8, 0);
         object.rotation.y = -0.8;
         object.scale.set(0.01, 0.01, 0.01);
