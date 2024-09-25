@@ -36,7 +36,7 @@
     else {
       selectingCarIndex = 0
     }
-    rotateDirection = -1
+    rotateDirection = 1
     onAnimation = true
   }
 
@@ -51,7 +51,7 @@
     else {
       selectingCarIndex = carPaths.length - 1
     }
-    rotateDirection = 1
+    rotateDirection = -1
     onAnimation = true
   }
 
@@ -90,17 +90,17 @@
   />
 </Canvas>
 
-<button class="next-car-button" on:click={IncrementCarIndex}>
-  次へ
+<button class="change-car-button change-prev" on:click={IncrementCarIndex}>
+  <span class="dli-chevron-right"></span>
 </button>
 
-<button class="prev-car-button" on:click={DecrementCarIndex}>
-  戻る
+<button class="change-car-button change-next" on:click={DecrementCarIndex}>
+  <span class="dli-chevron-left"></span>
 </button>
 
 <div class="container">
   <CarParameter label={"Hot"} maxGuage={5} guage={2}/>
-  <CarParameter label={"Hot"} maxGuage={5} guage={3}/>
+  <CarParameter label={"Size"} maxGuage={5} guage={3}/>
   <button class="done-button" on:click={Decide}>
     決定
   </button>
@@ -123,39 +123,42 @@
     text-align: center;
   }
 
-  .next-car-button{
+  .change-car-button{
     padding: 0;
     position: absolute;
     bottom: 50%;
-    right: 10%;
+    right: 20%;
     width: 80px;
     height: 80px;
     z-index: 1;
-    /* display: block; */
-    color: white;
-    background-color: blue;
+    background-color: rgba(0,0,0,0.4);
+    border-color: rgba(0,0,0,0.4);
     text-align: center;
   }
 
-  .prev-car-button{
-    padding: 0;
-    position: absolute;
-    bottom: 50%;
-    left: 10%;
-    width: 80px;
-    height: 80px;
-    z-index: 1;
-    /* display: block; */
-    color: white;
-    background-color: blue;
-    text-align: center;
+  .change-next{
+    left: 20%;
+  }
+
+  .change-prev{
+    right: 20%
+  }
+  
+  .change-car-button:hover {
+    border-color: transparent;
+    border-color: #FFF;
+    transition: 0s;
+  }
+
+  .change-car-button:focus {
+    outline: none;
   }
 
   .container {
     margin: 0 auto;
     padding: 0;
     position: absolute;
-    bottom: 12%;
+    bottom: 4%;
     right: 0;
     left: 0;
     text-align: center;
@@ -168,8 +171,43 @@
     width: 200px;
     height: 80px;
     z-index: 1;
-    color: white;
-    background-color: blue;
     text-align: center;
+    background-color: transparent;
+    color: #FFF;
+    font-size: 40px;
+    border: 0;
+  }
+
+  .done-button:focus {
+    outline: none;
+  }
+
+  /* 右矢印 */
+  .dli-chevron-right {
+    display: inline-block;
+    vertical-align: middle;
+    color: #FFF;
+    line-height: 1;
+    width: 2.5em;
+    height: 2.5em;
+    border: 0.3em solid currentColor;
+    border-left: 0;
+    border-bottom: 0;
+    box-sizing: border-box;
+    transform: translateX(-25%) rotate(45deg);
+  }
+
+  .dli-chevron-left {
+    display: inline-block;
+    vertical-align: middle;
+    color: #FFF;;
+    line-height: 1;
+    width: 2.5em;
+    height: 2.5em;
+    border: 0.3em solid currentColor;
+    border-left: 0;
+    border-bottom: 0;
+    box-sizing: border-box;
+    transform: translateX(25%) rotate(-135deg);
   }
 </style>
