@@ -27,7 +27,6 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
     }, [countTime]);
 
     const backgroundColor = colorMapJet(countTime, timeMax)
-    console.log(`background Color : ${backgroundColor}`)
 
     return (
         <div >
