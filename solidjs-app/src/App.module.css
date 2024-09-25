@@ -2,32 +2,39 @@
   text-align: center;
 }
 
-.logo {
-  animation: logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.header {
-  background-color: #282c34;
-  min-height: 100vh;
+.main {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(45deg, #2e2f30, #5ab3bf);
+  overflow: hidden;
+}
+
+.title {
+  z-index: 1;
+  min-height: 80vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.canvas {
+  min-height: 100vh;
+  min-width: 100vw;
+  position: fixed;
+  /* 右にずらして拡大 */
+  transform: translateX(30%) translateY(-10%) scale(1.5);
+  overflow: hidden;
+}
+
+.p{
   color: white;
-}
-
-.link {
-  color: #b318f0;
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  font-size: 3rem;
+  position: fixed;
+  bottom: 10%;
+  left: 10%;
 }
