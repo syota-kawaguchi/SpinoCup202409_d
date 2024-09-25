@@ -39,6 +39,7 @@
         class="background"
         src="https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result_stamp02_light_2.webp"
         alt="背景"
+        ref="background"
       />
       <div class="overlay"></div>
     </div>
@@ -136,11 +137,31 @@ export default {
       this.loadGLTFModel("gltfModelRight");
     }
 
+    // 背景画像のパスをスコアに応じて切り替える
+    this.setBackgroundImage();
+
     // カメラの距離を設定
     this.animateCamera();
   },
 
   methods: {
+    setBackgroundImage() {
+      let imagePath;
+
+      if (this.score < 500) {
+        imagePath =
+          "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result_stamp03_light_2.webp";
+      } else if (this.score < 1000) {
+        imagePath =
+          "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result_stamp02_light_2.webp";
+      } else {
+        imagePath =
+          "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result_stamp01_light_2.webp";
+      }
+
+      // 背景画像を更新
+      this.$refs.background.src = imagePath;
+    },
     loadGLTFModel(
       modelName = "gltfModelCenter" // モデル名のデフォルト値を設定
     ) {
