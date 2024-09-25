@@ -23,16 +23,19 @@
       />
     </TresCanvas>
 
-    <div class="text-overlay" ref="textOverlay">
-      <span class="count-text">{{ displayScore }}</span>
-      <span v-if="displayScore === score">YUMMY</span>
+    <div class="center-text-container">
+      <div class="text-overlay" ref="textOverlay">
+        <span class="count-text">{{ displayScore }}</span>
+        <span v-if="displayScore === score">YUMMY</span>
+      </div>
+
+      <a href="/solidjs/title" class="link" v-if="showLinks">
+        Go back to Title
+      </a>
     </div>
 
     <!-- SNSシェアボタン -->
-    <div class="share-buttons">
-      <a href="/solidjs/title" class="btn btn-primary home-button">
-        Go back to Home
-      </a>
+    <div class="share-buttons" v-if="showLinks">
       <a
         href="https://twitter.com/intent/tweet?text=My%20score%20is%2080000%20yummy!&url=https://example.com"
         target="_blank"
@@ -79,6 +82,7 @@ export default {
       driftPositionZ: 0,
       driftPositionZSub: 0,
       selectedCarID: "car01",
+      showLinks: false, // To control button visibility
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
   },
@@ -183,6 +187,11 @@ export default {
         this.$refs.textOverlay.style.color = `rgba(${
           this.score < 500 ? "0" : this.score < 1000 ? "100" : "233"
         }, 44, 44, 1)`;
+
+        // Delay showing the buttons by 3 seconds
+        setTimeout(() => {
+          this.showLinks = true;
+        }, 2000);
       }
     },
   },
@@ -210,15 +219,19 @@ export default {
   min-width: 25rem;
 }
 
+.center-text-container {
+  width: 100%;
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
 /* テキストオーバーレイ設定 */
 .text-overlay {
   span {
     display: inline-block;
   }
-  display: flex;
-  position: absolute;
-  top: 50%;
-  left: 50%;
   transform: translate(-50%, -50%) rotate(10deg); /* 15度傾ける */
   color: #e92c2c; /* テキストの色 */
   font-size: 12rem; /* テキストの標準サイズ */
@@ -229,6 +242,25 @@ export default {
   line-height: 0.8;
   -webkit-text-stroke-width: 6px;
   -webkit-text-stroke-color: rgb(0, 0, 0);
+}
+
+.link {
+  position: absolute;
+  bottom: -10rem;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+  background-color: rgb(0, 0, 0);
+  &:hover {
+    background-color: #2e2f30;
+  }
+
+  transition: opacity 0.3s;
+  padding: 20px 60px;
+  border-radius: 10px;
+  border: 1px solid white;
+  letter-spacing: 2px;
 }
 
 /* SNSシェアボタンのスタイル */
