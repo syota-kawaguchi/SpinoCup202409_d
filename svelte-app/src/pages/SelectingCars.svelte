@@ -3,30 +3,41 @@
   import { Canvas, useTask } from "@threlte/core";
   import SelectingCarsComponets from "../components/SelectingCarsComponets.svelte";
   import { carPaths } from "../const";
+    import { rotate } from "three/webgpu";
 
-  let carIndex = 0;
+  type RotateDirection = Clockwise | CounterClockwise
+  type Clockwise = {direction : number}
+  type CounterClockwise = {direction : 1}
+
+  let selectingCarIndex = 0;
+  let selectedCarIndex = selectingCarIndex;
+  let rotateDirection = -1;
   const IncrementCarIndex = () => {
-    if (carIndex < carPaths.length - 1) {
-      carIndex++
+    selectedCarIndex = selectingCarIndex
+    rotateDirection = -1
+    if (selectingCarIndex < carPaths.length - 1) {
+      selectingCarIndex++
     }
     else {
-      carIndex = 0
+      selectingCarIndex = 0
     }
   }
 
   const DecrementCarIndex = () => {
-    if (0 < carIndex) {
-      carIndex--
+    selectedCarIndex = selectingCarIndex
+    rotateDirection = 1
+    if (0 < selectingCarIndex) {
+      selectingCarIndex--
     }
     else {
-      carIndex = carPaths.length - 1
+      selectingCarIndex = carPaths.length - 1
     }
   }
 
 </script>
 
 <Canvas>
-  <SelectingCarsComponets carPath={carPaths[carIndex]}/>
+  <SelectingCarsComponets selectedCarIndex={selectedCarIndex} selectingCarIndex={selectingCarIndex} rotateDirection={rotateDirection}/>
 </Canvas>
 
 <button class="next-car-button" on:click={IncrementCarIndex}>
