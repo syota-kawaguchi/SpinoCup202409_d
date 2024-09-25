@@ -7,7 +7,7 @@
       <TresDirectionalLight intensity="1" position="[1, 1, 1]" />
       <!-- 方向性光の追加 -->
       <TresObject3D
-        :position="[driftPosition, 0, -cameraDistance + 2 * driftPosition]"
+        :position="[driftPositionX, 0, driftPositionZ]"
         :rotation="[0, driftRotation, 0]"
         ref="gltfModel"
       />
@@ -62,10 +62,11 @@ export default {
     return {
       score: 0,
       displayScore: 0,
-      cameraDistance: 150,
+      time: 150,
       driftRate: 1,
       driftRotation: 0,
-      driftPosition: 0,
+      driftPositionX: 0,
+      driftPositionZ: 0,
       selectedCarID: "car01",
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
@@ -124,27 +125,25 @@ export default {
     },
     animateCamera() {
       // 4になるまでカメラの距離を減らす
-      if (this.cameraDistance > 4) {
-        this.cameraDistance -= 1;
-        console.log(this.driftRate)
+      if (this.time > 4) {
+        this.time -= 1;
+        console.log(this.driftRate);
+        this.driftPositionZ = -this.time + 2 * this.driftPositionX;
         // 後半だけカメラを回転させる
-        if (this.cameraDistance < 54) {
+        if (this.time < 54) {
           switch (true) {
-            case this.score < 300:
-              this.driftRate += 0.2;
+            case this.score < 500:
+              this.driftRotation += 0.2;
               break;
             case this.score < 1000:
+              this.driftRate = (this.time - 4) / 50;
+              this.driftPositionX =
+                5 * Math.sin((1 - this.driftRate) * Math.PI);
+              this.driftRotation = Math.sin(
+                ((1 - this.driftRate) * 3 * Math.PI) / 2
+              );
               break;
             default:
-              this.driftRate = (this.cameraDistance - 4) / 50;
-              this.driftPosition = 5 * Math.sin((1 - this.driftRate) * Math.PI);
-              if (this.driftRotation > -0.7) {
-                this.driftRotation = Math.sin(
-                  ((1 - this.driftRate) * 3 * Math.PI) / 2
-                );
-              } else {
-                this.driftRotation = -0.7;
-              }
               break;
           }
         }
