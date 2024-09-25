@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "react-app/package.json", "use": "@vercel/node" },
+    { "src": "vue-app/package.json", "use": "@vercel/node" },
+    { "src": "svelte-app/package.json", "use": "@vercel/node" },
+    { "src": "solidjs-app/package.json", "use": "@vercel/node" },
+    { "src": "vanilla-app/package.json", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/react/(.*)", "dest": "/react-app/$1" },
+    { "src": "/vue/(.*)", "dest": "/vue-app/$1" },
+    { "src": "/svelte/(.*)", "dest": "/svelte-app/$1" },
+    { "src": "/solidjs/(.*)", "dest": "/solidjs-app/$1" },
+    { "src": "/(.*)", "dest": "/vanilla-app/$1" }
+  ]
+}
