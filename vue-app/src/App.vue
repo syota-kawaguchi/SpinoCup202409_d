@@ -1,11 +1,18 @@
 <template>
   <div class="image-container">
-
-    <TresCanvas style="max-height: 100vh; min-height: 100vh;">
-      <TresPerspectiveCamera :position="[cameraDistance, 0, cameraDistance]" :rotation="[0, Math.PI / 4, 0]" />
-      <TresAmbientLight intensity="2" /> <!-- 環境光の追加 -->
-      <TresDirectionalLight intensity="1" position="[1, 1, 1]" /> <!-- 方向性光の追加 -->
-      <TresObject3D :rotation="[0, Math.PI - 3 * Math.PI / 4, 0]"  ref="gltfModel" />
+    <TresCanvas style="max-height: 100vh; min-height: 100vh">
+      <TresPerspectiveCamera
+        :position="[cameraDistance, 0, cameraDistance]"
+        :rotation="[0, Math.PI / 4, 0]"
+      />
+      <TresAmbientLight intensity="2" />
+      <!-- 環境光の追加 -->
+      <TresDirectionalLight intensity="1" position="[1, 1, 1]" />
+      <!-- 方向性光の追加 -->
+      <TresObject3D
+        :rotation="[0, Math.PI - ((4 - driftRotation) * Math.PI) / 4, 0]"
+        ref="gltfModel"
+      />
     </TresCanvas>
 
     <div class="text-overlay">
@@ -43,11 +50,10 @@
   </div>
 </template>
 
-
 <script>
-import { TresCanvas } from '@tresjs/core'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Object3D } from 'three';
+import { TresCanvas } from "@tresjs/core";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Object3D } from "three";
 
 export default {
   name: "ImageWithText",
@@ -56,6 +62,7 @@ export default {
       score: 0,
       displayScore: 0,
       cameraDistance: 150,
+      driftRotation: 1,
       selectedCarID: "car01",
       gltfLoader: new GLTFLoader(), // GLTFLoaderをインスタンス化
     };
@@ -80,7 +87,7 @@ export default {
     // consoleにスコアを表示
     if (storedScore) {
       this.score = parseInt(storedScore, 10);
-    }else{
+    } else {
       this.score = 0;
     }
     // localStorageからスコアを取得
@@ -89,10 +96,10 @@ export default {
     console.log(storedSelectedCarID);
     if (storedScore) {
       this.selectedCarID = storedSelectedCarID;
-    }else{
+    } else {
       this.selectedCarID = "car01";
     }
-  
+
     // GLTFモデルを読み込み
     this.loadGLTFModel();
 
@@ -103,7 +110,7 @@ export default {
   methods: {
     loadGLTFModel() {
       // selectedCarIDに基づいてモデルのパスを決定する
-      const modelPath = `https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/${this.selectedCarID}.gltf`; 
+      const modelPath = `https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/gltf/${this.selectedCarID}.gltf`;
 
       // GLTFモデルをロード
       this.gltfLoader.load(modelPath, (gltf) => {
@@ -117,9 +124,14 @@ export default {
       // 4になるまでカメラの距離を減らす
       if (this.cameraDistance > 4) {
         this.cameraDistance -= 1;
+        // 後半だけカメラを回転させる
+        if (this.cameraDistance < 34) {
+          this.driftRotation = (this.cameraDistance - 4) / 30;
+          this.$refs.gltfModel.rotation.y = this.driftRotation;
+        }
         // スコアをカウントアップする
         if (this.displayScore < this.score) {
-          this.displayScore += 1; // 100ずつ増やす
+          this.displayScore += 1; // 1ずつ増やす
         }
         requestAnimationFrame(this.animateCamera);
       } else {
@@ -131,7 +143,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* コンテナ全体のスタイル */
 .image-container {
   margin: 0;
@@ -154,7 +165,7 @@ export default {
 
 /* テキストオーバーレイ設定 */
 .text-overlay {
-  span{
+  span {
     display: inline-block;
   }
   display: flex;
