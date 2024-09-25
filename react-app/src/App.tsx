@@ -2,20 +2,45 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { ThermoGraphyCircle } from "./component/countdownTimer";
-import { niku,tamanegi,medamayaki,timeMax,carSizes } from "./const";
+import { niku,tamanegi,medamayaki,timeMax,carSizes,foodScore } from "./const";
 import { FinishPageModal } from "./component/FinishPage";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
 
-class manager {
+class manager { 
   constructor(
-    public score: number,
-    public sunpower: number
+    public spawnGage: number = 0,
+    public spawnCount: number = 3,
+    public spawnRate: number = 0.001,
+    public score: number = 0,
+    public sunpower: number = 0,
+    public initialAnimeTime: number = 1,
+    public sunpowerMult: number = 1,
+    public onGame: boolean = true
   ) 
   {
-    
+    // this.score = score
+    // this.num = 0
+  }
+  gameCheck(_time:number){
+    return _time<timeMax;
+  }
+  initialAnimeUpdate(){
+    if(this.initialAnimeTime<=0){
+      this.initialAnimeTime = 0;
+      return;
+    }
+    this.initialAnimeTime -= 0.01;
+  }
+  spawnGageUpdate(){
+    this.spawnGage += this.spawnRate;
+    if(this.spawnGage >= this.spawnCount){
+      this.spawnGage = 0;
+      return this.spawnCount;
+    }
+    return 0;
   }
   addScore(_num:number){
     this.score += _num;
@@ -54,6 +79,7 @@ class FoodInfo{
 }
 
 function App() {
+  const managerObj = new manager();
   const [carID, setCarID] = useState<string | null>(null);
   const [isGameFinished, setIsGameFinished] =useState<boolean>(false);
 
@@ -62,26 +88,33 @@ function App() {
     if (selectedCarID) {
       setCarID(selectedCarID);
     } else {
-      setCarID("car02");
+      setCarID("car03");
     }
   }, []);
 
   let carSizeX: number;
   let carSizeY: number;
+  let carHeight: number;
 
   switch (carID) {
     case "car01":
     carSizeX = carSizes[0][0];
     carSizeY = carSizes[0][1];
+    carHeight = carSizes[0][2];
+    managerObj.sunpowerMult = carSizes[0][3];
       break;
     case "car02":
     carSizeX = carSizes[1][0];  
     carSizeY = carSizes[1][1];  
-      break;
+    carHeight = carSizes[1][2];
+    managerObj.sunpowerMult = carSizes[1][3];
+    break;
     case "car03":
     carSizeX = carSizes[2][0];  
     carSizeY = carSizes[2][1];  
-      break;
+    carHeight = carSizes[2][2];
+    managerObj.sunpowerMult = carSizes[2][3];
+    break;
   
     default:
       break;
@@ -91,7 +124,6 @@ function App() {
     localStorage.setItem("score", String(score));
   };
 
-  const managerObj = new manager(0,0);
   function getGrillTime(_name: string) {
     let _grillednessMax = 0;
           switch (_name) {
@@ -288,9 +320,9 @@ function App() {
 
     function loadMultipleFBXModels(_filename: string, _tag: string, _name: string, _count: number, _scale: number) {
       for (let i = 0; i < _count; i++) {
-        const posX = Math.random() * 3 + 6; // Random X position between -50 and 50
-        const posY = 7.8;// Math.random() * 100 - 50; // Random Y position between -50 and 50
-        const posZ = Math.random() * 4 - 4; // Random Z position between -50 and 50
+        const posX = Math.random() * 1.5 + 6.3;
+        const posY = 7.8;
+        const posZ = Math.random() * 3 - 2.5;
         const rotate = Math.random() * 3;
 
         loadFBXModelAsFood(_filename, _tag, _name, false, "nama", getGrillTime(_name),0, posX, posY, posZ, rotate, _scale);
@@ -298,12 +330,12 @@ function App() {
     }
 
     function initializeStage(){ // stageを既定の位置に配置
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx","stage",0,0,0,0,0.1);
+      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx","stage",0,-carHeight,0,0,0.1);
       loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/"+carID+".fbx","car",0,5,-10+(60-carSizeX)*0.05,0,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",5,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",5,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",5,0.05);
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-10.4+(60-carSizeX)*0.05,7,1,-1.57,0.02);
+      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",3,0.05);
+      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",3,0.05);
+      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",3,0.05);
+      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-10.5+(60-carSizeX)*0.05,7,1,-1.57,0.02);
       
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,-Math.sqrt(carSizeY),0,0.03);
@@ -355,6 +387,7 @@ function App() {
     }
 
     function deleteModel(_formerObject: THREE.Object3D, _num: number){
+      managerObj.spawnGage += 1;
       scene.remove(_formerObject);
       foodModels.splice(_num,1);
       foodArray.splice(_num,1);
@@ -433,7 +466,22 @@ function App() {
               if(foodArray[i].status != "yake"){
                 deleteModel(foodModels[i],i);
               }else{
-                managerObj.addScore(1);
+                let _score = 0;
+                switch (foodArray[i].name) {
+                  case "niku":
+                    _score = foodScore[0];
+                    break;
+                    case "tamanegi":
+                      _score = foodScore[1];
+                      break;
+                      case "medamayaki":
+                    _score = foodScore[2];
+                    break;
+                  default:
+                    _score = 10;
+                    break;
+                }
+                managerObj.addScore(_score);
                 deleteModel(foodModels[i],i);
                 console.log(managerObj.score);
               }
@@ -457,6 +505,25 @@ function App() {
         //checkFoodsOnBonnet();
         //changeModel(dragObject.dragTarget,0,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/models/niku_yake.fbx");
         dragObject.dragTarget = null;
+      }
+    }
+
+    function spawnFood(_num:number){
+      for(let i=0;i<_num;i++){
+        switch (Math.floor(Math.random()*3)) {
+          case 0:
+            loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",1,0.05);
+            break;
+          case 1:
+            loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",1,0.05);
+            break;
+          case 2:
+            loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",1,0.05);
+            break;
+        
+          default:
+            break;
+        }
       }
     }
 
@@ -489,7 +556,7 @@ function App() {
       //   }
 
       for(let i = 0; i<foodArray.length; i++){
-        foodArray[i].grill(managerObj.sunpower);
+        foodArray[i].grill(managerObj.sunpower*managerObj.sunpowerMult);
         if(foodArray[i].grillednessCheck() == "koge"){
               foodArray[i].status = "koge";
               changeModel(foodModels[i],foodArray[i].grilledness,i,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" + foodArray[i].name + "_koge.fbx");
@@ -498,6 +565,8 @@ function App() {
               changeModel(foodModels[i],foodArray[i].grilledness,i,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" + foodArray[i].name + "_yake.fbx");
         }
       }
+
+
 
       // }
 
@@ -509,10 +578,17 @@ function App() {
 
       //console.log(foodArray.length);
       //console.log(foodModels.length);
+      spawnFood(managerObj.spawnGageUpdate());
+
+      managerObj.initialAnimeUpdate();
+      camera.position.set(0+managerObj.initialAnimeTime*40,13-managerObj.initialAnimeTime*5,3+managerObj.initialAnimeTime*35);
+      camera.lookAt(0,4+managerObj.initialAnimeTime*10,0);
 
       managerObj.sunpowerCalc(clock.getElapsedTime());
       ambientLight.color.set(managerObj.sunpower*6,managerObj.sunpower*5,1+managerObj.sunpower*5);
       renderer.render(scene, camera); // レンダリング
+
+      managerObj.gameCheck(clock.getElapsedTime()); //これでゲームがおわってるか取得できる return (boolean); false->終わってる
     }
 
     // リサイズ対応
