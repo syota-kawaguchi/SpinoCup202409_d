@@ -11,8 +11,9 @@
     { id: 3, name: "Car 3" },
   ];
 
-  const _handleSelectCar = (id: number) => {
-    localStorage.setItem("selectedCarID", id.toString());
+  const _handleSelectCar = (_id: number) => {
+    const id = `car0${_id}`
+    localStorage.setItem("selectedCarID", id);
   };
 
   const intensityBright = 1.8
