@@ -402,6 +402,9 @@ function App() {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
+      if (!managerObj.onGame) { 
+        return 
+      }
       // レイキャスティングでマウスと重なるオブジェクトを取得
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
@@ -424,6 +427,9 @@ function App() {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       // レイキャスティングでマウスと重なるオブジェクトを取得
+      if (!managerObj.onGame) { 
+        return 
+      }
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
@@ -613,6 +619,7 @@ function App() {
   },);
 
   const onGameFinish = () => {
+    managerObj.onGame = false
     saveScore(managerObj.score)
   }
 
