@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'; // FBXLoaderをインポート
 
 // シーンの作成
 const scene = new THREE.Scene()
@@ -21,11 +22,15 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
 directionalLight.position.set(5, 10, 7.5)
 scene.add(directionalLight)
 
-// 車のボンネットの作成
-const bonnetGeometry = new THREE.BoxGeometry(4, 0.1, 3)
-const bonnetMaterial = new THREE.MeshStandardMaterial({ color: 0x555555 })
-const bonnet = new THREE.Mesh(bonnetGeometry, bonnetMaterial)
-scene.add(bonnet)
+// FBXローダーを使用してボンネットのFBXモデルを読み込み
+const loader = new FBXLoader();
+loader.load('https://bonnet-grills-bbq-app-bucket.s3.amazonaws.com/models/fbx/car03.fbx', (fbx: any) => {
+  fbx.scale.set(0.02, 0.02, 0.02); // サイズ調整
+  fbx.position.set(0, -1, -5); // 位置調整
+  scene.add(fbx);
+}, undefined, (error: any) => {
+  console.error('FBXモデルの読み込みに失敗しました:', error);
+});
 
 // 食材クラスの定義
 class Ingredient extends THREE.Mesh {
@@ -51,7 +56,6 @@ class Ingredient extends THREE.Mesh {
     if (this.position.y <= 0.1) {
       this.position.y = 0.1;
       this.velocity.set(0, 0, 0);
-      // 焼ける効果（色を変更）
       if (this.material instanceof THREE.MeshStandardMaterial) {
         this.material.color.setHex(0x8B4513);
       }
@@ -92,12 +96,10 @@ function createIngredient() {
 const animate = () => {
   requestAnimationFrame(animate);
 
-  // ランダムに新しい食材を生成
   if (Math.random() < 0.02) {
     createIngredient();
   }
 
-  // 各食材のアップデート
   ingredients.forEach(ingredient => ingredient.update());
 
   renderer.render(scene, camera);
