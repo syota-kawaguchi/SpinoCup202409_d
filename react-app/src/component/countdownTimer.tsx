@@ -46,7 +46,7 @@ type Color = {
 
 const getColor = (v:number, vMin: number, vMax:number) => {
 
-    let c : Color = {red : 1.0, green : 1.0, blue : 1.0}
+    const c : Color = {red : 1.0, green : 1.0, blue : 1.0}
 
     if (v < vMin) {
         v = vMin
@@ -72,7 +72,7 @@ const getColor = (v:number, vMin: number, vMax:number) => {
         c.blue = 0
     }
 
-    let color8bit : Color = {red : c.red * 255, green : c.green * 255, blue : c.blue * 255}
+    const color8bit : Color = {red : c.red * 255, green : c.green * 255, blue : c.blue * 255}
 
     return color8bit
 }
