@@ -1,6 +1,14 @@
 <template>
   <div class="image-container">
-    <img src="https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/images/result-car.jpg" alt="Car" />
+
+    <TresCanvas window-size>
+      <TresPerspectiveCamera />
+      <TresMesh>
+        <TresTorusGeometry :args="[1, 0.5, 16, 32]" />
+        <TresMeshBasicMaterial color="orange" />
+      </TresMesh>
+    </TresCanvas>
+
     <div class="text-overlay">
       <span class="large-number">{{ score }}</span> yummy
     </div>
@@ -35,7 +43,10 @@
   </div>
 </template>
 
+
 <script>
+import { TresCanvas } from '@tresjs/core'
+
 export default {
   name: "ImageWithText",
   data() {
@@ -71,7 +82,7 @@ export default {
 
 <style scoped>
 /* コンテナ設定：画像を固定し、画面全体に表示 */
-.image-container {
+.canvas {
   position: fixed;
   top: 0;
   left: 0;
