@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { ThermoGraphyCircle } from "./component/countdownTimer";
-import { niku,tamanegi,medamayaki,timeMax,carSizes } from "./const";
+import { niku,tamanegi,medamayaki,timeMax,carSizes,foodScore } from "./const";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
@@ -134,14 +134,12 @@ function App() {
   const dragObject: {
     mode: number;
     dragTarget: THREE.Object3D | null;
-    onFood: boolean;
     x: number;
     y: number;
     z: number;
 } = {
     mode: 0,
     dragTarget: null,
-    onFood: false,
     x: 0,
     y: 0,
     z: 0
@@ -319,9 +317,9 @@ function App() {
     function initializeStage(){ // stageを既定の位置に配置
       loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx","stage",0,0,0,0,0.1);
       loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/"+carID+".fbx","car",0,5,-10+(60-carSizeX)*0.05,0,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",5,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",5,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",5,0.05);
+      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",3,0.05);
+      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",3,0.05);
+      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",3,0.05);
       loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-10+(60-carSizeX)*0.05,7,1,-1.57,0.02);
       
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
@@ -453,7 +451,22 @@ function App() {
               if(foodArray[i].status != "yake"){
                 deleteModel(foodModels[i],i);
               }else{
-                managerObj.addScore(1);
+                let _score = 0;
+                switch (foodArray[i].name) {
+                  case "niku":
+                    _score = foodScore[0];
+                    break;
+                    case "tamanegi":
+                      _score = foodScore[1];
+                      break;
+                      case "medamayaki":
+                    _score = foodScore[2];
+                    break;
+                  default:
+                    _score = 10;
+                    break;
+                }
+                managerObj.addScore(_score);
                 deleteModel(foodModels[i],i);
                 console.log(managerObj.score);
               }
