@@ -13,6 +13,11 @@ export default defineConfig({
       clientPort: 3001,
     },
   },
+  resolve: {
+    alias: {
+      'react-circular-progressbar': 'react-circular-progressbar/dist/index.esm.js',
+    },
+  },
   base: "/react/play",
   build: {
     outDir: 'dist/react/play'
