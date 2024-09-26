@@ -136,3 +136,46 @@ body {
   right: 0;
   z-index: 1;
 }
+.scale-bar-container {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  height: 200px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.scale-bar {
+  width: 4px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 2px;
+  position: relative;
+}
+
+.scale-mark {
+  position: absolute;
+  left: 0;
+  display: flex;
+  align-items: center;
+}
+
+.scale-mark:nth-child(1) { top: 0; }
+.scale-mark:nth-child(2) { top: 50%; }
+.scale-mark:nth-child(3) { bottom: 0; }
+
+.mark-line {
+  width: 10px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.mark-label {
+  margin-left: 5px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}

@@ -63,6 +63,15 @@
         <i class="fab fa-line"></i>
       </a>
     </div>
+    <!-- 左下のランク -->
+    <div class="scale-bar-container">
+      <div class="scale-bar">
+        <div class="scale-mark" v-for="mark,index in ['1000 仙人', '500 パンピー', '0 へなちょこ']" :key="index">
+          <div class="mark-line"></div>
+          <span class="mark-label">{{ mark }} </span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -239,6 +248,11 @@ export default {
         }, 1000);
       }
     },
+  },
+  computed: {
+    rankPercentage() {
+      return Math.min(this.score / 10, 100);
+    }
   },
 };
 </script>
