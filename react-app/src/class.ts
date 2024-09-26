@@ -34,7 +34,12 @@ export class Manager {
     return 0;
   }
   addScore(_num: number) {
-    this.score += _num;
+    const addedScore = this.score + _num;
+    if (addedScore < 0) {
+      this.score = 0;
+    } else {
+      this.score = addedScore;
+    }
   }
   sunpowerCalc(_time: number) {
     this.sunpower = Math.sin((_time / timeMax) * Math.PI);
@@ -49,7 +54,7 @@ export class FoodInfo {
     public status: string,
     public maxGrilledness: number,
     public grilledness: number
-  ) {}
+  ) { }
   grill(_power: number) {
     if (this.isOnBonnet == true) {
       this.grilledness += _power;

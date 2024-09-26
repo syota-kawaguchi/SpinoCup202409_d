@@ -216,6 +216,9 @@ function App() {
 
         if (_status == "marukoge") {
           managerObj.marukogeUUIDs.push(object.uuid);
+          console.log(managerObj.marukogeUUIDs)
+          
+          // managerObj.addScore(_score);
         }
         foodModels.push(object); // Store the model in the array
         foodArray.push(
@@ -689,6 +692,8 @@ function App() {
           );
         } else if (foodArray[i].grillednessCheck() == "marukoge") {
           foodArray[i].status = "marukoge";
+          // 点数を引く実装を入れる
+          managerObj.addScore(foodScore[3]);
           changeModel(
             foodModels[i],
             foodArray[i].grilledness,
@@ -750,9 +755,8 @@ function App() {
   });
 
   const onGameFinish = () => {
-    const marukogeCount = managerObj.marukogeUUIDs.length;
-    console.log("marukoge ペナルティ: ", marukogeCount * foodScore[3]);
-    const finalScore = managerObj.score + marukogeCount * foodScore[3];
+    const finalScore = managerObj.score
+    console.log("finalScore: ", finalScore);
     console.log("finalScore: ", finalScore > 0 ? finalScore : 0);
     managerObj.onGame = false
     saveScore(finalScore)

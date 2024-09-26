@@ -38,23 +38,24 @@
         object-fit: cover;
       }
       .button-container {
-        position: absolute;
+        position: fixed;
         bottom: 20px;
         right: 20px;
-        display: flex;
-        gap: 10px;
+        z-index: 1000;
       }
       .nav-button {
-        padding: 30px 60px;
-        font-size: 48px;
-        background-color: rgba(255, 255, 255, 0.7);
+        background: none;
         border: none;
-        border-radius: 5px;
+        padding: 0;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: transform 0.3s ease;
       }
       .nav-button:hover {
-        background-color: rgba(255, 255, 255, 0.9);
+        transform: scale(1.1);
+      }
+      .nav-button img {
+        width: 200px; /* Adjust this value to match your image size */
+        height: auto;
       }
     </style>
   </head>
@@ -62,8 +63,9 @@
     <div class="container">
       <img src="/howtoplay_v2_light.jpg" alt="Bonnet-Grills-B.B.Q Background" class="background-image">
       <div class="button-container">
-        <!-- <button class="nav-button" onclick="navigateBack()">戻る</button> -->
-        <button class="nav-button" onclick="navigateForward()">進む</button>
+        <button class="nav-button" onclick="navigateForward()">
+          <img src="/arrow.webp" alt="進む">
+        </button>
       </div>
     </div>
 

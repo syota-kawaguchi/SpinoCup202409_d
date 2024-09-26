@@ -31,6 +31,7 @@ export const DisplayCurrentScore = ({
 
       if (managerObj.score !== currentScore) {
         setCurrentScore(managerObj.score); // stateに新しいスコアを反映
+        console.log("score updated", managerObj.score);
         newAddScore.push({
           additionalScore: managerObj.score - currentScore,
           time: 0,
