@@ -8,7 +8,7 @@ export const timeMax: number = 50;
 export const carSizes: number[][] = [[26,12,-1.5,1],[38,14,0,1.5],[60,36,5,1.5]];
 
 export class ModelURLS {
-    static hira = "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/hera.fbx"
+    static hera = "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/hera.fbx"
     static manaita = "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx"
     static stage01 = "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx"
 
