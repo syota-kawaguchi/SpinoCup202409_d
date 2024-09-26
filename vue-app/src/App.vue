@@ -64,7 +64,7 @@
       </a>
     </div>
     <!-- 左下のランク -->
-    <div class="scale-bar-container">
+    <div class="scale-bar-container" ref="scaleBar">
       <div class="scale-bar">
         <div class="scale-mark" v-for="mark,index in ['1000 仙人', '500 パンピー', '0 へなちょこ']" :key="index">
           <div class="mark-line"></div>
@@ -240,6 +240,7 @@ export default {
 
         // overlay-and-backgroundのopacityを0にする
         this.$refs.overlayAndBackground.style.opacity = 1;
+        this.$refs.scaleBar.style.opacity = 1;
 
         // Delay showing the buttons by 3 seconds
         setTimeout(() => {
