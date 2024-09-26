@@ -25,7 +25,7 @@ class manager {
     public initialAnimeTime: number = 1,
     public sunpowerMult: number = 1,
     public marukogeUUIDs: string[] = [],
-    public onGame:boolean = false
+    public onGame:boolean = true
   ) {
     // this.score = score
     // this.num = 0
