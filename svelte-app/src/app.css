@@ -13,6 +13,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+span {
+  font-family: "Dela Gothic One", sans-serif;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -38,7 +42,6 @@ h1 {
 .card {
   padding: 2em;
 }
-
 
 button {
   border-radius: 8px;

@@ -1,29 +1,33 @@
 import { useState, useEffect } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
+import { CircularProgressbar } from 'react-circular-progressbar/dist/index.esm.js';
 import 'react-circular-progressbar/dist/styles.css';
 import styles from '../App.module.css'
 import { timeMax } from '../const';
+import { FinishPageModal } from './FinishPage';
 
 type ThermoGraphyCircleProps = {
     startTime : number
     text : string
+    onGameFinish: () => void
 }
 
 export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
   const [countTime, setCount] = useState<number>(props.startTime)
+  const isGameFinished = countTime >= timeMax
 
     useEffect(() => {
         const interval = setInterval(() => {
             if (timeMax <= countTime) {
-                console.log(`will running clear interval`)
+                props.onGameFinish()
                 clearInterval(interval)
             }
             else {
                 setCount(prevTime => prevTime + 1)
-                console.log(`countTime : ${countTime}`)
             }
         }, 1000);
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval)
+        };
     }, [countTime]);
 
     const backgroundColor = colorMapJet(countTime, timeMax)
@@ -34,6 +38,7 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
             <div className={styles.circle}>
                 <CircularProgressbar value={countTime} text={`${props.text}`}></CircularProgressbar>
             </div>
+            <FinishPageModal isGameFinished={isGameFinished} />
         </div>
     )
 }
@@ -46,7 +51,7 @@ type Color = {
 
 const getColor = (v:number, vMin: number, vMax:number) => {
 
-    let c : Color = {red : 1.0, green : 1.0, blue : 1.0}
+    const c : Color = {red : 1.0, green : 1.0, blue : 1.0}
 
     if (v < vMin) {
         v = vMin
@@ -72,7 +77,7 @@ const getColor = (v:number, vMin: number, vMax:number) => {
         c.blue = 0
     }
 
-    let color8bit : Color = {red : c.red * 255, green : c.green * 255, blue : c.blue * 255}
+    const color8bit : Color = {red : c.red * 255, green : c.green * 255, blue : c.blue * 255}
 
     return color8bit
 }
