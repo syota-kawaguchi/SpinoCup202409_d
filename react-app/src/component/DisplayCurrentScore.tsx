@@ -2,6 +2,7 @@ import "react-circular-progressbar/dist/styles.css";
 import styles from "./displayCurrentScore.module.css";
 import { Manager } from "../class";
 import { useEffect, useState } from "react";
+import { foodScore } from "../const";
 
 interface AddScore {
   additionalScore: number;
@@ -17,11 +18,10 @@ export const DisplayCurrentScore = ({
   const [currentScore, setCurrentScore] = useState(managerObj.score);
   //   加点があった場合に加点分を下に表示するためのstate
   const [addScore, setAddScore] = useState<AddScore[]>([]);
-  //   const addScore = [
-  //     { additionalScore: 30, time: 0 },
-  //     { additionalScore: 20, time: 1 },
-  //     { additionalScore: 10, time: 0 },
-  //   ];
+  const [marukogeCount, setMarukogeCount] = useState<number>(
+    managerObj.marukogeUUIDs.length
+  );
+
   console.log(addScore);
 
   useEffect(() => {
@@ -36,6 +36,24 @@ export const DisplayCurrentScore = ({
           time: 0,
         });
       }
+
+      if (managerObj.marukogeUUIDs.length !== marukogeCount) {
+        // managerObj.marukogeUUIDs.length - marukogeCount 分だけ加点分を追加
+        newAddScore.push(
+          ...Array.from(
+            { length: managerObj.marukogeUUIDs.length - marukogeCount },
+            (_) => {
+              return {
+                additionalScore: foodScore[3],
+                time: 0,
+              };
+            }
+          )
+        );
+
+        setMarukogeCount(managerObj.marukogeUUIDs.length);
+      }
+
       newAddScore.forEach((score) => {
         score.time += 0.03; // 加点分の表示時間を更新
       });
@@ -44,7 +62,7 @@ export const DisplayCurrentScore = ({
     }, 10); // 100msごとにチェック (必要に応じて調整)
 
     return () => clearInterval(interval); // コンポーネントのアンマウント時にクリーンアップ
-  }, [managerObj, currentScore]);
+  }, [managerObj, currentScore, marukogeCount]);
 
   const color = (score: AddScore) => {
     switch (score.additionalScore) {
@@ -69,11 +87,12 @@ export const DisplayCurrentScore = ({
             className={styles.additionalScore}
             style={{
               color: `${color(score)}`,
-              bottom: `${(score.time) * 20}px`,
+              bottom: `${score.time * 20}px`,
               opacity: `${1 - score.time}`,
             }}
           >
-            +{score.additionalScore}
+            {score.additionalScore > 0 ? "+" : ""}
+            {score.additionalScore}
           </p>
         ))}
       </div>
