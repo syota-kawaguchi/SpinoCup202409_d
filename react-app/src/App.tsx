@@ -349,21 +349,21 @@ function App() {
         ModelURLS.niku,
         "food",
         "niku",
-        3,
+        4,
         0.05
       );
       loadMultipleFBXModels(
         ModelURLS.tamanegi,
         "food",
         "tamanegi",
-        3,
+        4,
         0.05
       );
       loadMultipleFBXModels(
         ModelURLS.medamayaki,
         "food",
         "medamayaki",
-        3,
+        4,
         0.05
       );
       loadFBXModelAsStage(

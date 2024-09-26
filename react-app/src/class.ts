@@ -4,7 +4,7 @@ export class Manager {
   constructor(
     public spawnGage: number = 0,
     public spawnCount: number = 3,
-    public spawnRate: number = 0.001,
+    public spawnRate: number = 0.01,
     public score: number = 0,
     public sunpower: number = 0,
     public initialAnimeTime: number = 1,
