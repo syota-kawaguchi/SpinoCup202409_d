@@ -17,6 +17,11 @@ export const DisplayCurrentScore = ({
   const [currentScore, setCurrentScore] = useState(managerObj.score);
   //   加点があった場合に加点分を下に表示するためのstate
   const [addScore, setAddScore] = useState<AddScore[]>([]);
+  //   const addScore = [
+  //     { additionalScore: 30, time: 0 },
+  //     { additionalScore: 20, time: 1 },
+  //     { additionalScore: 10, time: 0 },
+  //   ];
   console.log(addScore);
 
   useEffect(() => {
@@ -32,21 +37,42 @@ export const DisplayCurrentScore = ({
         });
       }
       newAddScore.forEach((score) => {
-        score.time += 0.1; // 加点分の表示時間を更新
+        score.time += 0.03; // 加点分の表示時間を更新
       });
 
       setAddScore([...newAddScore]); // 加点分をstateに追加
-    }, 100); // 100msごとにチェック (必要に応じて調整)
+    }, 10); // 100msごとにチェック (必要に応じて調整)
 
     return () => clearInterval(interval); // コンポーネントのアンマウント時にクリーンアップ
   }, [managerObj, currentScore]);
+
+  const color = (score: AddScore) => {
+    switch (score.additionalScore) {
+      case 30:
+        return "red";
+      case 20:
+        return "green";
+      case 10:
+        return "blue";
+      default:
+        return "black";
+    }
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.score}>{currentScore}</div>
       <div className={styles.addScore}>
         {addScore.map((score, index) => (
-          <p key={index} className={styles.additionalScore}>
+          <p
+            key={index}
+            className={styles.additionalScore}
+            style={{
+              color: `${color(score)}`,
+              bottom: `${(score.time) * 20}px`,
+              opacity: `${1 - score.time}`,
+            }}
+          >
             +{score.additionalScore}
           </p>
         ))}
