@@ -8,6 +8,7 @@ import {
   medamayaki,
   carSizes,
   foodScore,
+  ModelURLS,
 } from "./const";
 import { FoodInfo, Manager } from "./class";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -231,7 +232,7 @@ function App() {
     function initializeHera() {
       //初期化の順番守って。Hera->Manaita->
       fbxloader.load(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/hera.fbx",
+        ModelURLS.hira,
         (object) => {
           object.position.set(2, 8, 0);
           object.rotation.y = -0.8;
@@ -247,7 +248,7 @@ function App() {
 
     function initializeManaita() {
       fbxloader.load(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx",
+        ModelURLS.manaita,
         (object) => {
           object.position.set(7.5, 7.3, -1);
           object.scale.set(0.015, 0.015, 0.015);
@@ -325,7 +326,7 @@ function App() {
     function initializeStage() {
       // stageを既定の位置に配置
       loadFBXModelAsStage(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx",
+        ModelURLS.stage01,
         "stage",
         0,
         -carHeight,
@@ -334,9 +335,7 @@ function App() {
         0.1
       );
       loadFBXModelAsStage(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" +
-          carID +
-          ".fbx",
+        ModelURLS.car(carID!),
         "car",
         0,
         5,
@@ -345,28 +344,28 @@ function App() {
         0.05
       );
       loadMultipleFBXModels(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx",
+        ModelURLS.niku,
         "food",
         "niku",
         3,
         0.05
       );
       loadMultipleFBXModels(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx",
+        ModelURLS.tamanegi,
         "food",
         "tamanegi",
         3,
         0.05
       );
       loadMultipleFBXModels(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx",
+        ModelURLS.medamayaki,
         "food",
         "medamayaki",
         3,
         0.05
       );
       loadFBXModelAsStage(
-        "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx",
+        ModelURLS.manaita,
         "stage",
         -10.5 + (60 - carSizeX) * 0.05,
         7,
@@ -608,7 +607,7 @@ function App() {
         switch (Math.floor(Math.random() * 3)) {
           case 0:
             loadMultipleFBXModels(
-              "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx",
+              ModelURLS.niku,
               "food",
               "niku",
               1,
@@ -617,7 +616,7 @@ function App() {
             break;
           case 1:
             loadMultipleFBXModels(
-              "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx",
+              ModelURLS.tamanegi,
               "food",
               "tamanegi",
               1,
@@ -626,7 +625,7 @@ function App() {
             break;
           case 2:
             loadMultipleFBXModels(
-              "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx",
+              ModelURLS.medamayaki,
               "food",
               "medamayaki",
               1,
@@ -676,9 +675,7 @@ function App() {
             foodModels[i],
             foodArray[i].grilledness,
             i,
-            "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" +
-              foodArray[i].name +
-              "_koge.fbx"
+            ModelURLS.koge(foodArray[i].name)
           );
         } else if (foodArray[i].grillednessCheck() == "yake") {
           foodArray[i].status = "yake";
@@ -686,9 +683,7 @@ function App() {
             foodModels[i],
             foodArray[i].grilledness,
             i,
-            "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" +
-              foodArray[i].name +
-              "_yake.fbx"
+            ModelURLS.yake(foodArray[i].name)
           );
         } else if (foodArray[i].grillednessCheck() == "marukoge") {
           foodArray[i].status = "marukoge";
@@ -696,8 +691,7 @@ function App() {
             foodModels[i],
             foodArray[i].grilledness,
             i,
-            // TODO: まるこげのモデルを追加する(現在はkogeのモデルを使用)
-            "https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku_koge.fbx"
+            ModelURLS.marukoge,
           );
         }
       }
