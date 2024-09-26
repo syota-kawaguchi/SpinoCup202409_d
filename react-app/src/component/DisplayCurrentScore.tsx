@@ -67,11 +67,11 @@ export const DisplayCurrentScore = ({
 
   const color = (score: AddScore) => {
     switch (score.additionalScore) {
-      case 30:
+      case 60:
         return "red";
-      case 20:
+      case 40:
         return "green";
-      case 10:
+      case 20:
         return "blue";
       default:
         return "black";
