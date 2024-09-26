@@ -2,117 +2,81 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader.js";
 import { ThermoGraphyCircle } from "./component/countdownTimer";
-import { niku,tamanegi,medamayaki,timeMax,carSizes } from "./const";
+import {
+  niku,
+  tamanegi,
+  medamayaki,
+  carSizes,
+  foodScore,
+  ModelURLS,
+} from "./const";
+import { FoodInfo, Manager } from "./class";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
 let raycaster: THREE.Raycaster, mouse: THREE.Vector2;
 
-class manager {
-  constructor(
-    public score: number,
-    public sunpower: number
-  ) 
-  {
-    
-  }
-  addScore(_num:number){
-    this.score += _num;
-  }
-  sunpowerCalc(_time:number){
-    this.sunpower = Math.sin(_time/timeMax*Math.PI);
-    if(this.sunpower<0) this.sunpower = 0;
-  }
-}
-
-class FoodInfo{
-  constructor(
-    public name: string,
-    public isOnBonnet: boolean,
-    public status: string,
-    public maxGrilledness: number,
-    public grilledness: number,
-  )
-  {
-    
-  }
-  grill(_power: number){
-    if(this.isOnBonnet == true){
-      this.grilledness += _power;
-    }
-  }
-  grillednessCheck() {
-    if (this.grilledness >= this.maxGrilledness && this.status == "yake") {
-      // this.status = "koge";
-      return "koge";
-    }else if(this.grilledness >= this.maxGrilledness/2 && this.status == "nama"){
-      // this.status = "yake";
-      return "yake";
-    }
-  }
-}
-
 function App() {
+  const managerObj = new Manager();
   const [carID, setCarID] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  // TODO: Loading画面の追加
-  console.log(`carID: ${carID}, loading: ${loading}`);
 
   useEffect(() => {
     const selectedCarID = localStorage.getItem("selectedCarID");
     if (selectedCarID) {
       setCarID(selectedCarID);
-      setLoading(false);
     } else {
-      setCarID("car02");
-      setLoading(false);
+      setCarID("car03");
     }
   }, []);
 
   let carSizeX: number;
   let carSizeY: number;
+  let carHeight: number;
 
   switch (carID) {
     case "car01":
-    carSizeX = carSizes[0][0];
-    carSizeY = carSizes[0][1];
+      carSizeX = carSizes[0][0];
+      carSizeY = carSizes[0][1];
+      carHeight = carSizes[0][2];
+      managerObj.sunpowerMult = carSizes[0][3];
       break;
     case "car02":
-    carSizeX = carSizes[1][0];  
-    carSizeY = carSizes[1][1];  
+      carSizeX = carSizes[1][0];
+      carSizeY = carSizes[1][1];
+      carHeight = carSizes[1][2];
+      managerObj.sunpowerMult = carSizes[1][3];
       break;
     case "car03":
-    carSizeX = carSizes[2][0];  
-    carSizeY = carSizes[2][1];  
+      carSizeX = carSizes[2][0];
+      carSizeY = carSizes[2][1];
+      carHeight = carSizes[2][2];
+      managerObj.sunpowerMult = carSizes[2][3];
       break;
-  
+
     default:
       break;
   }
 
-  // ゲームが終わった時にスコアをlocalstorageに保存する
-  // const _saveScore = (score: number) => {
-  //   localStorage.setItem("score", String(score));
-  // };
-  // TODO: ゲームの終了処理を追加
+  const saveScore = (score: number) => {
+    localStorage.setItem("score", String(score));
+  };
 
-  const managerObj = new manager(0,0);
   function getGrillTime(_name: string) {
     let _grillednessMax = 0;
-          switch (_name) {
-            case "niku":
-              _grillednessMax = niku;
-              break;
-            case "tamanegi":
-              _grillednessMax = tamanegi;
-              break;
-            case "medamayaki":
-              _grillednessMax = medamayaki;
-              break;
-            default:
-              _grillednessMax = 1000;
-              break;
-          }
+    switch (_name) {
+      case "niku":
+        _grillednessMax = niku;
+        break;
+      case "tamanegi":
+        _grillednessMax = tamanegi;
+        break;
+      case "medamayaki":
+        _grillednessMax = medamayaki;
+        break;
+      default:
+        _grillednessMax = 1000;
+        break;
+    }
     return _grillednessMax;
   }
 
@@ -120,18 +84,16 @@ function App() {
     useRef<HTMLCanvasElement>(null);
 
   const dragObject: {
-    mode: number;
     dragTarget: THREE.Object3D | null;
     x: number;
     y: number;
     z: number;
-} = {
-    mode: 0,
+  } = {
     dragTarget: null,
     x: 0,
     y: 0,
-    z: 0
-};
+    z: 0,
+  };
 
   useEffect(() => {
     if (!ref.current) return;
@@ -143,16 +105,16 @@ function App() {
     };
 
     // mouse
-        // レイキャスターの初期化(追記部分)
-        raycaster = new THREE.Raycaster();
+    // レイキャスターの初期化(追記部分)
+    raycaster = new THREE.Raycaster();
 
-        //マウスベクトルの初期化(追記部分)
-        mouse = new THREE.Vector2();
-    
-        // イベントリスナーの追加(追記部分)
-        document.addEventListener('mousedown', onMouseDown, false);
-        document.addEventListener('mouseup', onMouseUp, false);
-        document.addEventListener('mousemove', onMouseMove, false);
+    //マウスベクトルの初期化(追記部分)
+    mouse = new THREE.Vector2();
+
+    // イベントリスナーの追加(追記部分)
+    document.addEventListener("mousedown", onMouseDown, false);
+    document.addEventListener("mouseup", onMouseUp, false);
+    document.addEventListener("mousemove", onMouseMove, false);
 
     // scene
     const scene: THREE.Scene = new THREE.Scene();
@@ -169,7 +131,7 @@ function App() {
       1000
     );
     camera.position.set(0, 20, 100); // カメラ位置を調整
-    
+
     // renderer
     const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
       canvas: ref.current,
@@ -211,9 +173,9 @@ function App() {
     const other: THREE.Object3D[] = []; //otherにはヘラ[0]、まな板[1]
 
     //camera move
-    function initializeCamera(){
-      camera.position.set(0,13,3);
-      camera.lookAt(0,4,0);
+    function initializeCamera() {
+      camera.position.set(0, 13, 3);
+      camera.lookAt(0, 4, 0);
     }
 
     // 使ってない
@@ -229,45 +191,85 @@ function App() {
     //   });
     // }
 
-    function loadFBXModelAsFood(_filename: string, _tag: string, _name: string, _isOnBonnet: boolean, _status: string, _grillednessMax: number, _currentGrilledness: number, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+    function loadFBXModelAsFood(
+      _filename: string,
+      _tag: string,
+      _name: string,
+      _isOnBonnet: boolean,
+      _status: string,
+      _grillednessMax: number,
+      _currentGrilledness: number,
+      _posX: number,
+      _posY: number,
+      _posZ: number,
+      _rotate: number,
+      _scale: number
+    ) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
         object.rotation.y = _rotate;
         object.scale.set(_scale, _scale, _scale);
         object.name = _tag;
         object.castShadow = true;
+
+        if (_status == "marukoge") {
+          managerObj.marukogeUUIDs.push(object.uuid);
+        }
         foodModels.push(object); // Store the model in the array
-        foodArray.push(new FoodInfo(_name,_isOnBonnet,_status,_grillednessMax,_currentGrilledness));
+        foodArray.push(
+          new FoodInfo(
+            _name,
+            _isOnBonnet,
+            _status,
+            _grillednessMax,
+            _currentGrilledness
+          )
+        );
         scene.add(object);
       });
     }
 
-    function initializeHera(){ //初期化の順番守って。Hera->Manaita->
-      fbxloader.load("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/hera.fbx", (object) => {
-        object.position.set(2, 8, 0);
-        object.rotation.y = -0.8;
-        object.scale.set(0.01, 0.01, 0.01);
-        object.name = "hera";
-        object.castShadow = true;
-        //other.push(object); // Store the model in the array
-        other[0] = object;
-        scene.add(object);
-      });
+    function initializeHera() {
+      //初期化の順番守って。Hera->Manaita->
+      fbxloader.load(
+        ModelURLS.hera,
+        (object) => {
+          object.position.set(2, 8, 0);
+          object.rotation.y = -0.8;
+          object.scale.set(0.01, 0.01, 0.01);
+          object.name = "hera";
+          object.castShadow = true;
+          //other.push(object); // Store the model in the array
+          other[0] = object;
+          scene.add(object);
+        }
+      );
     }
 
-    function initializeManaita(){
-      fbxloader.load("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx", (object) => {
-        object.position.set(7.5, 7.3, -1);
-        object.scale.set(0.015, 0.015, 0.015);
-        object.name = "manaita";
-        object.castShadow = true;
-        //other.push(object); // Store the model in the array
-        other[1] = object;
-        scene.add(object);
-      });
+    function initializeManaita() {
+      fbxloader.load(
+        ModelURLS.manaita,
+        (object) => {
+          object.position.set(7.5, 7.3, -1);
+          object.scale.set(0.015, 0.015, 0.015);
+          object.name = "manaita";
+          object.castShadow = true;
+          //other.push(object); // Store the model in the array
+          other[1] = object;
+          scene.add(object);
+        }
+      );
     }
 
-    function loadFBXModelAsStage(_filename: string, _tag: string, _posX: number, _posY: number, _posZ: number,_rotate: number, _scale: number) {
+    function loadFBXModelAsStage(
+      _filename: string,
+      _tag: string,
+      _posX: number,
+      _posY: number,
+      _posZ: number,
+      _rotate: number,
+      _scale: number
+    ) {
       fbxloader.load(_filename, (object) => {
         object.position.set(_posX, _posY, _posZ);
         object.rotation.y = _rotate;
@@ -291,25 +293,87 @@ function App() {
     //   });
     // }
 
-    function loadMultipleFBXModels(_filename: string, _tag: string, _name: string, _count: number, _scale: number) {
+    function loadMultipleFBXModels(
+      _filename: string,
+      _tag: string,
+      _name: string,
+      _count: number,
+      _scale: number
+    ) {
       for (let i = 0; i < _count; i++) {
-        const posX = Math.random() * 3 + 6; // Random X position between -50 and 50
-        const posY = 7.8;// Math.random() * 100 - 50; // Random Y position between -50 and 50
-        const posZ = Math.random() * 4 - 4; // Random Z position between -50 and 50
+        const posX = Math.random() * 1.5 + 6.3;
+        const posY = 7.8;
+        const posZ = Math.random() * 3 - 2.5;
         const rotate = Math.random() * 3;
 
-        loadFBXModelAsFood(_filename, _tag, _name, false, "nama", getGrillTime(_name),0, posX, posY, posZ, rotate, _scale);
+        loadFBXModelAsFood(
+          _filename,
+          _tag,
+          _name,
+          false,
+          "nama",
+          getGrillTime(_name),
+          0,
+          posX,
+          posY,
+          posZ,
+          rotate,
+          _scale
+        );
       }
     }
 
-    function initializeStage(){ // stageを既定の位置に配置
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/stage01.fbx","stage",0,0,0,0,0.1);
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/"+carID+".fbx","car",0,5,-10+(60-carSizeX)*0.05,0,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/niku.fbx","food","niku",5,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","food","tamanegi",5,0.05);
-      loadMultipleFBXModels("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/medamayaki.fbx","food","medamayaki",5,0.05);
-      loadFBXModelAsStage("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/manaita.fbx","stage",-10.4+(60-carSizeX)*0.05,7,1,-1.57,0.02);
-      
+    function initializeStage() {
+      // stageを既定の位置に配置
+      loadFBXModelAsStage(
+        ModelURLS.stage01,
+        "stage",
+        0,
+        -carHeight,
+        0,
+        0,
+        0.1
+      );
+      loadFBXModelAsStage(
+        ModelURLS.car(carID!),
+        "car",
+        0,
+        5,
+        -10 + (60 - carSizeX) * 0.05,
+        0,
+        0.05
+      );
+      loadMultipleFBXModels(
+        ModelURLS.niku,
+        "food",
+        "niku",
+        3,
+        0.05
+      );
+      loadMultipleFBXModels(
+        ModelURLS.tamanegi,
+        "food",
+        "tamanegi",
+        3,
+        0.05
+      );
+      loadMultipleFBXModels(
+        ModelURLS.medamayaki,
+        "food",
+        "medamayaki",
+        3,
+        0.05
+      );
+      loadFBXModelAsStage(
+        ModelURLS.manaita,
+        "stage",
+        -10.5 + (60 - carSizeX) * 0.05,
+        7,
+        1,
+        -1.57,
+        0.02
+      );
+
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",Math.sqrt(carSizeX),7,-Math.sqrt(carSizeY),0,0.03);
       //test_GuideTamanegi("https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/tamanegi.fbx","stage",-Math.sqrt(carSizeX),7,Math.sqrt(carSizeY),0,0.03);
@@ -342,7 +406,12 @@ function App() {
     */
     //カメラ関連、上の記述を参考に
 
-    function changeModel(_formerObject: THREE.Object3D, _grilledness: number, _num: number, _Filename: string){
+    function changeModel(
+      _formerObject: THREE.Object3D,
+      _grilledness: number,
+      _num: number,
+      _Filename: string
+    ) {
       const _posX = _formerObject.position.x;
       const _posY = _formerObject.position.y;
       const _posZ = _formerObject.position.z;
@@ -352,45 +421,79 @@ function App() {
       const _scale = _formerObject.scale.x;
       const _tag = _formerObject.name;
       const _name = foodArray[_num].name;
-      loadFBXModelAsFood(_Filename,_tag,_name, foodArray[_num].isOnBonnet, foodArray[_num].status, getGrillTime(_name),_grilledness,_posX,_posY,_posZ,_rotateY,_scale);
+      loadFBXModelAsFood(
+        _Filename,
+        _tag,
+        _name,
+        foodArray[_num].isOnBonnet,
+        foodArray[_num].status,
+        getGrillTime(_name),
+        _grilledness,
+        _posX,
+        _posY,
+        _posZ,
+        _rotateY,
+        _scale
+      );
       //delete _Filename;
       scene.remove(_formerObject);
-      foodModels.splice(_num,1);
-      foodArray.splice(_num,1);
+      foodModels.splice(_num, 1);
+      foodArray.splice(_num, 1);
     }
 
-    function deleteModel(_formerObject: THREE.Object3D, _num: number){
+    function deleteModel(_formerObject: THREE.Object3D, _num: number) {
+      managerObj.spawnGage += 1;
       scene.remove(_formerObject);
-      foodModels.splice(_num,1);
-      foodArray.splice(_num,1);
+      foodModels.splice(_num, 1);
+      foodArray.splice(_num, 1);
     }
 
-//========== Mouse Event =================================================================
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //========== Mouse Event =================================================================
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // イベントリスナーに対応する処理(追記部分)
-    function onMouseDown(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+    function onMouseDown(event: {
+      preventDefault: () => void;
+      clientX: number;
+      clientY: number;
+    }) {
       event.preventDefault();
 
       // 座標を正規化する呪文
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
+      if (!managerObj.onGame) { 
+        return 
+      }
       // レイキャスティングでマウスと重なるオブジェクトを取得
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
-      if(intersects[0] !== null){
+      if (intersects[0] !== null) {
         for (let i = 0; i < intersects.length; i++) {
-          if(intersects[i].object.parent?.name == "food"){
-            dragObject.dragTarget = intersects[i].object.parent;
-            break;
+          if (intersects[i].object.parent?.name == "food") {
+            if (intersects) {
+              const isThisIntersectMarukoge = managerObj.marukogeUUIDs.filter(
+                (marukogeUUID) =>
+                  marukogeUUID === intersects[i].object.parent?.uuid
+              );
+
+              if (isThisIntersectMarukoge.length == 0) {
+                dragObject.dragTarget = intersects[i].object.parent;
+                break;
+              }
+            }
           }
         }
       }
     }
-    
-    function onMouseMove(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+
+    function onMouseMove(event: {
+      preventDefault: () => void;
+      clientX: number;
+      clientY: number;
+    }) {
       event.preventDefault();
 
       // 座標を正規化する呪文
@@ -398,24 +501,34 @@ function App() {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       // レイキャスティングでマウスと重なるオブジェクトを取得
+      if (!managerObj.onGame) { 
+        return 
+      }
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
-      if(intersects[0] !== null){
+      if (intersects[0] !== null) {
         for (let i = 0; i < intersects.length; i++) {
-          if(intersects[i].object.parent !== dragObject.dragTarget && intersects[i].object.parent?.name !== "hera"){
-            other[0].position.set(intersects[i].point.x + 0.8,intersects[i].point.y + 0.7,intersects[i].point.z - 1.5);
-            other[0].rotation.set(0.5,-1,0);
+          if (
+            intersects[i].object.parent !== dragObject.dragTarget &&
+            intersects[i].object.parent?.name !== "hera"
+          ) {
+            other[0].position.set(
+              intersects[i].point.x + 0.8,
+              intersects[i].point.y + 0.7,
+              intersects[i].point.z - 1.5
+            );
+            other[0].rotation.set(0.5, -1, 0);
             dragObject.x = intersects[i].point.x;
-            dragObject.y = intersects[i].point.y+1;
+            dragObject.y = intersects[i].point.y + 1;
             dragObject.z = intersects[i].point.z;
-            if(dragObject.dragTarget !== null){
+            if (dragObject.dragTarget !== null) {
               dragObject.dragTarget.position.x = dragObject.x;
               dragObject.dragTarget.position.y = dragObject.y;
               dragObject.dragTarget.position.z = dragObject.z;
               other[0].position.y = dragObject.y;
               other[0].position.z = dragObject.z - 0.5;
-              other[0].rotation.set(0,-0.8,0);
+              other[0].rotation.set(0, -0.8, 0);
             }
             break;
           }
@@ -423,41 +536,65 @@ function App() {
       }
     }
 
-    function checkFoodsOnBonnet(){
+    function checkFoodsOnBonnet() {
       // console.log(foodArray.length);
-      for(let i = 0; i<foodArray.length; i++){
-        if(  foodModels[i] != dragObject.dragTarget
-          && foodModels[i].position.x*foodModels[i].position.x < carSizeX
-          && foodModels[i].position.z*foodModels[i].position.z < carSizeY
-          && foodModels[i].position.y > 3
-          && foodModels[i].position.y < 7.8){
-            foodArray[i].isOnBonnet = true;
-          }else{
-            foodArray[i].isOnBonnet = false;
-            if(foodModels[i].position.x < -5 && foodModels[i].position.y > 8){
-              if(foodArray[i].status != "yake"){
-                deleteModel(foodModels[i],i);
-              }else{
-                managerObj.addScore(1);
-                deleteModel(foodModels[i],i);
-                console.log(managerObj.score);
+      for (let i = 0; i < foodArray.length; i++) {
+        if (
+          foodModels[i] != dragObject.dragTarget &&
+          foodModels[i].position.x * foodModels[i].position.x < carSizeX &&
+          foodModels[i].position.z * foodModels[i].position.z < carSizeY &&
+          foodModels[i].position.y > 3 &&
+          foodModels[i].position.y < 7.8
+        ) {
+          foodArray[i].isOnBonnet = true;
+        } else {
+          foodArray[i].isOnBonnet = false;
+          if (foodModels[i].position.x < -5 && foodModels[i].position.y > 8) {
+            if (foodArray[i].status != "yake") {
+              deleteModel(foodModels[i], i);
+            } else {
+              let _score = 0;
+              switch (foodArray[i].name) {
+                case "niku":
+                  _score = foodScore[0];
+                  break;
+                case "tamanegi":
+                  _score = foodScore[1];
+                  break;
+                case "medamayaki":
+                  _score = foodScore[2];
+                  break;
+                default:
+                  _score = 10;
+                  break;
               }
+              managerObj.addScore(_score);
+              deleteModel(foodModels[i], i);
+              console.log(managerObj.score);
             }
           }
-      }
-    }
-
-    function checkFoodsDelete(){
-      for(let i = 0; i<foodArray.length; i++){
-        if(foodModels[i].position.y < 5 && foodModels[i] != dragObject.dragTarget){
-          deleteModel(foodModels[i],i);
         }
       }
     }
 
-    function onMouseUp(event: { preventDefault: () => void; clientX: number; clientY: number; }) {
+    function checkFoodsDelete() {
+      for (let i = 0; i < foodArray.length; i++) {
+        if (
+          foodModels[i].position.y < 5 &&
+          foodModels[i] != dragObject.dragTarget
+        ) {
+          deleteModel(foodModels[i], i);
+        }
+      }
+    }
+
+    function onMouseUp(event: {
+      preventDefault: () => void;
+      clientX: number;
+      clientY: number;
+    }) {
       event.preventDefault();
-      if(dragObject.dragTarget !== null){
+      if (dragObject.dragTarget !== null) {
         dragObject.dragTarget.position.y += -0.94;
         //checkFoodsOnBonnet();
         //changeModel(dragObject.dragTarget,0,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/models/niku_yake.fbx");
@@ -465,8 +602,45 @@ function App() {
       }
     }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//=================================================================================================
+    function spawnFood(_num: number) {
+      for (let i = 0; i < _num; i++) {
+        switch (Math.floor(Math.random() * 3)) {
+          case 0:
+            loadMultipleFBXModels(
+              ModelURLS.niku,
+              "food",
+              "niku",
+              1,
+              0.05
+            );
+            break;
+          case 1:
+            loadMultipleFBXModels(
+              ModelURLS.tamanegi,
+              "food",
+              "tamanegi",
+              1,
+              0.05
+            );
+            break;
+          case 2:
+            loadMultipleFBXModels(
+              ModelURLS.medamayaki,
+              "food",
+              "medamayaki",
+              1,
+              0.05
+            );
+            break;
+
+          default:
+            break;
+        }
+      }
+    }
+
+    //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //=================================================================================================
 
     // 初回実行
     tick();
@@ -484,7 +658,7 @@ function App() {
       //     if(model.name == "car"){
       //       model.position.y += 0.1;
       //     }
-      // });      
+      // });
       // for(let i = 0; i < foodModels.length; i++){
       //   foodModels[i].grill();
       //   if(foodModels[i].grillednessCheck() == "yake"){
@@ -493,14 +667,32 @@ function App() {
       //     changeModel(foodModels[i],foodModels[i].grilledness,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/models/niku_koge.fbx");
       //   }
 
-      for(let i = 0; i<foodArray.length; i++){
-        foodArray[i].grill(managerObj.sunpower);
-        if(foodArray[i].grillednessCheck() == "koge"){
-              foodArray[i].status = "koge";
-              changeModel(foodModels[i],foodArray[i].grilledness,i,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" + foodArray[i].name + "_koge.fbx");
-            }else if(foodArray[i].grillednessCheck() == "yake"){
-              foodArray[i].status = "yake";
-              changeModel(foodModels[i],foodArray[i].grilledness,i,"https://bonnet-grills-bbq-app-bucket.s3.us-west-2.amazonaws.com/models/fbx/" + foodArray[i].name + "_yake.fbx");
+      for (let i = 0; i < foodArray.length; i++) {
+        foodArray[i].grill(managerObj.sunpower * managerObj.sunpowerMult);
+        if (foodArray[i].grillednessCheck() == "koge") {
+          foodArray[i].status = "koge";
+          changeModel(
+            foodModels[i],
+            foodArray[i].grilledness,
+            i,
+            ModelURLS.koge(foodArray[i].name)
+          );
+        } else if (foodArray[i].grillednessCheck() == "yake") {
+          foodArray[i].status = "yake";
+          changeModel(
+            foodModels[i],
+            foodArray[i].grilledness,
+            i,
+            ModelURLS.yake(foodArray[i].name)
+          );
+        } else if (foodArray[i].grillednessCheck() == "marukoge") {
+          foodArray[i].status = "marukoge";
+          changeModel(
+            foodModels[i],
+            foodArray[i].grilledness,
+            i,
+            ModelURLS.marukoge,
+          );
         }
       }
 
@@ -514,9 +706,22 @@ function App() {
 
       //console.log(foodArray.length);
       //console.log(foodModels.length);
+      spawnFood(managerObj.spawnGageUpdate());
+
+      managerObj.initialAnimeUpdate();
+      camera.position.set(
+        0 + managerObj.initialAnimeTime * 40,
+        13 - managerObj.initialAnimeTime * 5,
+        3 + managerObj.initialAnimeTime * 35
+      );
+      camera.lookAt(0, 4 + managerObj.initialAnimeTime * 10, 0);
 
       managerObj.sunpowerCalc(clock.getElapsedTime());
-      ambientLight.color.set(managerObj.sunpower*6,managerObj.sunpower*5,1+managerObj.sunpower*5);
+      ambientLight.color.set(
+        managerObj.sunpower * 6,
+        managerObj.sunpower * 5,
+        1 + managerObj.sunpower * 5
+      );
       renderer.render(scene, camera); // レンダリング
     }
 
@@ -538,19 +743,36 @@ function App() {
     // クリーンアップ
     return () => {
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("click", () => {
-      });
+      window.removeEventListener("click", () => {});
     };
-  },);
+  });
+
+  const onGameFinish = () => {
+    const marukogeCount = managerObj.marukogeUUIDs.length;
+    console.log("marukoge ペナルティ: ", marukogeCount * foodScore[3]);
+    const finalScore = managerObj.score + marukogeCount * foodScore[3];
+    console.log("finalScore: ", finalScore > 0 ? finalScore : 0);
+    managerObj.onGame = false
+    saveScore(finalScore)
+  }
 
   return (
-    <main style={{ width: "100%",height:"100%" }}>
-      <canvas ref={ref} style={{ width: "100%",height:"100%" }} />
+    <main
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+      }}
+    >
+      <canvas ref={ref} style={{ width: "100%", height: "100%" }} />
 
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
-      <ThermoGraphyCircle startTime={0} text=""/>
-      
+      <ThermoGraphyCircle startTime={0} text="" onGameFinish={onGameFinish} />
     </main>
   );
 }
