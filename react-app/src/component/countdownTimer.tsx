@@ -18,13 +18,11 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
     useEffect(() => {
         const interval = setInterval(() => {
             if (timeMax <= countTime) {
-                console.log(`will running clear interval`)
                 props.onGameFinish()
                 clearInterval(interval)
             }
             else {
                 setCount(prevTime => prevTime + 1)
-                console.log(`countTime : ${countTime}`)
             }
         }, 1000);
         return () => {
