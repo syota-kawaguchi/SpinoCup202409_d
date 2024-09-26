@@ -799,8 +799,6 @@ function App() {
         1 + managerObj.sunpower * 5
       );
       renderer.render(scene, camera); // レンダリング
-
-      managerObj.gameCheck(clock.getElapsedTime()); //これでゲームがおわってるか取得できる return (boolean); false->終わってる
     }
 
     // リサイズ対応
