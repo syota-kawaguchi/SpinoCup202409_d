@@ -15,6 +15,9 @@ export default defineConfig({
   },
   base: "/react/play",
   build: {
-    outDir: 'dist/react/play'
+    outDir: 'dist/react/play',
+    rollupOptions:{
+      external: ['react-circular-progressbar'],
+    }
   }
 });

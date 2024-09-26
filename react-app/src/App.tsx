@@ -24,13 +24,11 @@ class manager {
     public sunpower: number = 0,
     public initialAnimeTime: number = 1,
     public sunpowerMult: number = 1,
-    public marukogeUUIDs: string[] = []
+    public marukogeUUIDs: string[] = [],
+    public onGame:boolean = false
   ) {
     // this.score = score
     // this.num = 0
-  }
-  gameCheck(_time: number) {
-    return _time < timeMax;
   }
   initialAnimeUpdate() {
     if (this.initialAnimeTime <= 0) {
@@ -536,6 +534,9 @@ function App() {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
+      if (!managerObj.onGame) { 
+        return 
+      }
       // レイキャスティングでマウスと重なるオブジェクトを取得
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
@@ -571,6 +572,9 @@ function App() {
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       // レイキャスティングでマウスと重なるオブジェクトを取得
+      if (!managerObj.onGame) { 
+        return 
+      }
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
 
@@ -826,8 +830,9 @@ function App() {
     console.log("marukoge ペナルティ: ", marukogeCount * foodScore[3]);
     const finalScore = managerObj.score + marukogeCount * foodScore[3];
     console.log("finalScore: ", finalScore > 0 ? finalScore : 0);
-    saveScore(finalScore > 0 ? finalScore : 0);
-  };
+    managerObj.onGame = false
+    saveScore(finalScore)
+  }
 
   return (
     <main
