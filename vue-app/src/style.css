@@ -1,6 +1,7 @@
 body {
   margin: 0;
   background: linear-gradient(45deg, #2e2f30, #5ab3bf);
+  overflow: hidden;
 }
 
 /* コンテナ全体のスタイル */
