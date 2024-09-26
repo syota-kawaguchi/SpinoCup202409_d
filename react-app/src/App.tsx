@@ -9,6 +9,7 @@ import {
   carSizes,
   foodScore,
   ModelURLS,
+  timeMax,
 } from "./const";
 import { FoodInfo, Manager } from "./class";
 import { DisplayCurrentScore } from "./component/DisplayCurrentScore";
@@ -773,7 +774,7 @@ function App() {
 
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
-      <ThermoGraphyCircle startTime={0} text="" onGameFinish={onGameFinish} />
+      <ThermoGraphyCircle startTime={0} text="" maxValue={timeMax} onGameFinish={onGameFinish} />
 
       <DisplayCurrentScore managerObj={managerObj} />
     </main>

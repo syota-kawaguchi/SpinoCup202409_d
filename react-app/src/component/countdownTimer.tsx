@@ -7,6 +7,7 @@ import { FinishPageModal } from './FinishPage';
 
 type ThermoGraphyCircleProps = {
     startTime : number
+    maxValue : number
     text : string
     onGameFinish: () => void
 }
@@ -36,7 +37,7 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
         <div >
             <div className={styles.thermo} style={{backgroundColor : `${backgroundColor}`}}></div>
             <div className={styles.circle}>
-                <CircularProgressbar value={countTime} text={`${props.text}`}></CircularProgressbar>
+                <CircularProgressbar value={countTime} maxValue={props.maxValue} text={`${props.text}`}></CircularProgressbar>
             </div>
             <FinishPageModal isGameFinished={isGameFinished} />
         </div>
