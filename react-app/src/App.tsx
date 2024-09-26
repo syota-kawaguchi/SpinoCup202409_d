@@ -629,7 +629,7 @@ function App() {
 
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
-      <ThermoGraphyCircle startTime={0} text="" onGameFinish={onGameFinish} />
+      <ThermoGraphyCircle startTime={0} text="" maxValue={timeMax} onGameFinish={onGameFinish} />
     </main>
   );
 }
