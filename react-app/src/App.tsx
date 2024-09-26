@@ -232,7 +232,7 @@ function App() {
     function initializeHera() {
       //初期化の順番守って。Hera->Manaita->
       fbxloader.load(
-        ModelURLS.hira,
+        ModelURLS.hera,
         (object) => {
           object.position.set(2, 8, 0);
           object.rotation.y = -0.8;
