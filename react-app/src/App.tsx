@@ -11,6 +11,7 @@ import {
   ModelURLS,
 } from "./const";
 import { FoodInfo, Manager } from "./class";
+import { DisplayCurrentScore } from "./component/DisplayCurrentScore";
 //import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 //未使用
 
@@ -773,6 +774,8 @@ function App() {
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
       <ThermoGraphyCircle startTime={0} text="" onGameFinish={onGameFinish} />
+
+      <DisplayCurrentScore managerObj={managerObj} />
     </main>
   );
 }
