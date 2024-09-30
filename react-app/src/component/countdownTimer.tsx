@@ -36,8 +36,12 @@ export const ThermoGraphyCircle = (props:ThermoGraphyCircleProps) => {
     return (
         <div >
             <div className={styles.thermo} style={{backgroundColor : `${backgroundColor}`}}></div>
+            <div className={styles.thermoText}><p>{`${timeMax - countTime}`}</p></div>
             <div className={styles.circle}>
-                <CircularProgressbar value={countTime} maxValue={props.maxValue} text={`${props.text}`}></CircularProgressbar>
+                <CircularProgressbar 
+                    value={countTime} 
+                    maxValue={props.maxValue} 
+                ></CircularProgressbar>
             </div>
             <FinishPageModal isGameFinished={isGameFinished} />
         </div>
@@ -50,6 +54,7 @@ type Color = {
     blue: number
 }
 
+// colorMap(jet)の計算
 const getColor = (v:number, vMin: number, vMax:number) => {
 
     const c : Color = {red : 1.0, green : 1.0, blue : 1.0}
@@ -83,6 +88,7 @@ const getColor = (v:number, vMin: number, vMax:number) => {
     return color8bit
 }
 
+// 
 const colorMapJet = (x:number, xMax:number) => {
     const max = xMax - 1.0;
     if (x <= xMax / 2) {
