@@ -70,3 +70,26 @@
   border-radius: 50%;
   background-color: #FFF;
 }
+
+.thermoText {
+  margin: 2rem;
+  padding: 0;
+  position: absolute;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 0%;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  font-size: 40px;
+  font-weight: bold;
+  color: #FFF;
+  z-index: 2;
+}
+
+.thermoText p{
+  margin: 0 auto;
+}
