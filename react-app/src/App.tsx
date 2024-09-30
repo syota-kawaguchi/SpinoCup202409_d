@@ -774,7 +774,12 @@ function App() {
 
       {/* <button onClick={()=>{debugger;}}>stop</button> */}
 
-      <ThermoGraphyCircle startTime={1} text="" maxValue={timeMax} onGameFinish={onGameFinish} />
+      <ThermoGraphyCircle 
+        startTime={0} 
+        text="" 
+        maxValue={timeMax} 
+        onGameFinish={onGameFinish} 
+      />
 
       <DisplayCurrentScore managerObj={managerObj} />
     </main>
